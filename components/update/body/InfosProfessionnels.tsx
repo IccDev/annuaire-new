@@ -120,7 +120,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
     return (
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
-            {/* Éducations */}
+        
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <Label className="text-lg font-medium">Éducation<span className="text-red-500">*</span></Label>
@@ -376,7 +376,6 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                 )}
             </div>
 
-            {/* Bouton de soumission */}
             <div className="pt-4">
                 <button
                     type="submit"

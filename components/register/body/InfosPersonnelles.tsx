@@ -250,7 +250,8 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
                     <div className="flex items-center space-x-2">
                         <Checkbox
                             id="consentement_email"
-                            {...register("consentement_email")}
+                            checked={watch("consentement_email")}
+                            onCheckedChange={(checked) => setValue("consentement_email", checked === true)}
                         />
                         <Label htmlFor="consentement_email">Autoriser l'affichage de mon email</Label>
                     </div>
@@ -264,7 +265,8 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
                     <div className="flex items-center space-x-2">
                         <Checkbox
                             id="consentement_gsm"
-                            {...register("consentement_gsm")}
+                            checked={watch("consentement_gsm")}
+                            onCheckedChange={(checked) => setValue("consentement_gsm", checked === true)}
                         />
                         <Label htmlFor="consentement_gsm">Autoriser l'affichage de mon numéro</Label>
                     </div>
