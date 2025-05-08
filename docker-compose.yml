@@ -1,0 +1,29 @@
+name: icc_apps
+services:
+  surrealdb:
+    user: ":"
+    entrypoint: 
+      - /surreal 
+      - start 
+      - --user
+      - ${SURREALDB_ROOT_USER}
+      - --pass
+      - ${SURREALDB_ROOT_PASSWORD}
+      - rocksdb:/var/lib/surreal
+    image: surrealdb/surrealdb:latest
+    volumes:
+      - ./databases/surreal:/var/lib/surreal
+    container_name: ${SURREALDB_NAME}_${SURREALDB_TAG}
+    networks:
+      icc_apps_net:
+        ipv4_address: ${SURREALDB_IP}
+    ports:
+      - ${SURREALDB_PORT}:8000
+
+networks:
+  icc_apps_net:
+    ipam:
+      driver: default
+      config:
+          - 
+            subnet: ${ICC_NETWORK}
