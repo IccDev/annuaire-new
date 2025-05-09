@@ -12,7 +12,7 @@ export async function GET(request: Request, { params }: { params: { email: strin
       );
     }
 
-    // Récupération des données utilisateur depuis l'API externe
+  
     const res = await fetch(
       `http://84.234.16.224:4042/annuaire/query/user/email/${encodeURIComponent(email)}`,
       {

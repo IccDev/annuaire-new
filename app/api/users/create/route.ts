@@ -4,7 +4,7 @@ export async function POST(request: Request) {
   try {
     const payload = await request.json();
     
-    // Vérifier si l'email existe déjà
+  
     const checkEmailRes = await fetch(
       `http://84.234.16.224:4042/annuaire/check/email?email=${encodeURIComponent(payload.personnel.email)}`,
       {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       );
     }
     
-    // Si l'email n'existe pas, procéder à la création
+  
     const res = await fetch(
       "http://84.234.16.224:4042/annuaire/create/user",
       {
