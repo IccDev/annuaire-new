@@ -2,9 +2,18 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Suspense } from "react";
 
 export default function UpdateSuccess() {
     const router = useRouter();
+    return (
+        <Suspense>
+            <UpdateSuccessContent router={router} />
+        </Suspense>
+    );
+}
+
+function UpdateSuccessContent({ router }: { router: ReturnType<typeof useRouter> }) {
     const searchParams = useSearchParams();
     const eglise = searchParams.get("eglise");
     const [countdown, setCountdown] = useState(5);
