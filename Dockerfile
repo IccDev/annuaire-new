@@ -1,26 +1,36 @@
-FROM node:22.9.0-alpine3.19
+FROM node:20-alpine3.20 AS base
 
-# Create app directory
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-WORKDIR /home/node/app
+WORKDIR /app
 
-# Install app dependencies
-COPY --chown=node:node package*.json ./
-# COPY --chown=node:node . .
-USER node
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-RUN npm install
+COPY . .
+#COPY .env.build .env.local
 
-# If you are building your code for production
-RUN npm ci
 
-# Bundle app source
-COPY --chown=node:node ./dist ./dist
-COPY --chown=node:node ./adapters ./adapters
-COPY --chown=node:node ./node_modules ./node_modules
-COPY --chown=node:node ./server ./server
-#COPY --chown=node:node . .
+RUN npm run build
+
+FROM node:20-alpine3.20 AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+
+COPY --from=base /app/public ./public
+COPY --from=base /app/.next/standalone ./
+COPY --from=base /app/.next/static ./.next/static
+
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
 
 EXPOSE 3000
-
-CMD [ "node", "server/entry.express" ]
+CMD ["node", "server.js"]
