@@ -8,7 +8,7 @@ import Footer from "./body/Footer";
 import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
 import type { PersonnelData, EgliseData, ProfessionnelData } from "@/types/interfaces/annuaire-register";
 
-type Step = "personnel" | "eglise" | "professionnel";
+type Step = "personnel" | "eglise" | "professionnel" | "end";
 
 export default function RegisterForm() {
     const [currentStep, setCurrentStep] = useState<Step>("personnel");
@@ -19,7 +19,7 @@ export default function RegisterForm() {
         setIsAnimating(true);
         setFormData(prev => ({ ...prev, personnel: data }));
         setTimeout(() => {
-            setCurrentStep("eglise");
+            //setCurrentStep(2);
             setIsAnimating(false);
         }, 300);
     };
@@ -28,18 +28,50 @@ export default function RegisterForm() {
         setIsAnimating(true);
         setFormData(prev => ({ ...prev, eglise: data }));
         setTimeout(() => {
-            setCurrentStep("professionnel");
+            //setCurrentStep(3);
             setIsAnimating(false);
         }, 300);
     };
 
-    const handlePrevious = () => {
+    const handlePrevious = (step: Step) => {
         setIsAnimating(true);
         setTimeout(() => {
-            if (currentStep === "eglise") {
+            if (step == "personnel") {
                 setCurrentStep("personnel");
-            } else if (currentStep === "professionnel") {
+            }
+            else if (step == "eglise") {
+                setCurrentStep("personnel")
+            }
+            else if (step == "professionnel") {
+                setCurrentStep("eglise")
+            }
+            else if (step == "end") {
+                setCurrentStep("professionnel")
+            }
+            else {
+                setCurrentStep("personnel");
+            }
+            setIsAnimating(false);
+        }, 300);
+    };
+
+    const handleNext = (step: Step) => {
+        setIsAnimating(true);
+        setTimeout(() => {
+            if (step == "personnel") {
                 setCurrentStep("eglise");
+            }
+            else if (step == "eglise") {
+                setCurrentStep("professionnel")
+            }
+            else if (step == "professionnel") {
+                setCurrentStep("end")
+            }
+            else if (step == "end") {
+                setCurrentStep("end")
+            }
+            else {
+                setCurrentStep("personnel");
             }
             setIsAnimating(false);
         }, 300);
@@ -52,10 +84,9 @@ export default function RegisterForm() {
                 titre: edu.titre || "",
                 specialite: edu.specialite || ""
             })),
-            professions: data.professions.filter(prof => prof.domaine || prof.titre || prof.fonction).map(prof => ({
+            professions: data.professions.filter(prof => prof.domaine || prof.titre).map(prof => ({
                 domaine: prof.domaine || "",
-                titre: prof.titre || "",
-                fonction: prof.fonction || ""
+                titre: prof.titre || ""
             })),
             diplomes: data.diplomes.filter(dip => dip.nom).map(dip => ({
                 nom: dip.nom
@@ -67,42 +98,45 @@ export default function RegisterForm() {
                 nom: comp.nom
             }))
         };
-        
+
         setFormData(prev => ({ ...prev, professionnel: updatedData }));
+        setCurrentStep('end');
     };
 
     return (
         <div className="max-w-2xl mx-auto overflow-hidden bg-white rounded-xl shadow-xl transition-all duration-300 hover:shadow-2xl">
             <div className="relative bg-slate-600 p-6 text-white">
                 <h2 className="text-2xl font-bold text-center mb-4">
-                    {currentStep === "personnel" 
+                    {currentStep === "personnel"
                         ? "Informations personnelles" 
                         : currentStep === "eglise" 
                         ? "Informations église"
+                        : currentStep === "professionnel"
+                        ? "Informations professionnelles"
                         : "Informations professionnelles"}
                 </h2>
                 <div className="flex justify-center space-x-4">
                     <div className="flex items-center space-x-2">
                         <div
-                            className={`h-3 w-3 rounded-full transition-colors duration-300 ${currentStep === "personnel" ? "bg-white" : "bg-slate-300"}`}
+                            className={`h-3 w-3 rounded-full transition-colors duration-300 ${currentStep === 'personnel' ? "bg-white" : "bg-slate-300"}`}
                         />
-                        <span className={`text-sm transition-colors duration-300 ${currentStep === "personnel" ? "text-white" : "text-blue-300"}`}>
+                        <span className={`text-sm transition-colors duration-300 ${currentStep === 'personnel' ? "text-white" : "text-blue-300"}`}>
                             Étape 1
                         </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <div
-                            className={`h-3 w-3 rounded-full transition-colors duration-300 ${currentStep === "eglise" ? "bg-white" : "bg-blue-300"}`}
+                            className={`h-3 w-3 rounded-full transition-colors duration-300 ${currentStep === 'eglise' ? "bg-white" : "bg-blue-300"}`}
                         />
-                        <span className={`text-sm transition-colors duration-300 ${currentStep === "eglise" ? "text-white" : "text-blue-300"}`}>
+                        <span className={`text-sm transition-colors duration-300 ${currentStep === 'eglise' ? "text-white" : "text-blue-300"}`}>
                             Étape 2
                         </span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <div
-                            className={`h-3 w-3 rounded-full transition-colors duration-300 ${currentStep === "professionnel" ? "bg-white" : "bg-blue-300"}`}
+                            className={`h-3 w-3 rounded-full transition-colors duration-300 ${currentStep === 'professionnel' ? "bg-white" : "bg-blue-300"}`}
                         />
-                        <span className={`text-sm transition-colors duration-300 ${currentStep === "professionnel" ? "text-white" : "text-blue-300"}`}>
+                        <span className={`text-sm transition-colors duration-300 ${currentStep === 'professionnel' ? "text-white" : "text-blue-300"}`}>
                             Étape 3
                         </span>
                     </div>
@@ -120,18 +154,22 @@ export default function RegisterForm() {
                         data={formData.eglise}
                         onSubmit={handleEgliseSubmit}
                     />
-                ) : (
+                ) : currentStep === "professionnel" ? (
                     <InfosProfessionnels
                         data={formData.professionnel}
                         onSubmit={handleProfessionnelSubmit}
                     />
-                )}
+                ) : (<InfosProfessionnels
+                        data={formData.professionnel}
+                        onSubmit={handleProfessionnelSubmit}
+                    />)}
 
                 <Footer 
                     currentStep={currentStep}
                     onPrevious={handlePrevious}
+                    onNext={handleNext}
                     formData={formData}
-                    isLastStep={currentStep === "professionnel"}
+                    isLastStep={currentStep === 'end'}
                 />
             </div>
         </div>

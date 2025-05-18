@@ -192,7 +192,7 @@ export default function ResultForm() {
                                 className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
                                 {...register("church")}
                             >
-                                <option value="toutes">Sans filtre</option>
+                                <option value="toutes">Église</option>
                                 {eglises.map((eglise, index) => (
                                     <option
                                         key={index + 1}

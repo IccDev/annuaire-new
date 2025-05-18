@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,10 +11,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Check, X } from "lucide-react";
+import { Check, ChevronsUpDown, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { departements as DEPARTEMENTS } from "@/types/interfaces/annuaire-register";
+import { Eglise } from "@/types/interfaces/annuaire";
+import { get_churches } from "@/app/api/annuaire-api";
 
 const egliseSchema = z.object({
     eglise: z.string().min(1, "Le nom de l'église est requis"),
@@ -29,10 +31,15 @@ interface InfosEgliseProps {
     onSubmit: (data: EgliseData) => void;
 }
 
+
+
 export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
     const [openDepartement, setOpenDepartement] = useState(false);
     const [customDepartement, setCustomDepartement] = useState("");
     const [selectedDepartements, setSelectedDepartements] = useState<string[]>(data.departements);
+    const [eglises, setEglises] = useState<Eglise[]>([]);
+    const [egliseSearch, setEgliseSearch] = useState("");
+    const [openEglise, setOpenEglise] = useState(false);
 
     const {
         register,
@@ -49,6 +56,18 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
         },
     });
 
+    useEffect(() => {
+        const fetchEglises = async () => {
+            try {
+                const response = await get_churches();
+                setEglises(response);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des eglises:", error);
+            }
+        };
+        fetchEglises();
+    }, []);
+
     const isStarSelected = watch("star");
 
     const handleDepartementSelect = (departement: string) => {
@@ -59,6 +78,8 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
         }
         setOpenDepartement(false);
     };
+
+    const selectedEglise = watch("eglise");
 
     const handleCustomDepartementAdd = () => {
         if (customDepartement && !selectedDepartements.includes(customDepartement)) {
@@ -75,15 +96,59 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
         setValue("departements", newDepartements);
     };
 
+    const filteredEglise = eglises
+        .filter(eglise =>
+            eglise.nom.toLowerCase().includes(egliseSearch.toLowerCase())
+        )
+        .slice(0, 10);
+
     return (
         <form id="eglise-form" onSubmit={handleSubmit((data) => onSubmit(data as EgliseData))} className="space-y-8">
             <div className="space-y-2">
                 <Label htmlFor="eglise">Nom de l'église</Label>
-                <Input
-                    id="eglise"
-                    {...register("eglise")}
-                    placeholder="Entrez le nom de votre église"
-                />
+                <Popover open={openEglise} onOpenChange={setOpenEglise}>
+                    <PopoverTrigger asChild>
+                        <button
+                            role="combobox"
+                            aria-expanded={openEglise}
+                            className="w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+                        >
+                            {selectedEglise || "Sélectionnez un pays"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                        <Command>
+                            <CommandInput
+                                placeholder="Rechercher un pays..."
+                                onValueChange={setEgliseSearch}
+                            />
+                            <CommandEmpty>Aucun pays trouvé</CommandEmpty>
+                            <CommandGroup className="max-h-60 overflow-auto">
+                                {filteredEglise.map((eglise) => (
+                                    <CommandItem
+                                        key={eglise.nom}
+                                        value={eglise.nom}
+                                        onSelect={() => {
+                                            setValue("eglise", eglise.nom);
+                                            setOpenEglise(false);
+                                        }}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                selectedEglise === eglise.nom
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                            )}
+                                        />
+                                        {eglise.nom}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
                 {errors.eglise && (
                     <p className="text-sm text-red-500">{errors.eglise.message}</p>
                 )}

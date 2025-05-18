@@ -85,10 +85,9 @@ export default function UpdateFormComplete() {
                 titre: edu.titre || "",
                 specialite: edu.specialite || ""
             })),
-            professions: data.professions.filter(prof => prof.domaine || prof.titre || prof.fonction).map(prof => ({
+            professions: data.professions.filter(prof => prof.domaine || prof.titre).map(prof => ({
                 domaine: prof.domaine || "",
-                titre: prof.titre || "",
-                fonction: prof.fonction || ""
+                titre: prof.titre || ""
             })),
             diplomes: data.diplomes.filter(dip => dip.nom).map(dip => ({
                 nom: dip.nom
