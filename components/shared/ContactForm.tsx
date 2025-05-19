@@ -110,15 +110,15 @@ export default function ContactPage() {
         setIsLoading(true);
 
         try {
-            if (!process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ||
+            /*if (!process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ||
                 !process.env.NEXT_PUBLIC_EMAIL_CONTACT_TEMPLATE_ID ||
                 !process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID) {
                 throw new Error("Configuration EmailJS manquante");
-            }
+            }*/
 
             const emailResult = await emailjs.send(
-                process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID,
-                process.env.NEXT_PUBLIC_EMAIL_CONTACT_TEMPLATE_ID,
+                "service_ha9t6f8",
+                "template_vwg05mm",
                 {
                     message: data.msg,
                     to_email: userData.email,
@@ -128,7 +128,7 @@ export default function ContactPage() {
                     from_gsm: data.gsm,
                 },
                 {
-                    publicKey: process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID,
+                    publicKey: "VErQdihbBGmtJazhN",
                 }
             );
 

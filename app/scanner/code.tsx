@@ -9,8 +9,8 @@ interface QRCodeProps {
 export default function QRCode({ registerPath }: QRCodeProps) {
     const params = useParams();
     const eglise = params.eglise as string;
-    const fullPath = `https://www.impactcentrechretien.eu/register`;
-
+    const fullPath = `http://84.234.16.224:3032/register`;
+    
     return (
         <div>
             <QRCodeSVG size={300} value={fullPath} />

@@ -19,8 +19,7 @@ const educationSchema = z.object({
 
 const professionSchema = z.object({
     titre: z.string().min(1, "Le titre est requis"),
-    domaine: z.string().min(1, "Le domaine est requis"),
-    fonction: z.string().min(0, ""),
+    domaine: z.string().min(1, "Le domaine est requis")
 });
 
 const diplomeSchema = z.object({
@@ -227,7 +226,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => appendProfession({ titre: "", domaine: "", fonction: "" })}
+                        onClick={() => appendProfession({ titre: "", domaine: ""})}
                     >
                         Ajouter une profession
                     </Button>
@@ -302,29 +301,6 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 {errors.professions?.[index]?.domaine && (
                                     <p className="text-sm text-red-500">
                                         {errors.professions[index]?.domaine?.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Fonction</Label>
-                                <Select
-                                    onValueChange={(value) => setValue(`professions.${index}.fonction`, value)}
-                                    defaultValue={watch(`professions.${index}.fonction`)}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Sélectionner une fonction" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {user_status.map((status) => (
-                                            <SelectItem key={status} value={status}>
-                                                {status}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {errors.professions?.[index]?.fonction && (
-                                    <p className="text-sm text-red-500">
-                                        {errors.professions[index]?.fonction?.message}
                                     </p>
                                 )}
                             </div>

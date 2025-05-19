@@ -67,7 +67,6 @@ export type Education = {
 export type Profession = {
   domaine: string;
   titre: string;
-  fonction: string;
 };
 
 export type ZodEducation = {
@@ -79,7 +78,6 @@ export type ZodEducation = {
 export type ZodProfession = {
   domaine?: Maybe<string>;
   titre?: Maybe<string>;
-  fonction?: Maybe<string>;
 };
 
 export type ZodProfessionnelData = {
@@ -129,8 +127,7 @@ export const defaultProfessionnelData = {
   professions: [
     {
       domaine: "",
-      titre: "",
-      fonction: "",
+      titre: ""
     },
   ],
   diplomes: [
@@ -197,10 +194,9 @@ export const get_professionnel = (
       titre: d?.titre || "",
       specialite: d?.specialite || "",
     })) || [],
-    professions: pro.professions?.filter(d => d && (d.domaine || d.titre || d.fonction)).map((d) => ({
+    professions: pro.professions?.filter(d => d && (d.domaine || d.titre)).map((d) => ({
       domaine: d?.domaine || "",
-      titre: d?.titre || "",
-      fonction: d?.fonction || "",
+      titre: d?.titre || ""
     })) || [],
     diplomes: pro.diplomes?.filter(d => d && d.nom).map((d) => ({
       nom: d?.nom || "",

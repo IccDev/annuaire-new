@@ -7,20 +7,21 @@ import { create_annuaire_user } from "@/app/api/annuaire-api";
 import { RegisterFormData } from "@/types/interfaces/annuaire-register";
 import { toast } from "sonner";
 
+type Step = "personnel" | "eglise" | "professionnel" | "end";
 interface FooterProps {
-  currentStep: "personnel" | "eglise" | "professionnel";
-  onPrevious: () => void;
+  currentStep: Step;
+  onNext: (value: Step) => void;
+  onPrevious: (value: Step) => void;
   formData: RegisterFormData;
   isLastStep: boolean;
 }
 
-export default function Footer({ currentStep, onPrevious, formData, isLastStep }: FooterProps) {
+export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext }: FooterProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
     if (!isLastStep) return;
-
     setIsSubmitting(true);
 
     try {
@@ -43,7 +44,6 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep }
         setIsSubmitting(false);
         return;
       }
-
       const response = await create_annuaire_user(formData);
 
       if (!response.ok) {
@@ -76,7 +76,7 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep }
         <Button
           type="button"
           variant="outline"
-          onClick={onPrevious}
+          onClick={() => onPrevious(currentStep)}
           disabled={isSubmitting}
         >
           Précédent
@@ -90,7 +90,7 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep }
         form={!isLastStep ? `${currentStep}-form` : undefined}
         disabled={isSubmitting}
         className={isLastStep ? "bg-green-600 hover:bg-green-700" : ""}
-        onClick={isLastStep ? handleSubmit : undefined}
+        onClick={() => {isLastStep ? handleSubmit() : onNext(currentStep)}}
       >
         {isSubmitting ? (
           <>
