@@ -113,7 +113,8 @@ export default function ResultForm() {
 
     const onSubmit = (data: SearchFormValues) => {
         setIsLoading(true);
-        router.push(`/${eglise}/annuaire/users/${data.key}/${data.church}`);
+        const cleanedKey = data.key.trim().replace(/\s+/g, " ");
+        router.push(`/${eglise}/annuaire/users/${cleanedKey}/${data.church}`);
     };
 
     const handlePageChange = (newPage: number) => {

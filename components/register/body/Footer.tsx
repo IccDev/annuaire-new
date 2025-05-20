@@ -37,13 +37,7 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
         return;
       }
 
-      if (!formData.professionnel.educations.length ||
-        !formData.professionnel.professions.length ||
-        !formData.professionnel.competences.length) {
-        toast.error("Veuillez compléter toutes les informations professionnelles requises");
-        setIsSubmitting(false);
-        return;
-      }
+
       const response = await create_annuaire_user(formData);
 
       if (!response.ok) {
@@ -90,7 +84,7 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
         form={!isLastStep ? `${currentStep}-form` : undefined}
         disabled={isSubmitting}
         className={isLastStep ? "bg-green-600 hover:bg-green-700" : ""}
-        onClick={() => {isLastStep ? handleSubmit() : onNext(currentStep)}}
+        onClick={isLastStep ? handleSubmit : undefined}
       >
         {isSubmitting ? (
           <>

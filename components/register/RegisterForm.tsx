@@ -19,7 +19,7 @@ export default function RegisterForm() {
         setIsAnimating(true);
         setFormData(prev => ({ ...prev, personnel: data }));
         setTimeout(() => {
-            //setCurrentStep(2);
+            setCurrentStep("eglise");
             setIsAnimating(false);
         }, 300);
     };
@@ -28,7 +28,7 @@ export default function RegisterForm() {
         setIsAnimating(true);
         setFormData(prev => ({ ...prev, eglise: data }));
         setTimeout(() => {
-            //setCurrentStep(3);
+            setCurrentStep("professionnel");
             setIsAnimating(false);
         }, 300);
     };
@@ -79,22 +79,22 @@ export default function RegisterForm() {
 
     const handleProfessionnelSubmit = (data: ProfessionnelData) => {
         const updatedData = {
-            educations: data.educations.filter(edu => edu.domaine || edu.titre || edu.specialite).map(edu => ({
+            educations: (data.educations || []).filter(edu => edu.domaine || edu.titre || edu.specialite).map(edu => ({
                 domaine: edu.domaine || "",
                 titre: edu.titre || "",
                 specialite: edu.specialite || ""
             })),
-            professions: data.professions.filter(prof => prof.domaine || prof.titre).map(prof => ({
-                domaine: prof.domaine || "",
+            professions: (data.professions || []).filter(prof => prof.statut || prof.titre).map(prof => ({
+                statut: prof.statut || "",
                 titre: prof.titre || ""
             })),
-            diplomes: data.diplomes.filter(dip => dip.nom).map(dip => ({
+            diplomes: (data.diplomes || []).filter(dip => dip.nom).map(dip => ({
                 nom: dip.nom
             })),
-            certifications: data.certifications.filter(cert => cert.nom).map(cert => ({
+            certifications: (data.certifications || []).filter(cert => cert.nom).map(cert => ({
                 nom: cert.nom
             })),
-            competences: data.competences.filter(comp => comp.nom).map(comp => ({
+            competences: (data.competences || []).filter(comp => comp.nom).map(comp => ({
                 nom: comp.nom
             }))
         };

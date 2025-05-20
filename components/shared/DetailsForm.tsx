@@ -322,7 +322,7 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                 items={[
                                     { text: `Église : ${userData.eglise.eglise}` },
                                     {
-                                        text: `Departement: ${userData.eglise.departements
+                                        text: `Département: ${userData.eglise.departements
                                             .filter(Boolean)
                                             .join(", ")}`,
                                     },

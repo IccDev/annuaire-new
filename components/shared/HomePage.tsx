@@ -63,8 +63,15 @@ const Search = () => {
 
     const onSubmit = (data: SearchFormValues) => {
         setIsLoading(true);
+        //Pour Jason & Djedou : Nettoyage de la clé de recherche
+        // Ceci va éviter de faire des recherches avec des espaces en trop
+        const cleanedKey = data.key.trim().replace(/\s+/g, " ");
+        if (!cleanedKey) {
+            setIsLoading(false);
+            return;
+        }
         setTimeout(() => {
-            router.push(`/${eglise}/annuaire/users/${data.key}/${data.church}`);
+            router.push(`/${eglise}/annuaire/users/${cleanedKey}/${data.church}`);
             setIsLoading(false);
         }, 1000);
     };
@@ -138,7 +145,7 @@ export default function HomePage() {
     const params = useParams();
     const eglise = params.eglise as string;
     const [isSearching, setIsSearching] = useState(false);
-    
+
     const egliseParam = eglise ? eglise.toLowerCase() : '';
 
     return (
@@ -168,13 +175,13 @@ export default function HomePage() {
                 <Search />
                 {isSearching && <div className="ml-4">Recherche en cours...</div>}
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <Link 
+                    <Link
                         href={`/scanner`}
                         className="w-full sm:w-auto cursor-pointer rounded-full bg-slate-700 px-4 py-2 text-lg text-white hover:bg-slate-500 text-center order-1 sm:order-none"
                     >
                         {"S'enregistrer"}
                     </Link>
-                    <Link 
+                    <Link
                         href={`/update`}
                         className="w-full sm:w-auto cursor-pointer rounded-full border border-sky-500 px-4 py-2 text-lg text-center order-2 sm:order-none"
                     >

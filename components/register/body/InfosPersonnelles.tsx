@@ -199,7 +199,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
             </div>
 
             <div className="space-y-2">
-                <Label>Genre</Label>
+                <Label>Genre<span className="text-red-500">*</span></Label>
                 <RadioGroup
                     onValueChange={(value) => setValue("genre", value)}
                     defaultValue={getValues("genre")}
@@ -225,14 +225,14 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                    <Label htmlFor="nom">Nom</Label>
+                    <Label htmlFor="nom">Nom<span className="text-red-500">*</span></Label>
                     <Input id="nom" {...register("nom")} placeholder="Votre nom de famille" />
                     {errors.nom && (
                         <p className="text-sm text-red-500">{errors.nom.message}</p>
                     )}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="prenom">Prénom</Label>
+                    <Label htmlFor="prenom">Prénom<span className="text-red-500">*</span></Label>
                     <Input id="prenom" {...register("prenom")} placeholder="Votre prénom" />
                     {errors.prenom && (
                         <p className="text-sm text-red-500">{errors.prenom.message}</p>
@@ -242,7 +242,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email<span className="text-red-500">*</span></Label>
                     <Input id="email" type="email" {...register("email")} placeholder="Votre adresse email" />
                     {errors.email && (
                         <p className="text-sm text-red-500">{errors.email.message}</p>
@@ -257,7 +257,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="gsm">Téléphone</Label>
+                    <Label htmlFor="gsm">Téléphone<span className="text-red-500">*</span></Label>
                     <Input id="gsm" {...register("gsm")} placeholder="Votre numéro de téléphone" />
                     {errors.gsm && (
                         <p className="text-sm text-red-500">{errors.gsm.message}</p>
@@ -275,7 +275,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                    <Label>Pays</Label>
+                    <Label>Pays de résidence<span className="text-red-500">*</span></Label>
                     <Popover open={openCountry} onOpenChange={setOpenCountry}>
                         <PopoverTrigger asChild>
                             <button
@@ -327,7 +327,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
 
                 {selectedCountry && (
                     <div className="space-y-2">
-                        <Label>Ville</Label>
+                        <Label>Ville de résidence<span className="text-red-500">*</span></Label>
                         <Popover open={openCity} onOpenChange={setOpenCity}>
                             <PopoverTrigger asChild>
                                 <button
@@ -379,7 +379,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
             </div>
 
             <div className="space-y-2">
-                <Label>Langues</Label>
+                <Label>Langues<span className="text-red-500">*</span></Label>
                 <div className="relative">
                     <Popover>
                         <PopoverTrigger asChild>

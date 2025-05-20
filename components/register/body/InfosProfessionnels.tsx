@@ -9,37 +9,38 @@ import { ProfessionnelData, domaines, user_status } from "@/types/interfaces/ann
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 const educationSchema = z.object({
-    titre: z.string().min(1, "Le titre est requis"),
-    domaine: z.string().min(1, "Le domaine est requis"),
-    specialite: z.string().min(0, ""),
+    titre: z.string().optional(),
+    domaine: z.string().optional(),
+    specialite: z.string().optional(),
 });
 
 const professionSchema = z.object({
-    titre: z.string().min(1, "Le titre est requis"),
-    domaine: z.string().min(1, "Le domaine est requis")
+    titre: z.string().optional(),
+    statut: z.string().optional()
 });
 
 const diplomeSchema = z.object({
-    nom: z.string().min(1, "Le nom du diplôme est requis"),
+    nom: z.string().optional(),
 });
 
 const certificationSchema = z.object({
-    nom: z.string().min(1, "Le nom de la certification est requis"),
+    nom: z.string().optional(),
 });
 
 const competenceSchema = z.object({
-    nom: z.string().min(1, "Le nom de la compétence est requis"),
+    nom: z.string().optional(),
 });
 
 const professionnelSchema = z.object({
-    educations: z.array(educationSchema).min(1, "Au moins une éducation est requise"),
-    professions: z.array(professionSchema).min(1, "Au moins une profession est requise"),
-    diplomes: z.array(diplomeSchema),
-    certifications: z.array(certificationSchema),
-    competences: z.array(competenceSchema).min(1, "Au moins une compétence est requise"),
+    educations: z.array(educationSchema).optional(),
+    professions: z.array(professionSchema).optional(),
+    diplomes: z.array(diplomeSchema).optional(),
+    certifications: z.array(certificationSchema).optional(),
+    competences: z.array(competenceSchema).optional(),
 });
 
 type ProfessionnelFormValues = z.infer<typeof professionnelSchema>;
@@ -61,7 +62,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
         resolver: zodResolver(professionnelSchema),
         defaultValues: {
             educations: data.educations || [{ titre: "", domaine: "", specialite: "" }],
-            professions: data.professions || [{ titre: "", domaine: "", fonction: "" }],
+            professions: data.professions || [{ titre: "", statut: "" }],
             diplomes: data.diplomes || [],
             certifications: data.certifications || [],
             competences: data.competences || [{ nom: "" }],
@@ -118,15 +119,99 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Activités professionnelles</Label>
+                </div>
+                {professionFields.map((field, index) => (
+                    <div key={field.id} className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h4>Profession {index + 1}</h4>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeProfession(index)}
+                            >
+                                <Trash2 className="h-4 w-4 text-red-700" />
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label>Fonction</Label>
+                                <Input
+                                    {...register(`professions.${index}.titre`)}
+                                    placeholder="Développeur web, Juriste, Comptable…
+"
+                                />
+                                {errors.professions?.[index]?.titre && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.professions[index]?.titre?.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Statut</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            className="w-full justify-between"
+                                        >
+                                            {watch(`professions.${index}.statut`) || "Sélectionner un statut"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Rechercher un statut..." />
+                                            <CommandEmpty>Aucun statut trouvé.</CommandEmpty>
+                                            <CommandGroup>
+                                                {user_status.map((statutItem) => (
+                                                    <CommandItem
+                                                        key={statutItem}
+                                                        value={statutItem}
+                                                        onSelect={() => {
+                                                            setValue(`professions.${index}.statut`, statutItem);
+                                                        }}
+                                                    >
+                                                        <Check
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                watch(`professions.${index}.statut`) === statutItem
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                        {statutItem}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                                {errors.professions?.[index]?.statut && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.professions[index]?.statut?.message}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendProfession({ titre: "", statut: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une profession
+                </Button>
+            </div>
+
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
                     <Label className="text-lg font-medium">Éducation</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendEducation({ titre: "", domaine: "", specialite: "" })}
-                    >
-                        Ajouter une éducation
-                    </Button>
                 </div>
                 {educationFields.map((field, index) => (
                     <div key={field.id} className="space-y-4">
@@ -138,15 +223,15 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 size="icon"
                                 onClick={() => removeEducation(index)}
                             >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-4 w-4 text-red-700" />
                             </Button>
                         </div>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div className="space-y-2">
-                                <Label>Titre</Label>
+                                <Label>École</Label>
                                 <Input
                                     {...register(`educations.${index}.titre`)}
-                                    placeholder="Ex: Licence, Master..."
+                                    placeholder="Ex: Université libre de Bruxelles..."
                                 />
                                 {errors.educations?.[index]?.titre && (
                                     <p className="text-sm text-red-500">
@@ -155,42 +240,58 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <Label>Domaine</Label>
+                                <Label htmlFor={`educations.${index}.domaine`}>Domaine</Label>
                                 <Popover>
                                     <PopoverTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            role="combobox"
-                                            className="w-full justify-between"
-                                        >
-                                            {watch(`educations.${index}.domaine`) || "Sélectionner un domaine"}
-                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
+                                        <div className="relative w-full">
+                                            <Input
+                                                {...register(`educations.${index}.domaine`)}
+                                                placeholder="Sélectionner ou saisir un domaine"
+                                                className="w-full pr-10"
+                                                id={`educations.${index}.domaine`}
+                                                autoComplete="off"
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="absolute right-0 top-1/2 transform -translate-y-1/2 h-full px-3 text-muted-foreground hover:text-foreground"
+                                                tabIndex={-1}
+                                            >
+                                                <ChevronsUpDown className="h-4 w-4" />
+                                            </Button>
+                                        </div>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-full p-0">
+                                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
                                         <Command>
-                                            <CommandInput placeholder="Rechercher un domaine..." />
-                                            <CommandEmpty>Aucun domaine trouvé</CommandEmpty>
+                                            <CommandInput
+                                                placeholder="Rechercher ou saisir un domaine..."
+                                                value={watch(`educations.${index}.domaine`)}
+                                                onValueChange={(search) => setValue(`educations.${index}.domaine`, search, { shouldValidate: true, shouldDirty: true })}
+                                            />
+                                            <CommandEmpty>Aucun domaine trouvé. Vous pouvez saisir le vôtre.</CommandEmpty>
                                             <CommandGroup>
-                                                {domaines.map((domaine) => (
-                                                    <CommandItem
-                                                        key={domaine}
-                                                        value={domaine}
-                                                        onSelect={() => {
-                                                            setValue(`educations.${index}.domaine`, domaine);
-                                                        }}
-                                                    >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                watch(`educations.${index}.domaine`) === domaine
-                                                                    ? "opacity-100"
-                                                                    : "opacity-0"
-                                                            )}
-                                                        />
-                                                        {domaine}
-                                                    </CommandItem>
-                                                ))}
+                                                {domaines
+                                                    .filter(d => d.toLowerCase().includes((watch(`educations.${index}.domaine`) || '').toLowerCase()))
+                                                    .map((domaineItem) => (
+                                                        <CommandItem
+                                                            key={domaineItem}
+                                                            value={domaineItem}
+                                                            onSelect={(currentValue) => {
+                                                                setValue(`educations.${index}.domaine`, currentValue === watch(`educations.${index}.domaine`) ? "" : currentValue, { shouldValidate: true });
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    watch(`educations.${index}.domaine`) === domaineItem
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                )}
+                                                            />
+                                                            {domaineItem}
+                                                        </CommandItem>
+                                                    ))}
                                             </CommandGroup>
                                         </Command>
                                     </PopoverContent>
@@ -216,111 +317,24 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                         </div>
                     </div>
                 ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une éducation
+                </Button>
             </div>
+
+
 
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Activités professionnelles</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendProfession({ titre: "", domaine: ""})}
-                    >
-                        Ajouter une profession
-                    </Button>
-                </div>
-                {professionFields.map((field, index) => (
-                    <div key={field.id} className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <h4>Profession {index + 1}</h4>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => removeProfession(index)}
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </div>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label>Titre</Label>
-                                <Input
-                                    {...register(`professions.${index}.titre`)}
-                                    placeholder="Ex: Développeur, Manager..."
-                                />
-                                {errors.professions?.[index]?.titre && (
-                                    <p className="text-sm text-red-500">
-                                        {errors.professions[index]?.titre?.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div className="space-y-2">
-                                <Label>Domaine</Label>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            role="combobox"
-                                            className="w-full justify-between"
-                                        >
-                                            {watch(`professions.${index}.domaine`) || "Sélectionner un domaine"}
-                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-full p-0">
-                                        <Command>
-                                            <CommandInput placeholder="Rechercher un domaine..." />
-                                            <CommandEmpty>Aucun domaine trouvé</CommandEmpty>
-                                            <CommandGroup>
-                                                {domaines.map((domaine) => (
-                                                    <CommandItem
-                                                        key={domaine}
-                                                        value={domaine}
-                                                        onSelect={() => {
-                                                            setValue(`professions.${index}.domaine`, domaine);
-                                                        }}
-                                                    >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                watch(`professions.${index}.domaine`) === domaine
-                                                                    ? "opacity-100"
-                                                                    : "opacity-0"
-                                                            )}
-                                                        />
-                                                        {domaine}
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </Command>
-                                    </PopoverContent>
-                                </Popover>
-                                {errors.professions?.[index]?.domaine && (
-                                    <p className="text-sm text-red-500">
-                                        {errors.professions[index]?.domaine?.message}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-          
-            <div className="space-y-4 pb-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Diplômes</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendDiplome({ nom: "" })}
-                    >
-                        Ajouter un diplôme
-                    </Button>
+                    <Label className="text-lg font-medium">Diplômes & Certifications
+                    </Label>
                 </div>
                 {diplomeFields.map((field, index) => (
                     <div key={field.id} className="flex items-center space-x-4">
@@ -341,67 +355,31 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                             size="icon"
                             onClick={() => removeDiplome(index)}
                         >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4 text-red-700" />
                         </Button>
                     </div>
                 ))}
-            </div>
-
-            <div className="space-y-4 pb-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Certifications</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendCertification({ nom: "" })}
-                    >
-                        Ajouter une certification
-                    </Button>
-                </div>
-                {certificationFields.map((field, index) => (
-                    <div key={field.id} className="flex items-center space-x-4">
-                        <div className="flex-grow space-y-2">
-                            <Input
-                                {...register(`certifications.${index}.nom`)}
-                                placeholder="Nom de la certification"
-                            />
-                            {errors.certifications?.[index]?.nom && (
-                                <p className="text-sm text-red-500">
-                                    {errors.certifications[index]?.nom?.message}
-                                </p>
-                            )}
-                        </div>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => removeCertification(index)}
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
-                    </div>
-                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendDiplome({ nom: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter un diplôme
+                </Button>
             </div>
 
             <div className="space-y-4 pb-6">
                 <div className="flex items-center justify-between">
                     <Label className="text-lg font-medium">Compétences</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendCompetence({ nom: "" })}
-                    >
-                        Ajouter une compétence
-                    </Button>
                 </div>
                 {competenceFields.map((field, index) => (
                     <div key={field.id} className="flex items-center space-x-4">
                         <div className="flex-grow space-y-2">
                             <Input
                                 {...register(`competences.${index}.nom`)}
-                                placeholder="Nom de la compétence"
+                                placeholder=""
                             />
                             {errors.competences?.[index]?.nom && (
                                 <p className="text-sm text-red-500">
@@ -415,10 +393,57 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                             size="icon"
                             onClick={() => removeCompetence(index)}
                         >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4 text-red-700" />
                         </Button>
                     </div>
                 ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendCompetence({ nom: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une compétence
+                </Button>
+            </div>
+
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Plus d’informations</Label>
+                </div>
+                {certificationFields.map((field, index) => (
+                    <div key={field.id} className="flex items-center space-x-4">
+                        <div className="flex-grow space-y-2">
+                            <Input
+                                {...register(`certifications.${index}.nom`)}
+                                placeholder=""
+                            />
+                            {errors.certifications?.[index]?.nom && (
+                                <p className="text-sm text-red-500">
+                                    {errors.certifications[index]?.nom?.message}
+                                </p>
+                            )}
+                        </div>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeCertification(index)}
+                        >
+                            <Trash2 className="h-4 w-4 text-red-700" />
+                        </Button>
+                    </div>
+                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendCertification({ nom: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une information
+                </Button>
             </div>
         </form>
     );

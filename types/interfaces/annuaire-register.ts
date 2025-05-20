@@ -45,28 +45,28 @@ export type ZodEgliseData = {
 };
 
 export type ProfessionnelData = {
-  educations: Education[];
-  professions: Profession[];
-  diplomes: {
-    nom: string;
+  educations?: Education[];
+  professions?: Profession[];
+  diplomes?: {
+    nom?: string;
   }[];
-  certifications: {
-    nom: string;
+  certifications?: {
+    nom?: string;
   }[];
-  competences: {
-    nom: string;
+  competences?: {
+    nom?: string;
   }[];
 };
 
 export type Education = {
-  domaine: string;
-  titre: string;
-  specialite: string;
+  domaine?: string;
+  titre?: string;
+  specialite?: string;
 };
 
 export type Profession = {
-  domaine: string;
-  titre: string;
+  statut?: string;
+  titre?: string;
 };
 
 export type ZodEducation = {
@@ -76,7 +76,7 @@ export type ZodEducation = {
 };
 
 export type ZodProfession = {
-  domaine?: Maybe<string>;
+  statut?: Maybe<string>;
   titre?: Maybe<string>;
 };
 
@@ -116,7 +116,7 @@ export const defaultPersonnelData: PersonnelData = {
   langues: [],
 };
 
-export const defaultProfessionnelData = {
+export const defaultProfessionnelData: ProfessionnelData = {
   educations: [
     {
       domaine: "",
@@ -126,7 +126,7 @@ export const defaultProfessionnelData = {
   ],
   professions: [
     {
-      domaine: "",
+      statut: "",
       titre: ""
     },
   ],
@@ -153,7 +153,7 @@ export const defaultEgliseData: EgliseData = {
   departements: [] as string[],
 };
 
-export const defaultRegisterFormData = {
+export const defaultRegisterFormData: RegisterFormData = {
   personnel: defaultPersonnelData,
   eglise: defaultEgliseData,
   professionnel: defaultProfessionnelData,
@@ -194,8 +194,8 @@ export const get_professionnel = (
       titre: d?.titre || "",
       specialite: d?.specialite || "",
     })) || [],
-    professions: pro.professions?.filter(d => d && (d.domaine || d.titre)).map((d) => ({
-      domaine: d?.domaine || "",
+    professions: pro.professions?.filter(d => d && (d.statut || d.titre)).map((d) => ({
+      statut: d?.statut || "",
       titre: d?.titre || ""
     })) || [],
     diplomes: pro.diplomes?.filter(d => d && d.nom).map((d) => ({
