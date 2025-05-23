@@ -50,17 +50,21 @@ interface InfosPersonnellesProps {
 }
 
 export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesProps) {
-    const [openLangues, setOpenLangues] = useState(false);
-    const [selectedLangues, setSelectedLangues] = useState<string[]>(data.langues || []);
-    const [photoPreview, setPhotoPreview] = useState<string | null>(data.photo || null);
-    const [isUploading, setIsUploading] = useState(false);
+    const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+    const [countries, setCountries] = useState<Array<{ name: string }>>([]);
+    const [cities, setCities] = useState<string[]>([]);
+    const [openCountry, setOpenCountry] = useState(false);
+    const [openCity, setOpenCity] = useState(false);
+    const [countrySearch, setCountrySearch] = useState("");
+    const [citySearch, setCitySearch] = useState("");
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-        setValue,
         watch,
+        setValue,
+        getValues,
     } = useForm<PersonnelFormValues>({
         resolver: zodResolver(personnelSchema),
         defaultValues: {
@@ -80,103 +84,138 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
         },
     });
 
+    const selectedCountry = watch("residence.pays");
+
     useEffect(() => {
-        setValue("langues", selectedLangues);
-    }, [selectedLangues, setValue]);
+        const fetchCountries = async () => {
+            try {
+                const response = await fetch("https://countriesnow.space/api/v0.1/countries/positions");
+                const data = await response.json();
+                if (data.data) {
+                    setCountries(data.data);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération des pays:", error);
+            }
+        };
+        fetchCountries();
+    }, []);
 
-    const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    useEffect(() => {
+        const fetchCities = async () => {
+            if (selectedCountry) {
+                try {
+                    const response = await fetch("https://countriesnow.space/api/v0.1/countries/cities", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ country: selectedCountry }),
+                    });
+                    const data = await response.json();
+                    if (data.data) {
+                        setCities(data.data);
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des villes:", error);
+                }
+            }
+        };
+        fetchCities();
+    }, [selectedCountry]);
 
-        try {
-            setIsUploading(true);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPhotoPreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+    const handlePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            try {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setPhotoPreview(reader.result as string);
+                };
+                reader.readAsDataURL(file);
 
-            const downloadURL = await uploadImage(file);
-            setValue("photo", downloadURL);
-            setIsUploading(false);
-            toast.success("Photo téléchargée avec succès");
-        } catch (error) {
-            console.error("Erreur lors du téléchargement de l'image:", error);
-            toast.error("Erreur lors du téléchargement de l'image");
-            setIsUploading(false);
+                const downloadURL = await uploadImage(file);
+                setValue("photo", downloadURL);
+                toast.success("Photo téléchargée avec succès");
+            } catch (error) {
+                console.error("Erreur lors du téléchargement de la photo:", error);
+                toast.error("Erreur lors du téléchargement de la photo");
+            }
         }
     };
 
-    const handleLangueSelect = (langue: string) => {
-        setSelectedLangues((current) => {
-            if (current.includes(langue)) {
-                return current.filter((l) => l !== langue);
-            } else {
-                return [...current, langue];
-            }
-        });
-    };
+    const filteredCountries = countries
+        .filter(country =>
+            country.name.toLowerCase().includes(countrySearch.toLowerCase())
+        )
+        .slice(0, 10);
 
-    const removeLangue = (langue: string) => {
-        setSelectedLangues((current) => current.filter((l) => l !== langue));
-    };
-
-    const onFormSubmit = (data: PersonnelFormValues) => {
-        onSubmit(data as PersonnelData);
-    };
+    const filteredCities = cities
+        .filter(city =>
+            city.toLowerCase().includes(citySearch.toLowerCase())
+        )
+        .slice(0, 10);
 
     return (
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-            <div className="flex flex-col items-center justify-center space-y-4">
-                <div className="relative h-32 w-32 rounded-full overflow-hidden border-2 border-slate-300">
-                    {photoPreview ? (
-                        <Image
-                            src={photoPreview}
-                            alt="Photo de profil"
-                            fill
-                            className="object-cover"
-                        />
-                    ) : (
-                        <div className="h-full w-full bg-slate-200 flex items-center justify-center">
-                            <span className="text-slate-500 text-4xl">?</span>
+        <form id="personnel-form" onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+
+            <div className="space-y-4">
+                <Label htmlFor="photo" className="block text-lg font-medium">Photo de profil</Label>
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="relative group">
+                        <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-blue-100 transition-all duration-300 group-hover:border-blue-300">
+                            <Image
+                                src={photoPreview || "/images/avatar.png"}
+                                alt="Photo de profil"
+                                layout="fill"
+                                objectFit="cover"
+                                className="transition-transform duration-300 group-hover:scale-110"
+                            />
                         </div>
-                    )}
-                    {isUploading && (
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                            <span className="text-white text-sm">Modifier la photo</span>
                         </div>
-                    )}
-                </div>
-                <div>
-                    <Label htmlFor="photo" className="cursor-pointer px-4 py-2 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors">
-                        {photoPreview ? "Changer la photo" : "Ajouter une photo"}
-                    </Label>
-                    <input
-                        id="photo"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handlePhotoChange}
-                        disabled={isUploading}
-                    />
+                    </div>
+                    <div className="w-full max-w-sm">
+                        <label
+                            htmlFor="photo"
+                            className="flex flex-col items-center justify-center w-full h-32 border-2 border-blue-300 border-dashed rounded-lg cursor-pointer bg-blue-50 hover:bg-blue-100 transition-colors duration-300"
+                        >
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg className="w-8 h-8 mb-4 text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                </svg>
+                                <p className="mb-2 text-sm text-blue-500"><span className="font-semibold">Cliquez pour télécharger</span> ou glissez et déposez</p>
+                                <p className="text-xs text-blue-500">PNG, JPG ou GIF</p>
+                            </div>
+                            <Input
+                                id="photo"
+                                type="file"
+                                accept="image/*"
+                                onChange={handlePhotoChange}
+                                className="hidden"
+                            />
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <div className="space-y-2">
                 <Label>Genre<span className="text-red-500">*</span></Label>
                 <RadioGroup
-                    defaultValue={data.genre}
-                    className="flex space-x-4"
-                    {...register("genre")}
                     onValueChange={(value) => setValue("genre", value)}
+                    defaultValue={getValues("genre")}
+                    className="flex space-x-4"
                 >
                     <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="homme" id="homme" />
-                        <Label htmlFor="homme">Homme</Label>
+                        <RadioGroupItem value="Mlle" id="mlle" />
+                        <Label htmlFor="mlle">Mlle</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="femme" id="femme" />
-                        <Label htmlFor="femme">Femme</Label>
+                        <RadioGroupItem value="Mme" id="mme" />
+                        <Label htmlFor="mme">Mme</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Mr" id="mr" />
+                        <Label htmlFor="mr">Mr</Label>
                     </div>
                 </RadioGroup>
                 {errors.genre && (
@@ -184,179 +223,242 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
                 )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                     <Label htmlFor="nom">Nom<span className="text-red-500">*</span></Label>
-                    <Input
-                        id="nom"
-                        placeholder="Votre nom"
-                        {...register("nom")}
-                        className={errors.nom ? "border-red-500" : ""}
-                    />
+                    <Input id="nom" {...register("nom")} placeholder="Votre nom de famille" />
                     {errors.nom && (
                         <p className="text-sm text-red-500">{errors.nom.message}</p>
                     )}
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="prenom">Prénom<span className="text-red-500">*</span></Label>
-                    <Input
-                        id="prenom"
-                        placeholder="Votre prénom"
-                        {...register("prenom")}
-                        className={errors.prenom ? "border-red-500" : ""}
-                    />
+                    <Input id="prenom" {...register("prenom")} placeholder="Votre prénom" />
                     {errors.prenom && (
                         <p className="text-sm text-red-500">{errors.prenom.message}</p>
                     )}
                 </div>
             </div>
 
-            <div className="space-y-2">
-                <Label htmlFor="email">Email<span className="text-red-500">*</span></Label>
-                <Input
-                    id="email"
-                    type="email"
-                    placeholder="votre.email@exemple.com"
-                    {...register("email")}
-                    className={errors.email ? "border-red-500" : ""}
-                />
-                {errors.email && (
-                    <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-                <div className="flex items-center space-x-2 mt-2">
-                    <Checkbox
-                        id="consentement_email"
-                        {...register("consentement_email")}
-                        defaultChecked={data.consentement_email}
-                    />
-                    <Label htmlFor="consentement_email" className="text-sm text-gray-600">
-                        J'accepte de recevoir des emails
-                    </Label>
-                </div>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="gsm">Téléphone mobile<span className="text-red-500">*</span></Label>
-                <Input
-                    id="gsm"
-                    placeholder="+32 123 456 789"
-                    {...register("gsm")}
-                    className={errors.gsm ? "border-red-500" : ""}
-                />
-                {errors.gsm && (
-                    <p className="text-sm text-red-500">{errors.gsm.message}</p>
-                )}
-                <div className="flex items-center space-x-2 mt-2">
-                    <Checkbox
-                        id="consentement_gsm"
-                        {...register("consentement_gsm")}
-                        defaultChecked={data.consentement_gsm}
-                    />
-                    <Label htmlFor="consentement_gsm" className="text-sm text-gray-600">
-                        J'accepte de recevoir des SMS
-                    </Label>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                    <Label htmlFor="pays">Pays<span className="text-red-500">*</span></Label>
-                    <Input
-                        id="pays"
-                        placeholder="Votre pays"
-                        {...register("residence.pays")}
-                        className={errors.residence?.pays ? "border-red-500" : ""}
-                    />
+                    <Label htmlFor="email">Email<span className="text-red-500">*</span></Label>
+                    <Input id="email" type="email" {...register("email")} placeholder="Votre adresse email" />
+                    {errors.email && (
+                        <p className="text-sm text-red-500">{errors.email.message}</p>
+                    )}
+                    <div className="flex items-center space-x-2">
+                        <Checkbox
+                            id="consentement_email"
+                            checked={watch("consentement_email")}
+                            onCheckedChange={(checked) => setValue("consentement_email", checked === true)}
+                        />
+                        <Label htmlFor="consentement_email">Autoriser l'affichage de mon email</Label>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="gsm">Téléphone<span className="text-red-500">*</span></Label>
+                    <Input id="gsm" {...register("gsm")} placeholder="Votre numéro de téléphone" />
+                    {errors.gsm && (
+                        <p className="text-sm text-red-500">{errors.gsm.message}</p>
+                    )}
+                    <div className="flex items-center space-x-2">
+                        <Checkbox
+                            id="consentement_gsm"
+                            checked={watch("consentement_gsm")}
+                            onCheckedChange={(checked) => setValue("consentement_gsm", checked === true)}
+                        />
+                        <Label htmlFor="consentement_gsm">Autoriser l'affichage de mon numéro</Label>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                    <Label>Pays de résidence<span className="text-red-500">*</span></Label>
+                    <Popover open={openCountry} onOpenChange={setOpenCountry}>
+                        <PopoverTrigger asChild>
+                            <button
+                                role="combobox"
+                                aria-expanded={openCountry}
+                                className="w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+                            >
+                                {selectedCountry || "Sélectionnez un pays"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                            <Command>
+                                <CommandInput
+                                    placeholder="Rechercher un pays..."
+                                    onValueChange={setCountrySearch}
+                                />
+                                <CommandEmpty>Aucun pays trouvé</CommandEmpty>
+                                <CommandGroup className="max-h-60 overflow-auto">
+                                    {filteredCountries.map((country) => (
+                                        <CommandItem
+                                            key={country.name}
+                                            value={country.name}
+                                            onSelect={() => {
+                                                setValue("residence.pays", country.name);
+                                                setValue("residence.ville", "");
+                                                setOpenCountry(false);
+                                            }}
+                                        >
+                                            <Check
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    selectedCountry === country.name
+                                                        ? "opacity-100"
+                                                        : "opacity-0"
+                                                )}
+                                            />
+                                            {country.name}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                     {errors.residence?.pays && (
                         <p className="text-sm text-red-500">{errors.residence.pays.message}</p>
                     )}
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="ville">Ville<span className="text-red-500">*</span></Label>
-                    <Input
-                        id="ville"
-                        placeholder="Votre ville"
-                        {...register("residence.ville")}
-                        className={errors.residence?.ville ? "border-red-500" : ""}
-                    />
-                    {errors.residence?.ville && (
-                        <p className="text-sm text-red-500">{errors.residence.ville.message}</p>
-                    )}
-                </div>
+
+                {selectedCountry && (
+                    <div className="space-y-2">
+                        <Label>Ville de résidence<span className="text-red-500">*</span></Label>
+                        <Popover open={openCity} onOpenChange={setOpenCity}>
+                            <PopoverTrigger asChild>
+                                <button
+                                    role="combobox"
+                                    aria-expanded={openCity}
+                                    className="w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+                                >
+                                    {getValues("residence.ville") || "Sélectionnez une ville"}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                                <Command>
+                                    <CommandInput
+                                        placeholder="Rechercher une ville..."
+                                        onValueChange={setCitySearch}
+                                    />
+                                    <CommandEmpty>Aucune ville trouvée</CommandEmpty>
+                                    <CommandGroup className="max-h-60 overflow-auto">
+                                        {filteredCities.map((city) => (
+                                            <CommandItem
+                                                key={city}
+                                                value={city}
+                                                onSelect={() => {
+                                                    setValue("residence.ville", city);
+                                                    setOpenCity(false);
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        getValues("residence.ville") === city
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
+                                                    )}
+                                                />
+                                                {city}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        {errors.residence?.ville && (
+                            <p className="text-sm text-red-500">{errors.residence.ville.message}</p>
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className="space-y-2">
                 <Label>Langues<span className="text-red-500">*</span></Label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                    {selectedLangues.map((langue) => (
-                        <div
-                            key={langue}
-                            className="flex items-center bg-slate-100 rounded-full px-3 py-1"
-                        >
-                            <span className="text-sm">{langue}</span>
+                <div className="relative">
+                    <Popover>
+                        <PopoverTrigger asChild>
                             <button
                                 type="button"
-                                onClick={() => removeLangue(langue)}
-                                className="ml-2 text-slate-500 hover:text-slate-700"
+                                role="combobox"
+                                aria-expanded={true}
+                                className="w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 flex items-center"
                             >
-                                <X className="h-3 w-3" />
+                                <span>
+                                    {watch("langues").length > 0
+                                        ? `${watch("langues").length} langue(s) sélectionnée(s)`
+                                        : "Sélectionnez vos langues"}
+                                </span>
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </button>
-                        </div>
-                    ))}
-                </div>
-                <Popover open={openLangues} onOpenChange={setOpenLangues}>
-                    <PopoverTrigger asChild>
-                        <button
-                            type="button"
-                            className={cn(
-                                "w-full flex items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
-                                errors.langues ? "border-red-500" : ""
-                            )}
-                        >
-                            <span>Sélectionner des langues</span>
-                            <ChevronsUpDown className="h-4 w-4 opacity-50" />
-                        </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0">
-                        <Command>
-                            <CommandInput placeholder="Rechercher une langue..." />
-                            <CommandEmpty>Aucune langue trouvée.</CommandEmpty>
-                            <CommandGroup>
-                                {LANGUES.map((langue) => (
-                                    <CommandItem
-                                        key={langue}
-                                        onSelect={() => handleLangueSelect(langue)}
-                                        className="flex items-center"
-                                    >
-                                        <div
-                                            className={cn(
-                                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border",
-                                                selectedLangues.includes(langue)
-                                                    ? "bg-primary border-primary text-primary-foreground"
-                                                    : "opacity-50 [&_svg]:invisible"
-                                            )}
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                            <Command>
+                                <CommandInput placeholder="Rechercher une langue..." />
+                                <CommandEmpty>Aucune langue trouvée</CommandEmpty>
+                                <CommandGroup>
+                                    {LANGUES.map((langue) => (
+                                        <CommandItem
+                                            key={langue}
+                                            value={langue}
+                                            onSelect={() => {
+                                                const currentLangages = getValues("langues");
+                                                if (currentLangages.includes(langue)) {
+                                                    setValue(
+                                                        "langues",
+                                                        currentLangages.filter((l) => l !== langue)
+                                                    );
+                                                } else {
+                                                    setValue("langues", [...currentLangages, langue]);
+                                                }
+                                            }}
                                         >
-                                            <Check className={cn("h-3 w-3")} />
-                                        </div>
-                                        <span>{langue}</span>
-                                    </CommandItem>
-                                ))}
-                            </CommandGroup>
-                        </Command>
-                    </PopoverContent>
-                </Popover>
+                                            <Check
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    watch("langues").includes(langue)
+                                                        ? "opacity-100"
+                                                        : "opacity-0"
+                                                )}
+                                            />
+                                            {langue}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                        {watch("langues").map((langue) => (
+                            <div
+                                key={langue}
+                                className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-900"
+                            >
+                                {langue}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setValue(
+                                            "langues",
+                                            watch("langues").filter((l) => l !== langue)
+                                        );
+                                    }}
+                                    className="ml-1 rounded-full hover:text-red-500"
+                                >
+                                    <X className="h-3 w-3" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 {errors.langues && (
                     <p className="text-sm text-red-500">{errors.langues.message}</p>
                 )}
-            </div>
-
-            <div className="pt-4">
-                <button
-                    type="submit"
-                    className="w-full bg-slate-700 text-white py-2 px-4 rounded-md hover:bg-slate-600 transition-colors"
-                >
-                    Continuer
-                </button>
             </div>
         </form>
     );

@@ -36,6 +36,73 @@ export interface Profession {
   fonction?: string;
 }
 
+// Import types from annuaire-register for structure reference if needed
+// import {
+//   PersonnelData as FormPersonnelData,
+//   EgliseData as FormEgliseData,
+//   Education as FormEducation,
+// } from "./annuaire-register";
+
+
+export interface UserPersonnelData {
+  nom: string;
+  prenom: string;
+  genre: string; 
+  email: string;
+  consentement_email: boolean;
+  photo?: string | null;
+  gsm: string;
+  consentement_gsm: boolean;
+  residence: {
+    pays: string;
+    ville: string;
+  };
+  langues: string[];
+}
+
+
+export interface UserEgliseData {
+  eglise: string;
+  star: boolean;
+  departements: string[];
+}
+
+
+export interface UserEducationData {
+  domaine: string;
+  titre: string;
+  specialite?: string | null;
+}
+
+
+export interface UserProfessionData {
+  domaine: string;
+  titre: string;
+  fonction?: string | null; 
+}
+
+
+export interface UserProfessionnelData {
+  educations: UserEducationData[];
+  professions: UserProfessionData[];
+  diplomes: Array<{ nom: string }>;
+  certifications: Array<{ nom: string | null }>; 
+  competences: Array<{ nom: string }>;
+}
+
+
+export interface UserRecord {
+  id: RecordId; 
+  personnel: UserPersonnelData;
+  eglise: UserEgliseData;
+  professionnel: UserProfessionnelData;
+}
+
+
+export interface UserDataResponse {
+  data: UserRecord[];
+}
+
 export const getId = (input: any): string => {
   if (!input) return "";
   if (typeof input === "string") return input;

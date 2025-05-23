@@ -9,38 +9,38 @@ import { ProfessionnelData, domaines, user_status } from "@/types/interfaces/ann
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 
 const educationSchema = z.object({
-    titre: z.string().min(1, "Le titre est requis"),
-    domaine: z.string().min(1, "Le domaine est requis"),
-    specialite: z.string().min(0, ""),
+    titre: z.string().optional(),
+    domaine: z.string().optional(),
+    specialite: z.string().optional(),
 });
 
 const professionSchema = z.object({
-    titre: z.string().min(1, "Le titre est requis"),
-    domaine: z.string().min(1, "Le domaine est requis"),
-    fonction: z.string().min(0, ""),
+    titre: z.string().optional(),
+    statut: z.string().optional()
 });
 
 const diplomeSchema = z.object({
-    nom: z.string().min(1, "Le nom du diplôme est requis"),
+    nom: z.string().optional(),
 });
 
 const certificationSchema = z.object({
-    nom: z.string().min(1, "Le nom de la certification est requis"),
+    nom: z.string().optional(),
 });
 
 const competenceSchema = z.object({
-    nom: z.string().min(1, "Le nom de la compétence est requis"),
+    nom: z.string().optional(),
 });
 
 const professionnelSchema = z.object({
-    educations: z.array(educationSchema).min(1, "Au moins une éducation est requise"),
-    professions: z.array(professionSchema).min(1, "Au moins une profession est requise"),
-    diplomes: z.array(diplomeSchema),
-    certifications: z.array(certificationSchema),
-    competences: z.array(competenceSchema).min(1, "Au moins une compétence est requise"),
+    educations: z.array(educationSchema).optional(),
+    professions: z.array(professionSchema).optional(),
+    diplomes: z.array(diplomeSchema).optional(),
+    certifications: z.array(certificationSchema).optional(),
+    competences: z.array(competenceSchema).optional(),
 });
 
 type ProfessionnelFormValues = z.infer<typeof professionnelSchema>;
@@ -53,19 +53,19 @@ interface InfosProfessionnelsProps {
 export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionnelsProps) {
     const {
         register,
-        control,
         handleSubmit,
         formState: { errors },
-        setValue,
+        control,
         watch,
+        setValue,
     } = useForm<ProfessionnelFormValues>({
         resolver: zodResolver(professionnelSchema),
         defaultValues: {
-            educations: data.educations.length > 0 ? data.educations : [{ domaine: "", titre: "", specialite: "" }],
-            professions: data.professions.length > 0 ? data.professions : [{ domaine: "", titre: "", fonction: "" }],
-            diplomes: data.diplomes.length > 0 ? data.diplomes : [{ nom: "" }],
-            certifications: data.certifications.length > 0 ? data.certifications : [{ nom: "" }],
-            competences: data.competences.length > 0 ? data.competences : [{ nom: "" }],
+            educations: data.educations || [{ titre: "", domaine: "", specialite: "" }],
+            professions: data.professions || [{ titre: "", statut: "" }],
+            diplomes: data.diplomes || [],
+            certifications: data.certifications || [],
+            competences: data.competences || [{ nom: "" }],
         },
     });
 
@@ -114,275 +114,336 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
         name: "competences",
     });
 
-    const onFormSubmit = (data: ProfessionnelFormValues) => {
-        onSubmit(data);
-    };
-
     return (
-        <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
-        
-            <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <Label className="text-lg font-medium">Éducation<span className="text-red-500">*</span></Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendEducation({ domaine: "", titre: "", specialite: "" })}
-                    >
-                        Ajouter
-                    </Button>
-                </div>
-                {educationFields.map((field, index) => (
-                    <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                        <button
-                            type="button"
-                            onClick={() => removeEducation(index)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                            disabled={educationFields.length === 1}
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
-                        <div className="space-y-2">
-                            <Label htmlFor={`educations.${index}.domaine`}>Domaine<span className="text-red-500">*</span></Label>
-                            <Select
-                                onValueChange={(value) => setValue(`educations.${index}.domaine`, value)}
-                                defaultValue={field.domaine}
-                            >
-                                <SelectTrigger className={errors.educations?.[index]?.domaine ? "border-red-500" : ""}>
-                                    <SelectValue placeholder="Sélectionner un domaine" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {domaines.map((domaine) => (
-                                        <SelectItem key={domaine} value={domaine}>
-                                            {domaine}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {errors.educations?.[index]?.domaine && (
-                                <p className="text-sm text-red-500">{errors.educations[index]?.domaine?.message}</p>
-                            )}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor={`educations.${index}.titre`}>Titre<span className="text-red-500">*</span></Label>
-                            <Input
-                                id={`educations.${index}.titre`}
-                                placeholder="Titre de l'éducation"
-                                {...register(`educations.${index}.titre`)}
-                                className={errors.educations?.[index]?.titre ? "border-red-500" : ""}
-                            />
-                            {errors.educations?.[index]?.titre && (
-                                <p className="text-sm text-red-500">{errors.educations[index]?.titre?.message}</p>
-                            )}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor={`educations.${index}.specialite`}>Spécialité</Label>
-                            <Input
-                                id={`educations.${index}.specialite`}
-                                placeholder="Spécialité (optionnel)"
-                                {...register(`educations.${index}.specialite`)}
-                            />
-                        </div>
-                    </div>
-                ))}
-                {errors.educations && !Array.isArray(errors.educations) && (
-                    <p className="text-sm text-red-500">{errors.educations.message}</p>
-                )}
-            </div>
+        <form id="professionnel-form" onSubmit={handleSubmit((data) => onSubmit(data))} className="space-y-8">
 
-            <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <Label className="text-lg font-medium">Profession<span className="text-red-500">*</span></Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendProfession({ domaine: "", titre: "", fonction: "" })}
-                    >
-                        Ajouter
-                    </Button>
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Activités professionnelles</Label>
                 </div>
                 {professionFields.map((field, index) => (
-                    <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                        <button
-                            type="button"
-                            onClick={() => removeProfession(index)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                            disabled={professionFields.length === 1}
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
-                        <div className="space-y-2">
-                            <Label htmlFor={`professions.${index}.domaine`}>Domaine<span className="text-red-500">*</span></Label>
-                            <Select
-                                onValueChange={(value) => setValue(`professions.${index}.domaine`, value)}
-                                defaultValue={field.domaine}
+                    <div key={field.id} className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h4>Profession {index + 1}</h4>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeProfession(index)}
                             >
-                                <SelectTrigger className={errors.professions?.[index]?.domaine ? "border-red-500" : ""}>
-                                    <SelectValue placeholder="Sélectionner un domaine" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {domaines.map((domaine) => (
-                                        <SelectItem key={domaine} value={domaine}>
-                                            {domaine}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {errors.professions?.[index]?.domaine && (
-                                <p className="text-sm text-red-500">{errors.professions[index]?.domaine?.message}</p>
-                            )}
+                                <Trash2 className="h-4 w-4 text-red-700" />
+                            </Button>
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor={`professions.${index}.titre`}>Titre<span className="text-red-500">*</span></Label>
-                            <Input
-                                id={`professions.${index}.titre`}
-                                placeholder="Titre de la profession"
-                                {...register(`professions.${index}.titre`)}
-                                className={errors.professions?.[index]?.titre ? "border-red-500" : ""}
-                            />
-                            {errors.professions?.[index]?.titre && (
-                                <p className="text-sm text-red-500">{errors.professions[index]?.titre?.message}</p>
-                            )}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor={`professions.${index}.fonction`}>Fonction</Label>
-                            <Input
-                                id={`professions.${index}.fonction`}
-                                placeholder="Fonction (optionnel)"
-                                {...register(`professions.${index}.fonction`)}
-                            />
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label>Fonction</Label>
+                                <Input
+                                    {...register(`professions.${index}.titre`)}
+                                    placeholder="Développeur web, Juriste, Comptable…
+"
+                                />
+                                {errors.professions?.[index]?.titre && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.professions[index]?.titre?.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Statut</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            className="w-full justify-between"
+                                        >
+                                            {watch(`professions.${index}.statut`) || "Sélectionner un statut"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-full p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Rechercher un statut..." />
+                                            <CommandEmpty>Aucun statut trouvé.</CommandEmpty>
+                                            <CommandGroup>
+                                                {user_status.map((statutItem) => (
+                                                    <CommandItem
+                                                        key={statutItem}
+                                                        value={statutItem}
+                                                        onSelect={() => {
+                                                            setValue(`professions.${index}.statut`, statutItem);
+                                                        }}
+                                                    >
+                                                        <Check
+                                                            className={cn(
+                                                                "mr-2 h-4 w-4",
+                                                                watch(`professions.${index}.statut`) === statutItem
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                        {statutItem}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                                {errors.professions?.[index]?.statut && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.professions[index]?.statut?.message}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}
-                {errors.professions && !Array.isArray(errors.professions) && (
-                    <p className="text-sm text-red-500">{errors.professions.message}</p>
-                )}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendProfession({ titre: "", statut: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une profession
+                </Button>
             </div>
 
-            <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <Label className="text-lg font-medium">Diplômes</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendDiplome({ nom: "" })}
-                    >
-                        Ajouter
-                    </Button>
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Éducation</Label>
+                </div>
+                {educationFields.map((field, index) => (
+                    <div key={field.id} className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h4>Éducation {index + 1}</h4>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeEducation(index)}
+                            >
+                                <Trash2 className="h-4 w-4 text-red-700" />
+                            </Button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="space-y-2">
+                                <Label>École</Label>
+                                <Input
+                                    {...register(`educations.${index}.titre`)}
+                                    placeholder="Ex: Université libre de Bruxelles..."
+                                />
+                                {errors.educations?.[index]?.titre && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.educations[index]?.titre?.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor={`educations.${index}.domaine`}>Domaine</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div className="relative w-full">
+                                            <Input
+                                                {...register(`educations.${index}.domaine`)}
+                                                placeholder="Sélectionner ou saisir un domaine"
+                                                className="w-full pr-10"
+                                                id={`educations.${index}.domaine`}
+                                                autoComplete="off"
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="absolute right-0 top-1/2 transform -translate-y-1/2 h-full px-3 text-muted-foreground hover:text-foreground"
+                                                tabIndex={-1}
+                                            >
+                                                <ChevronsUpDown className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                                        <Command>
+                                            <CommandInput
+                                                placeholder="Rechercher ou saisir un domaine..."
+                                                value={watch(`educations.${index}.domaine`)}
+                                                onValueChange={(search) => setValue(`educations.${index}.domaine`, search, { shouldValidate: true, shouldDirty: true })}
+                                            />
+                                            <CommandEmpty>Aucun domaine trouvé. Vous pouvez saisir le vôtre.</CommandEmpty>
+                                            <CommandGroup>
+                                                {domaines
+                                                    .filter(d => d.toLowerCase().includes((watch(`educations.${index}.domaine`) || '').toLowerCase()))
+                                                    .map((domaineItem) => (
+                                                        <CommandItem
+                                                            key={domaineItem}
+                                                            value={domaineItem}
+                                                            onSelect={(currentValue) => {
+                                                                setValue(`educations.${index}.domaine`, currentValue === watch(`educations.${index}.domaine`) ? "" : currentValue, { shouldValidate: true });
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    watch(`educations.${index}.domaine`) === domaineItem
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                )}
+                                                            />
+                                                            {domaineItem}
+                                                        </CommandItem>
+                                                    ))}
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                                {errors.educations?.[index]?.domaine && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.educations[index]?.domaine?.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Spécialité</Label>
+                                <Input
+                                    {...register(`educations.${index}.specialite`)}
+                                    placeholder="Ex: Développement web, Finance..."
+                                />
+                                {errors.educations?.[index]?.specialite && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.educations[index]?.specialite?.message}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une éducation
+                </Button>
+            </div>
+
+
+
+
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Diplômes & Certifications
+                    </Label>
                 </div>
                 {diplomeFields.map((field, index) => (
-                    <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                        <button
-                            type="button"
-                            onClick={() => removeDiplome(index)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
-                        <div className="space-y-2">
-                            <Label htmlFor={`diplomes.${index}.nom`}>Nom du diplôme</Label>
+                    <div key={field.id} className="flex items-center space-x-4">
+                        <div className="flex-grow space-y-2">
                             <Input
-                                id={`diplomes.${index}.nom`}
-                                placeholder="Nom du diplôme"
                                 {...register(`diplomes.${index}.nom`)}
-                                className={errors.diplomes?.[index]?.nom ? "border-red-500" : ""}
+                                placeholder="Nom du diplôme"
                             />
                             {errors.diplomes?.[index]?.nom && (
-                                <p className="text-sm text-red-500">{errors.diplomes[index]?.nom?.message}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.diplomes[index]?.nom?.message}
+                                </p>
                             )}
                         </div>
-                    </div>
-                ))}
-            </div>
-
-            <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <Label className="text-lg font-medium">Certifications</Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendCertification({ nom: "" })}
-                    >
-                        Ajouter
-                    </Button>
-                </div>
-                {certificationFields.map((field, index) => (
-                    <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                        <button
+                        <Button
                             type="button"
-                            onClick={() => removeCertification(index)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeDiplome(index)}
                         >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
-                        <div className="space-y-2">
-                            <Label htmlFor={`certifications.${index}.nom`}>Nom de la certification</Label>
-                            <Input
-                                id={`certifications.${index}.nom`}
-                                placeholder="Nom de la certification"
-                                {...register(`certifications.${index}.nom`)}
-                                className={errors.certifications?.[index]?.nom ? "border-red-500" : ""}
-                            />
-                            {errors.certifications?.[index]?.nom && (
-                                <p className="text-sm text-red-500">{errors.certifications[index]?.nom?.message}</p>
-                            )}
-                        </div>
+                            <Trash2 className="h-4 w-4 text-red-700" />
+                        </Button>
                     </div>
                 ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendDiplome({ nom: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter un diplôme
+                </Button>
             </div>
 
-            <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <Label className="text-lg font-medium">Compétences<span className="text-red-500">*</span></Label>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => appendCompetence({ nom: "" })}
-                    >
-                        Ajouter
-                    </Button>
+            <div className="space-y-4 pb-6">
+                <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Compétences</Label>
                 </div>
                 {competenceFields.map((field, index) => (
-                    <div key={field.id} className="space-y-4 p-4 border rounded-md relative">
-                        <button
-                            type="button"
-                            onClick={() => removeCompetence(index)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                            disabled={competenceFields.length === 1}
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </button>
-                        <div className="space-y-2">
-                            <Label htmlFor={`competences.${index}.nom`}>Nom de la compétence<span className="text-red-500">*</span></Label>
+                    <div key={field.id} className="flex items-center space-x-4">
+                        <div className="flex-grow space-y-2">
                             <Input
-                                id={`competences.${index}.nom`}
-                                placeholder="Nom de la compétence"
                                 {...register(`competences.${index}.nom`)}
-                                className={errors.competences?.[index]?.nom ? "border-red-500" : ""}
+                                placeholder=""
                             />
                             {errors.competences?.[index]?.nom && (
-                                <p className="text-sm text-red-500">{errors.competences[index]?.nom?.message}</p>
+                                <p className="text-sm text-red-500">
+                                    {errors.competences[index]?.nom?.message}
+                                </p>
                             )}
                         </div>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeCompetence(index)}
+                        >
+                            <Trash2 className="h-4 w-4 text-red-700" />
+                        </Button>
                     </div>
                 ))}
-                {errors.competences && !Array.isArray(errors.competences) && (
-                    <p className="text-sm text-red-500">{errors.competences.message}</p>
-                )}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendCompetence({ nom: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
+                >
+                    Ajouter une compétence
+                </Button>
             </div>
 
-            <div className="pt-4">
-                <button
-                    type="submit"
-                    className="w-full bg-slate-700 text-white py-2 px-4 rounded-md hover:bg-slate-600 transition-colors"
+            <div className="space-y-4 pb-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                    <Label className="text-lg font-medium">Plus d’informations</Label>
+                </div>
+                {certificationFields.map((field, index) => (
+                    <div key={field.id} className="flex items-center space-x-4">
+                        <div className="flex-grow space-y-2">
+                            <Input
+                                {...register(`certifications.${index}.nom`)}
+                                placeholder=""
+                            />
+                            {errors.certifications?.[index]?.nom && (
+                                <p className="text-sm text-red-500">
+                                    {errors.certifications[index]?.nom?.message}
+                                </p>
+                            )}
+                        </div>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeCertification(index)}
+                        >
+                            <Trash2 className="h-4 w-4 text-red-700" />
+                        </Button>
+                    </div>
+                ))}
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendCertification({ nom: "" })}
+                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
-                    Mettre à jour mes informations
-                </button>
+                    Ajouter une information
+                </Button>
             </div>
         </form>
     );

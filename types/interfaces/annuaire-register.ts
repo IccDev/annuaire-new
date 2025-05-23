@@ -127,7 +127,7 @@ export const defaultProfessionnelData: ProfessionnelData = {
   professions: [
     {
       statut: "",
-      titre: ""
+      titre: "",
     },
   ],
   diplomes: [
@@ -189,24 +189,39 @@ export const get_professionnel = (
   pro: ZodProfessionnelData
 ): ProfessionnelData => {
   return {
-    educations: pro.educations?.filter(d => d && (d.domaine || d.titre || d.specialite)).map((d) => ({
-      domaine: d?.domaine || "",
-      titre: d?.titre || "",
-      specialite: d?.specialite || "",
-    })) || [],
-    professions: pro.professions?.filter(d => d && (d.statut || d.titre)).map((d) => ({
-      statut: d?.statut || "",
-      titre: d?.titre || ""
-    })) || [],
-    diplomes: pro.diplomes?.filter(d => d && d.nom).map((d) => ({
-      nom: d?.nom || "",
-    })) || [],
-    certifications: pro.certifications?.filter(d => d && d.nom).map((d) => ({
-      nom: d?.nom || "",
-    })) || [],
-    competences: pro.competences?.filter(d => d && d.nom).map((d) => ({
-      nom: d?.nom || "",
-    })) || [],
+    educations:
+      pro.educations
+        ?.filter((d) => d && (d.domaine || d.titre || d.specialite))
+        .map((d) => ({
+          domaine: d?.domaine || "",
+          titre: d?.titre || "",
+          specialite: d?.specialite || "",
+        })) || [],
+    professions:
+      pro.professions
+        ?.filter((d) => d && (d.statut || d.titre))
+        .map((d) => ({
+          statut: d?.statut || "",
+          titre: d?.titre || "",
+        })) || [],
+    diplomes:
+      pro.diplomes
+        ?.filter((d) => d && d.nom)
+        .map((d) => ({
+          nom: d?.nom || "",
+        })) || [],
+    certifications:
+      pro.certifications
+        ?.filter((d) => d && d.nom)
+        .map((d) => ({
+          nom: d?.nom || "",
+        })) || [],
+    competences:
+      pro.competences
+        ?.filter((d) => d && d.nom)
+        .map((d) => ({
+          nom: d?.nom || "",
+        })) || [],
   };
 };
 

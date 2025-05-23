@@ -174,6 +174,15 @@ export default function HomePage() {
                 </p>
                 <Search />
                 {isSearching && <div className="ml-4">Recherche en cours...</div>}
+                {/* <div className="mt-4 w-full flex justify-center">
+                    <Link
+                        href={`/recherche-intelligente`}
+                        className="w-full sm:w-auto cursor-pointer rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-6 py-3 text-lg font-semibold text-white hover:from-sky-600 hover:to-indigo-700 text-center flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300"
+                    >
+                        <Image src="/images/ai.png" alt="Recherche Intelligente" width={24} height={24} />
+                        {"Recherche Intelligente"}
+                    </Link>
+                </div> */}
                 <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <Link
                         href={`/scanner`}
