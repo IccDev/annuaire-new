@@ -13,8 +13,8 @@ export default function UpdatePage() {
     let {user_id} = useParams();
 
     useEffect(() => {
-
-    }, [loadedData])
+        console.log("userData updated: ", userData);
+    }, [userData])
 
     useEffect(() => {
         const fetchUserById = async () => {
@@ -33,7 +33,6 @@ export default function UpdatePage() {
                 }
         };
         fetchUserById();
-        console.log("userData: ", userData);
     }, [user_id]);
 
     return (
