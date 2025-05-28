@@ -5,14 +5,14 @@ import InfosPersonnelles from "./body/InfosPersonnelles";
 import InfosEglise from "./body/InfosEglise";
 import InfosProfessionnels from "./body/InfosProfessionnels";
 import Footer from "./body/Footer";
-import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
+import { RegisterFormData } from "@/types/interfaces/annuaire-register";
 import type { PersonnelData, EgliseData, ProfessionnelData } from "@/types/interfaces/annuaire-register";
 
 type Step = "personnel" | "eglise" | "professionnel" | "end";
 
-export default function RegisterForm() {
+export default function RegisterForm(props: {defaultRegisterFormData: RegisterFormData, action: "update" | "create"}) {
     const [currentStep, setCurrentStep] = useState<Step>("personnel");
-    const [formData, setFormData] = useState(defaultRegisterFormData);
+    const [formData, setFormData] = useState(props.defaultRegisterFormData);
     const [isAnimating, setIsAnimating] = useState(false);
 
     const handlePersonnelSubmit = (data: PersonnelData) => {
@@ -170,6 +170,7 @@ export default function RegisterForm() {
                     onNext={handleNext}
                     formData={formData}
                     isLastStep={currentStep === 'end'}
+                    action={props.action}
                 />
             </div>
         </div>

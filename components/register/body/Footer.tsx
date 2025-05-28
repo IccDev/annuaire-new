@@ -14,9 +14,10 @@ interface FooterProps {
   onPrevious: (value: Step) => void;
   formData: RegisterFormData;
   isLastStep: boolean;
+  action: "update" | "create";
 }
 
-export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext }: FooterProps) {
+export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext, action }: FooterProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,42 +26,45 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
     setIsSubmitting(true);
 
     try {
-      if (!formData.personnel.email || !formData.personnel.nom || !formData.personnel.prenom) {
-        toast.error("Veuillez compléter toutes les informations personnelles requises");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (!formData.eglise.eglise) {
-        toast.error("Veuillez indiquer le nom de votre église");
-        setIsSubmitting(false);
-        return;
-      }
-
-
-      const response = await create_annuaire_user(formData);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.message?.includes("email")) {
-          toast.error("Cette adresse email est déjà utilisée. Veuillez en utiliser une autre.");
-        } else {
-          toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+        if (!formData.personnel.email || !formData.personnel.nom || !formData.personnel.prenom) {
+            toast.error("Veuillez compléter toutes les informations personnelles requises");
+            setIsSubmitting(false);
+            return;
         }
-        setIsSubmitting(false);
-        return;
-      }
 
-      toast.success("Inscription réussie ! Vous allez être redirigé vers la page d'accueil.");
+        if (!formData.eglise.eglise) {
+            toast.error("Veuillez indiquer le nom de votre église");
+            setIsSubmitting(false);
+            return;
+        }
 
-      setTimeout(() => {
-        router.push("/home");
-      }, 3000);
+        if (action === "create") {
+            const response = await create_annuaire_user(formData);
+            if (!response.ok) {
+                const errorData = await response.json();
+                if (errorData.message?.includes("email")) {
+                toast.error("Cette adresse email est déjà utilisée. Veuillez en utiliser une autre.");
+                } else {
+                toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+                }
+                setIsSubmitting(false);
+                return;
+            }
 
+            toast.success("Inscription réussie ! Vous allez être redirigé vers la page d'accueil.");
+        }
+
+        if (action === "update") {
+            console.log("update data: ", formData);
+        }
+        
+        setTimeout(() => {
+            router.push("/home");
+        }, 3000);
     } catch (error) {
-      console.error("Erreur lors de l'inscription:", error);
-      toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
-      setIsSubmitting(false);
+        console.error("Erreur lors de l'inscription:", error);
+        toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+        setIsSubmitting(false);
     }
   };
 

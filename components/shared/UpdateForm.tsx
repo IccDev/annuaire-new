@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
+import emailjs from "@emailjs/browser";
 
 const Navigate = ({ goBack, goHome }: { goBack: () => void, goHome: () => void }) => {
     return (
@@ -38,29 +39,10 @@ const defaultAnnuaireUserUpdate: AnnuaireUserUpdate = {
     email: ""
 };
 
-// Pour Djedou et Jason : ceci est une fonction temporaire
-// je ne comprends juste pas bien comment Djedou avait implémenté la logique de l'envoi du formulaire de mise à jour
-const sendUpdateEmail = async (email: string, eglise: string) => {
-    try {
-
-        const response = await fetch('/api/send-update-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, eglise })
-        });
-        
-        const data = await response.json();
-        return response.ok && data.success;
-    } catch (error) {
-        console.error("Erreur lors de l'envoi de l'email:", error);
-        return false;
-    }
-};
 
 export default function UserUpdate() {
     const router = useRouter();
     const params = useParams();
-    const eglise = params.eglise as string;
     const user_id = params.user_id as string;
 
     const [showToast, setShowToast] = useState(false);
@@ -69,6 +51,38 @@ export default function UserUpdate() {
     const { control, handleSubmit, formState: { errors } } = useForm<AnnuaireUserUpdate>({
         defaultValues: defaultAnnuaireUserUpdate
     });
+
+
+    const sendUpdateEmail = async (email_to_update: string, user_id: string) => {
+        emailjs
+        .send(
+            `${process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID}`,
+            `${process.env.NEXT_PUBLIC_EMAIL_UPDATE_TEMPLATE_ID}`,
+            {
+            url_formulaire: `${process.env.NEXT_PUBLIC_BASE_URL}/annuaire/update-user/${user_id}`,
+            to_email: email_to_update,
+            object:
+                "Annuaire des professions ICC - Modification de vos informations personnelles",
+            },
+            {
+            publicKey: process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID,
+        })
+        .then(
+            () => {
+            setIsLoading(false);
+                setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                    goHome();
+                }, 3000);
+            },
+            (error: any) => {
+                console.error("Erreur lors de l'envoi de l'email:", error);
+                setIsLoading(false);
+                alert("Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer.");
+            },
+        );
+    };
 
     useEffect(() => {
         if (user_id) {
@@ -90,22 +104,13 @@ export default function UserUpdate() {
 
     const onSubmit = async (data: AnnuaireUserUpdate) => {
         setIsLoading(true);
-
+        /*
+        step 1: get user_id by email
+        step 2: use thate user_id to send email
+        */
         console.log("Données du formulaire envoyées :", data);
-
-        const emailSent = await sendUpdateEmail(data.email, eglise);
-        
-        if (emailSent) {
-            setIsLoading(false);
-            setShowToast(true);
-            setTimeout(() => {
-                setShowToast(false);
-                goHome();
-            }, 3000);
-        } else {
-            setIsLoading(false);
-            alert("Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer.");
-        }
+        const user_id = "12458796354";
+        await sendUpdateEmail(data.email, user_id);
     };
 
     return (

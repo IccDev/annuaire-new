@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { email, eglise } = await request.json();
+    const { email, user_id } = await request.json();
 
     if (!email) {
       return NextResponse.json(
@@ -10,12 +10,8 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
-
-    const encodedEmail = encodeURIComponent(email);
-    
   
-    const updateUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/update/${encodedEmail}`;
+    const updateUrl = `${process.env.NEXT_PUBLIC_APP_URL}/update/${user_id}`;
 
     console.log(`Email de mise à jour envoyé à ${email} avec le lien: ${updateUrl}`);
 
