@@ -65,24 +65,35 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
         watch,
         setValue,
         getValues,
+        reset,
     } = useForm<PersonnelFormValues>({
         resolver: zodResolver(personnelSchema),
-        defaultValues: {
-            photo: data.photo || "",
-            genre: data.genre || "",
-            nom: data.nom || "",
-            prenom: data.prenom || "",
-            email: data.email || "",
-            consentement_email: data.consentement_email || false,
-            gsm: data.gsm || "",
-            consentement_gsm: data.consentement_gsm || false,
-            residence: {
-                pays: data.residence?.pays || "",
-                ville: data.residence?.ville || "",
-            },
-            langues: data.langues || [],
-        },
+        defaultValues: data,
     });
+
+    useEffect(() => {
+        if (data) {
+            const defaultData = {
+                photo: data.photo || "",
+                genre: data.genre || "",
+                nom: data.nom || "",
+                prenom: data.prenom || "",
+                email: data.email || "",
+                consentement_email: data.consentement_email || false,
+                gsm: data.gsm || "",
+                consentement_gsm: data.consentement_gsm || false,
+                residence: {
+                    pays: data.residence?.pays || "",
+                    ville: data.residence?.ville || "",
+                },
+                langues: data.langues || [],
+            };
+            reset(defaultData);
+            if (data.photo) {
+                setPhotoPreview(data.photo);
+            }
+        }
+    }, [data, reset]);
 
     const selectedCountry = watch("residence.pays");
 

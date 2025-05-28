@@ -13,7 +13,6 @@ export interface RecordId {
   id: string | { String: string } | object;
 }
 
-
 export interface Eglise {
   id: RecordId;
   nom: string;
@@ -36,18 +35,16 @@ export interface Profession {
   fonction?: string;
 }
 
-// Import types from annuaire-register for structure reference if needed
 // import {
 //   PersonnelData as FormPersonnelData,
 //   EgliseData as FormEgliseData,
 //   Education as FormEducation,
 // } from "./annuaire-register";
 
-
 export interface UserPersonnelData {
   nom: string;
   prenom: string;
-  genre: string; 
+  genre: string;
   email: string;
   consentement_email: boolean;
   photo?: string | null;
@@ -60,13 +57,11 @@ export interface UserPersonnelData {
   langues: string[];
 }
 
-
 export interface UserEgliseData {
   eglise: string;
   star: boolean;
   departements: string[];
 }
-
 
 export interface UserEducationData {
   domaine: string;
@@ -74,30 +69,26 @@ export interface UserEducationData {
   specialite?: string | null;
 }
 
-
 export interface UserProfessionData {
   domaine: string;
   titre: string;
-  fonction?: string | null; 
+  fonction?: string | null;
 }
-
 
 export interface UserProfessionnelData {
   educations: UserEducationData[];
   professions: UserProfessionData[];
   diplomes: Array<{ nom: string }>;
-  certifications: Array<{ nom: string | null }>; 
+  certifications: Array<{ nom: string | null }>;
   competences: Array<{ nom: string }>;
 }
 
-
 export interface UserRecord {
-  id: RecordId; 
+  id: RecordId;
   personnel: UserPersonnelData;
   eglise: UserEgliseData;
   professionnel: UserProfessionnelData;
 }
-
 
 export interface UserDataResponse {
   data: UserRecord[];

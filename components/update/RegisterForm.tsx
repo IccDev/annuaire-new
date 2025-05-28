@@ -1,20 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InfosPersonnelles from "./body/InfosPersonnelles";
 import InfosEglise from "./body/InfosEglise";
 import InfosProfessionnels from "./body/InfosProfessionnels";
-//import Footer from "./body/Footer";
 import Footer from "./body/Footer";
 import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
-import type { PersonnelData, EgliseData, ProfessionnelData } from "@/types/interfaces/annuaire-register";
+import type { PersonnelData, EgliseData, ProfessionnelData, RegisterFormData } from "@/types/interfaces/annuaire-register";
 
 type Step = "personnel" | "eglise" | "professionnel" | "end";
 
-export default function RegisterForm() {
+interface RegisterFormProps {
+    defaultRegisterFormData: RegisterFormData;
+    action: "update";
+}
+
+export default function RegisterForm(props: RegisterFormProps) {
     const [currentStep, setCurrentStep] = useState<Step>("personnel");
-    const [formData, setFormData] = useState(defaultRegisterFormData);
+    const [formData, setFormData] = useState(props.defaultRegisterFormData);
     const [isAnimating, setIsAnimating] = useState(false);
+
+    useEffect(() => {
+        setFormData(props.defaultRegisterFormData);
+    }, [props.defaultRegisterFormData]);
 
     const handlePersonnelSubmit = (data: PersonnelData) => {
         setIsAnimating(true);
@@ -109,12 +117,12 @@ export default function RegisterForm() {
             <div className="relative bg-slate-600 p-6 text-white">
                 <h2 className="text-2xl font-bold text-center mb-4">
                     {currentStep === "personnel"
-                        ? "Informations personnelles" 
-                        : currentStep === "eglise" 
-                        ? "Informations église"
-                        : currentStep === "professionnel"
-                        ? "Informations professionnelles"
-                        : "Informations professionnelles"}
+                        ? "Informations personnelles"
+                        : currentStep === "eglise"
+                            ? "Informations église"
+                            : currentStep === "professionnel"
+                                ? "Informations professionnelles"
+                                : "Informations professionnelles"}
                 </h2>
                 <div className="flex justify-center space-x-4">
                     <div className="flex items-center space-x-2">
@@ -161,16 +169,17 @@ export default function RegisterForm() {
                         onSubmit={handleProfessionnelSubmit}
                     />
                 ) : (<InfosProfessionnels
-                        data={formData.professionnel}
-                        onSubmit={handleProfessionnelSubmit}
-                    />)}
+                    data={formData.professionnel}
+                    onSubmit={handleProfessionnelSubmit}
+                />)}
 
-                <Footer 
+                <Footer
                     currentStep={currentStep}
                     onPrevious={handlePrevious}
                     onNext={handleNext}
                     formData={formData}
                     isLastStep={currentStep === 'end'}
+                    action={props.action}
                 />
             </div>
         </div>

@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -58,16 +59,23 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
         control,
         watch,
         setValue,
+        reset,
     } = useForm<ProfessionnelFormValues>({
         resolver: zodResolver(professionnelSchema),
-        defaultValues: {
-            educations: data.educations || [{ titre: "", domaine: "", specialite: "" }],
-            professions: data.professions || [{ titre: "", statut: "" }],
-            diplomes: data.diplomes || [],
-            certifications: data.certifications || [],
-            competences: data.competences || [{ nom: "" }],
-        },
     });
+
+    useEffect(() => {
+        if (data) {
+            const defaultData = {
+                educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "" }],
+                professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", statut: "" }],
+                diplomes: data.diplomes && data.diplomes.length > 0 ? data.diplomes : [],
+                certifications: data.certifications && data.certifications.length > 0 ? data.certifications : [],
+                competences: data.competences && data.competences.length > 0 ? data.competences : [{ nom: "" }],
+            };
+            reset(defaultData);
+        }
+    }, [data, reset]);
 
     const {
         fields: educationFields,

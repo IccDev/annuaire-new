@@ -49,15 +49,26 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
         watch,
         setValue,
         getValues,
+        reset, 
     } = useForm<EgliseFormValues>({
         resolver: zodResolver(egliseSchema),
-        defaultValues: {
-            eglise: data.eglise || "",
-            star: data.star || false,
-            departements: data.departements || []
-        },
+        defaultValues: data,
         mode: "onChange",
     });
+
+
+    useEffect(() => {
+        if (data) {
+            const defaultData = {
+                eglise: data.eglise || "",
+                star: data.star || false,
+                departements: data.departements || [],
+            };
+            reset(defaultData);
+            setSelectedDepartements(data.departements || []);
+            setEgliseSearch(data.eglise || "");
+        }
+    }, [data, reset]);
 
     useEffect(() => {
         const fetchEglises = async () => {

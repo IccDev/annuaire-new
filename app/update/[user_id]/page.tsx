@@ -1,6 +1,6 @@
 "use client";
 
-import RegisterForm from "@/components/register/RegisterForm";
+import RegisterForm from "@/components/update/RegisterForm"; // Corrigé le chemin d'importation
 import { useParams } from "next/navigation";
 import { defaultRegisterFormData, RegisterFormData } from "@/types/interfaces/annuaire-register";
 import { useEffect, useState } from "react";

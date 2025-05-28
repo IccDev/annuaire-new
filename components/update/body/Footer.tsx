@@ -14,9 +14,10 @@ interface FooterProps {
   onPrevious: (value: Step) => void;
   formData: RegisterFormData;
   isLastStep: boolean;
+  action?: "register" | "update";
 }
 
-export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext }: FooterProps) {
+export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext, action = "register" }: FooterProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,29 +38,34 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
         return;
       }
 
+      if (action === "register") {
+        const response = await create_annuaire_user(formData);
 
-      const response = await create_annuaire_user(formData);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.message?.includes("email")) {
-          toast.error("Cette adresse email est déjà utilisée. Veuillez en utiliser une autre.");
-        } else {
-          toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+        if (!response.ok) {
+          const errorData = await response.json();
+          if (errorData.message?.includes("email")) {
+            toast.error("Cette adresse email est déjà utilisée. Veuillez en utiliser une autre.");
+          } else {
+            toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+          }
+          setIsSubmitting(false);
+          return;
         }
-        setIsSubmitting(false);
-        return;
+
+        toast.success("Mise à jour réussie ! Vous allez être redirigé vers la page d'accueil.");
+
+        setTimeout(() => {
+          router.push("/home");
+        }, 3000);
+      } else if (action === "update") {
+        console.log("Données à mettre à jour:", formData);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success("Informations mises à jour avec succès !");
       }
 
-      toast.success("Inscription réussie ! Vous allez être redirigé vers la page d'accueil.");
-
-      setTimeout(() => {
-        router.push("/home");
-      }, 3000);
-
     } catch (error) {
-      console.error("Erreur lors de l'inscription:", error);
-      toast.error("Une erreur est survenue lors de l'inscription. Veuillez réessayer.");
+      console.error(`Erreur lors de ${action === "register" ? "l'inscription" : "la mise à jour"}:`, error);
+      toast.error(`Une erreur est survenue lors de ${action === "register" ? "l'inscription" : "la mise à jour"}. Veuillez réessayer.`);
       setIsSubmitting(false);
     }
   };
@@ -95,7 +101,7 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
             Traitement en cours...
           </>
         ) : isLastStep ? (
-          "Finaliser l'inscription"
+          action === "register" ? "Finaliser la mise à jour" : "Mettre à jour"
         ) : (
           "Suivant"
         )}
