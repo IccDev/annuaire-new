@@ -61,7 +61,7 @@ export default function UserUpdate() {
             `${process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID}`,
             `${process.env.NEXT_PUBLIC_EMAIL_UPDATE_TEMPLATE_ID}`,
             {
-            url_formulaire: `${process.env.NEXT_PUBLIC_BASE_URL}/annuaire/update-user/${user_id}`,
+            url_formulaire: `${process.env.NEXT_PUBLIC_BASE_URL}/update/${user_id}`,
             to_email: email_to_update,
             object:
                 "Annuaire des professions ICC - Modification de vos informations personnelles",

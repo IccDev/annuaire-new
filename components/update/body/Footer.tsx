@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { create_annuaire_user } from "@/app/api/annuaire-api";
+import { create_annuaire_user, update_annuaire_user } from "@/app/api/annuaire-api";
 import { RegisterFormData } from "@/types/interfaces/annuaire-register";
 import { toast } from "sonner";
 
@@ -59,7 +59,7 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
           router.push("/home");
         }, 3000);
       } else if (action === "update") {
-        const response = await create_annuaire_user(formData);
+        const response = await update_annuaire_user(formData, user_id);
         if (!response.ok) {
             toast.error("Informations mises à jour avec échec !");
         }
