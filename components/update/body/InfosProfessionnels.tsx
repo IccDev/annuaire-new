@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,6 @@ import { ProfessionnelData, domaines, user_status } from "@/types/interfaces/ann
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 const educationSchema = z.object({
@@ -62,20 +60,14 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
         reset,
     } = useForm<ProfessionnelFormValues>({
         resolver: zodResolver(professionnelSchema),
-    });
-
-    useEffect(() => {
-        if (data) {
-            const defaultData = {
-                educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "" }],
-                professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", statut: "" }],
-                diplomes: data.diplomes && data.diplomes.length > 0 ? data.diplomes : [],
-                certifications: data.certifications && data.certifications.length > 0 ? data.certifications : [],
-                competences: data.competences && data.competences.length > 0 ? data.competences : [{ nom: "" }],
-            };
-            reset(defaultData);
+        defaultValues: {
+            educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "" }],
+            professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", statut: "" }],
+            diplomes: data.diplomes && data.diplomes.length > 0 ? data.diplomes : [],
+            certifications: data.certifications && data.certifications.length > 0 ? data.certifications : [],
+            competences: data.competences && data.competences.length > 0 ? data.competences : [{ nom: "" }],
         }
-    }, [data, reset]);
+    });
 
     const {
         fields: educationFields,

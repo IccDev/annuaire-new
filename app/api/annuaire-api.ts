@@ -121,6 +121,28 @@ const create_annuaire_user = async (payload: any): Promise<Response> => {
   });
 };
 
+const update_annuaire_user = async (payload: any, user_id: string): Promise<Response> => {
+  return await fetch("/api/users/update", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({data: payload, user_id}),
+  });
+};
+
+const get_annuaire_user_by_email = async (email: string): Promise<Response> => {
+  return await fetch("/api/users/user_by_email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({email}),
+  });
+};
+
 export {
   annuaire_url,
   annuaire_ns,
@@ -132,4 +154,6 @@ export {
   get_user_by_id,
   get_user_to_contact,
   create_annuaire_user,
+  update_annuaire_user,
+  get_annuaire_user_by_email
 };

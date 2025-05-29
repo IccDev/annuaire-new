@@ -15,9 +15,10 @@ interface FooterProps {
   formData: RegisterFormData;
   isLastStep: boolean;
   action?: "register" | "update";
+  user_id: string;
 }
 
-export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext, action = "register" }: FooterProps) {
+export default function Footer({ currentStep, onPrevious, formData, isLastStep, onNext, action = "register", user_id }: FooterProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,9 +59,18 @@ export default function Footer({ currentStep, onPrevious, formData, isLastStep, 
           router.push("/home");
         }, 3000);
       } else if (action === "update") {
-        console.log("Données à mettre à jour:", formData);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        toast.success("Informations mises à jour avec succès !");
+        const response = await create_annuaire_user(formData);
+        if (!response.ok) {
+            toast.error("Informations mises à jour avec échec !");
+        }
+        else {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            toast.success("Informations mises à jour avec succès !");
+            setIsSubmitting(false);
+            setTimeout(() => {
+                router.push("/home");
+            }, 3000);
+        }
       }
 
     } catch (error) {

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import emailjs from "@emailjs/browser";
+import { get_annuaire_user_by_email } from "@/app/api/annuaire-api";
+import { getId } from "@/types/interfaces/annuaire";
 
 const Navigate = ({ goBack, goHome }: { goBack: () => void, goHome: () => void }) => {
     return (
@@ -104,13 +106,12 @@ export default function UserUpdate() {
 
     const onSubmit = async (data: AnnuaireUserUpdate) => {
         setIsLoading(true);
-        /*
-        step 1: get user_id by email
-        step 2: use thate user_id to send email
-        */
-        console.log("Données du formulaire envoyées :", data);
-        const user_id = "12458796354";
-        await sendUpdateEmail(data.email, user_id);
+        const user = await get_annuaire_user_by_email(data.email)
+        const userData = await user.json();
+        if (userData) {
+            let user_id = getId(userData.data[0].id.id);
+            await sendUpdateEmail(data.email, user_id);
+        }
     };
 
     return (

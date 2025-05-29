@@ -13,6 +13,7 @@ type Step = "personnel" | "eglise" | "professionnel" | "end";
 interface RegisterFormProps {
     defaultRegisterFormData: RegisterFormData;
     action: "update";
+    user_id: string;
 }
 
 export default function RegisterForm(props: RegisterFormProps) {
@@ -88,22 +89,22 @@ export default function RegisterForm(props: RegisterFormProps) {
 
     const handleProfessionnelSubmit = (data: ProfessionnelData) => {
         const updatedData = {
-            educations: (data.educations || []).filter(edu => edu.domaine || edu.titre || edu.specialite).map(edu => ({
+            educations: (data.educations || props.defaultRegisterFormData.professionnel.educations || []).filter(edu => edu.domaine || edu.titre || edu.specialite).map(edu => ({
                 domaine: edu.domaine || "",
                 titre: edu.titre || "",
                 specialite: edu.specialite || ""
             })),
-            professions: (data.professions || []).filter(prof => prof.statut || prof.titre).map(prof => ({
+            professions: (data.professions || props.defaultRegisterFormData.professionnel.professions || []).filter(prof => prof.statut || prof.titre).map(prof => ({
                 statut: prof.statut || "",
                 titre: prof.titre || ""
             })),
-            diplomes: (data.diplomes || []).filter(dip => dip.nom).map(dip => ({
+            diplomes: (data.diplomes || props.defaultRegisterFormData.professionnel.diplomes || []).filter(dip => dip.nom).map(dip => ({
                 nom: dip.nom
             })),
-            certifications: (data.certifications || []).filter(cert => cert.nom).map(cert => ({
+            certifications: (data.certifications || props.defaultRegisterFormData.professionnel.certifications || []).filter(cert => cert.nom).map(cert => ({
                 nom: cert.nom
             })),
-            competences: (data.competences || []).filter(comp => comp.nom).map(comp => ({
+            competences: (data.competences || props.defaultRegisterFormData.professionnel.competences || []).filter(comp => comp.nom).map(comp => ({
                 nom: comp.nom
             }))
         };
@@ -180,6 +181,7 @@ export default function RegisterForm(props: RegisterFormProps) {
                     formData={formData}
                     isLastStep={currentStep === 'end'}
                     action={props.action}
+                    user_id={props.user_id || ""}
                 />
             </div>
         </div>
