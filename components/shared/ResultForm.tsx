@@ -114,7 +114,7 @@ export default function ResultForm() {
     const onSubmit = (data: SearchFormValues) => {
         setIsLoading(true);
         const cleanedKey = data.key.trim().replace(/\s+/g, " ");
-        router.push(`/${eglise}/annuaire/users/${cleanedKey}/${data.church}`);
+        router.push(`/annuaire/users/${cleanedKey}/${data.church}`);
     };
 
     const handlePageChange = (newPage: number) => {
@@ -143,7 +143,7 @@ export default function ResultForm() {
 
     const routeToDetails = (id: RecordId) => {
         const userId = getId(id.id);
-        router.push(`/${eglise}/annuaire/users/details/${userId}`);
+        router.push(`/annuaire/users/details/${userId}`);
     };
 
 

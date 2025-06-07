@@ -232,14 +232,14 @@ export default function UserProfile({ user_id }: UserProfileProps) {
     }, [user_id]);
 
     const routeToContact = () => {
-        router.push(`/${eglise}/annuaire/users/contact/${user_id}`);
+        router.push(`/annuaire/users/contact/${user_id}`);
     };
 
     const goBack = () => {
         if (window.history.length > 1) {
             window.history.back();
         } else {
-            router.push(`/${eglise}/annuaire/home/`);
+            router.push(`/annuaire/home/`);
         }
     };
 
