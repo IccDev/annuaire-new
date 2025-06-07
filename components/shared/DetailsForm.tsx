@@ -343,7 +343,7 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                 items={[
                                     {
                                         text: userData.professionnel.professions
-                                            .map((profession) => `• ${profession.domaine} (${profession.titre})`)
+                                            .map((profession) => `• ${profession.titre} (${profession.domaine}) `)
                                             .join("\n") || "Non spécifié",
                                     },
                                 ]}

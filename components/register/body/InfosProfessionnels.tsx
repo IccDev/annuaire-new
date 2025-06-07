@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
+
 const educationSchema = z.object({
     titre: z.string().optional(),
     domaine: z.string().optional(),
@@ -302,7 +303,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                     </p>
                                 )}
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label>Spécialité</Label>
                                 <Input
                                     {...register(`educations.${index}.specialite`)}
@@ -313,7 +314,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                         {errors.educations[index]?.specialite?.message}
                                     </p>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))}
@@ -435,7 +436,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                         </Button>
                     </div>
                 ))}
-                <Button
+                {/* <Button
                     type="button"
                     variant="outline"
                     size="sm"
@@ -443,7 +444,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une information
-                </Button>
+                </Button> */}
             </div>
         </form>
     );
