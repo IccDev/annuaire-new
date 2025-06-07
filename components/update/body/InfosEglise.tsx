@@ -49,7 +49,7 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
         watch,
         setValue,
         getValues,
-        reset, 
+        reset,
     } = useForm<EgliseFormValues>({
         resolver: zodResolver(egliseSchema),
         defaultValues: data,
@@ -176,7 +176,8 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
             </div>
 
             <div className="space-y-2">
-                <Label>Je suis STAR (Serviteur Travaillant Activement pour le Royaume)</Label>
+                <Label>Vous êtes STAR
+                </Label>
                 <RadioGroup
                     defaultValue={data.star ? "oui" : "non"}
                     onValueChange={(value) => setValue("star", value === "oui")}

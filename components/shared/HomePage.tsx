@@ -74,6 +74,7 @@ const Search = () => {
             router.push(`/${eglise}/annuaire/users/${cleanedKey}/${data.church}`);
             setIsLoading(false);
         }, 1000);
+        console.log("Recherche effectuée avec les données :", data);
     };
 
     return (

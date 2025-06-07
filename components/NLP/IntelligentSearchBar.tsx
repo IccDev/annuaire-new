@@ -14,8 +14,8 @@ const IntelligentSearchBar = () => {
 
     return (
         <div className="w-full max-w-3xl mx-auto my-10">
-            <form 
-                onSubmit={handleSubmit} 
+            <form
+                onSubmit={handleSubmit}
                 className="relative bg-white/80 backdrop-blur-md rounded-xl shadow-2xl transition-all duration-300 hover:shadow-sky-400/50 focus-within:shadow-sky-500/60 border border-transparent focus-within:border-sky-500"
             >
                 <div className="flex items-center p-2">
@@ -34,7 +34,7 @@ const IntelligentSearchBar = () => {
                 </div>
             </form>
             <p className="mt-3 text-xs text-center text-slate-500">
-                Ex: "Je cherche un électricien pour une urgence à Bruxelles" ou "Quels sont les services de menuiserie disponibles ?"
+                Ex: "Je cherche une personne travaillant dans le secteur de la santé à Bruxelles" ou "Je cherche une personne dans le domaine de l'informatique à Nivelles ou dans les environs".<br />
             </p>
         </div>
     );
