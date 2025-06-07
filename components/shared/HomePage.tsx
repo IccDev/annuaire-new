@@ -71,9 +71,10 @@ const Search = () => {
             return;
         }
         setTimeout(() => {
-            router.push(`/${eglise}/annuaire/users/${cleanedKey}/${data.church}`);
+            router.push(`/annuaire/users/${cleanedKey}/${data.church}`);
             setIsLoading(false);
         }, 1000);
+        console.log("Recherche effectuée avec les données :", data);
     };
 
     return (

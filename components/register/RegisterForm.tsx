@@ -84,8 +84,8 @@ export default function RegisterForm(props: {defaultRegisterFormData: RegisterFo
                 titre: edu.titre || "",
                 specialite: edu.specialite || ""
             })),
-            professions: (data.professions || []).filter(prof => prof.statut || prof.titre).map(prof => ({
-                statut: prof.statut || "",
+            professions: (data.professions || []).filter(prof => prof.domaine || prof.titre).map(prof => ({
+                domaine: prof.domaine || "",
                 titre: prof.titre || ""
             })),
             diplomes: (data.diplomes || []).filter(dip => dip.nom).map(dip => ({

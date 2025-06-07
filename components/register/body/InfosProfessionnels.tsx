@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
+
 const educationSchema = z.object({
     titre: z.string().optional(),
     domaine: z.string().optional(),
@@ -20,7 +21,7 @@ const educationSchema = z.object({
 
 const professionSchema = z.object({
     titre: z.string().optional(),
-    statut: z.string().optional()
+    domaine: z.string().optional()
 });
 
 const diplomeSchema = z.object({
@@ -62,7 +63,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
         resolver: zodResolver(professionnelSchema),
         defaultValues: {
             educations: data.educations || [{ titre: "", domaine: "", specialite: "" }],
-            professions: data.professions || [{ titre: "", statut: "" }],
+            professions: data.professions || [{ titre: "", domaine: "" }],
             diplomes: data.diplomes || [],
             certifications: data.certifications || [],
             competences: data.competences || [{ nom: "" }],
@@ -157,7 +158,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                             role="combobox"
                                             className="w-full justify-between"
                                         >
-                                            {watch(`professions.${index}.statut`) || "Sélectionner un statut"}
+                                            {watch(`professions.${index}.domaine`) || "Sélectionner un statut"}
                                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                     </PopoverTrigger>
@@ -171,13 +172,13 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                                         key={statutItem}
                                                         value={statutItem}
                                                         onSelect={() => {
-                                                            setValue(`professions.${index}.statut`, statutItem);
+                                                            setValue(`professions.${index}.domaine`, statutItem);
                                                         }}
                                                     >
                                                         <Check
                                                             className={cn(
                                                                 "mr-2 h-4 w-4",
-                                                                watch(`professions.${index}.statut`) === statutItem
+                                                                watch(`professions.${index}.domaine`) === statutItem
                                                                     ? "opacity-100"
                                                                     : "opacity-0"
                                                             )}
@@ -189,9 +190,9 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                         </Command>
                                     </PopoverContent>
                                 </Popover>
-                                {errors.professions?.[index]?.statut && (
+                                {errors.professions?.[index]?.domaine && (
                                     <p className="text-sm text-red-500">
-                                        {errors.professions[index]?.statut?.message}
+                                        {errors.professions[index]?.domaine?.message}
                                     </p>
                                 )}
                             </div>
@@ -202,7 +203,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendProfession({ titre: "", statut: "" })}
+                    onClick={() => appendProfession({ titre: "", domaine: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une profession
@@ -302,7 +303,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                     </p>
                                 )}
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label>Spécialité</Label>
                                 <Input
                                     {...register(`educations.${index}.specialite`)}
@@ -313,7 +314,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                         {errors.educations[index]?.specialite?.message}
                                     </p>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 ))}
@@ -435,7 +436,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                         </Button>
                     </div>
                 ))}
-                <Button
+                {/* <Button
                     type="button"
                     variant="outline"
                     size="sm"
@@ -443,7 +444,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une information
-                </Button>
+                </Button> */}
             </div>
         </form>
     );

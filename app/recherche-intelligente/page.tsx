@@ -25,13 +25,6 @@ export default function IntelligentSearchPage() {
     const params = useParams();
     const eglise = params.eglise as string;
 
-    // const goBack = () => {
-    //     if (window.history.length > 1) {
-    //         window.history.back();
-    //     } else {
-    //         router.push(`/${eglise}/annuaire/home/`);
-    //     }
-    // };
 
     const goHome = () => {
         router.push(`/home/`);
