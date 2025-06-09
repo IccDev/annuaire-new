@@ -94,8 +94,8 @@ export default function RegisterForm(props: RegisterFormProps) {
                 titre: edu.titre || "",
                 specialite: edu.specialite || ""
             })),
-            professions: (data.professions || props.defaultRegisterFormData.professionnel.professions || []).filter(prof => prof.statut || prof.titre).map(prof => ({
-                statut: prof.statut || "",
+            professions: (data.professions || props.defaultRegisterFormData.professionnel.professions || []).filter(prof => prof.domaine || prof.titre).map(prof => ({
+                statut: prof.domaine || "",
                 titre: prof.titre || ""
             })),
             diplomes: (data.diplomes || props.defaultRegisterFormData.professionnel.diplomes || []).filter(dip => dip.nom).map(dip => ({

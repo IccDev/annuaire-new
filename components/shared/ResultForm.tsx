@@ -263,7 +263,7 @@ export default function ResultForm() {
                                                     <p className="mb-4 inline-block rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-blue-950">
                                                         {user.professions && user.professions.length > 0
                                                             ? user.professions
-                                                                .map((prof: any) => prof.domaine)
+                                                                .map((prof: any) => prof.titre)
                                                                 .join(", ")
                                                             : "Profession non spécifiée"}
                                                     </p>

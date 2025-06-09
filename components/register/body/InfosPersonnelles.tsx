@@ -89,9 +89,11 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
     useEffect(() => {
         const fetchCountries = async () => {
             try {
-                const response = await fetch("https://countriesnow.space/api/v0.1/countries/positions");
+                const response = await fetch("/api/countries");
                 const data = await response.json();
+                console.log("Réponse de l'API countries:", data);
                 if (data.data) {
+                    console.log("Liste des pays:", data.data); 
                     setCountries(data.data);
                 }
             } catch (error) {
@@ -105,13 +107,16 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
         const fetchCities = async () => {
             if (selectedCountry) {
                 try {
-                    const response = await fetch("https://countriesnow.space/api/v0.1/countries/cities", {
+                    console.log("Récupération des villes pour:", selectedCountry);
+                    const response = await fetch("/api/cities", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ country: selectedCountry }),
                     });
                     const data = await response.json();
+                    console.log("Réponse des villes:", data);
                     if (data.data) {
+                        console.log("Nombre de villes reçues:", data.data.length);
                         setCities(data.data);
                     }
                 } catch (error) {
@@ -148,11 +153,17 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
         )
         .slice(0, 10);
 
+    console.log("Pays filtrés:", filteredCountries); 
+    console.log("Recherche actuelle:", countrySearch);
+
     const filteredCities = cities
         .filter(city =>
             city.toLowerCase().includes(citySearch.toLowerCase())
         )
         .slice(0, 10);
+    
+    console.log("Villes filtrées:", filteredCities);
+    console.log("Recherche ville actuelle:", citySearch); 
 
     return (
         <form id="personnel-form" onSubmit={handleSubmit(onSubmit)} className="space-y-8">
