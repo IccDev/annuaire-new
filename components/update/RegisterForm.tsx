@@ -5,7 +5,7 @@ import InfosPersonnelles from "./body/InfosPersonnelles";
 import InfosEglise from "./body/InfosEglise";
 import InfosProfessionnels from "./body/InfosProfessionnels";
 import Footer from "./body/Footer";
-import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
+// import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
 import type { PersonnelData, EgliseData, ProfessionnelData, RegisterFormData } from "@/types/interfaces/annuaire-register";
 
 type Step = "personnel" | "eglise" | "professionnel" | "end";
