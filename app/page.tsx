@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowRight, Home } from "lucide-react";
+import { ArrowRight, LogIn } from "lucide-react";
 import ButtonWithIcon from "@/components/ui/button-with-icon";
 import IccLogo from "@/public/images/icc.png";
 
 export default function LandingPage() {
   const router = useRouter();
 
-  const onClickHandler = (_: React.MouseEvent, input: string) => {
-    router.push(`/${input.toLowerCase()}`);
+  const handleClick = (e: React.MouseEvent, input: string) => {
+    router.push("/auth/login");
   };
 
   return (
@@ -43,23 +43,7 @@ export default function LandingPage() {
             Trouvez un ou plusieurs professionnels au sein de votre église
             locale et entrez directement en contact avec eux.
           </p>
-          <p className="md:text-lg px-4 md:px-36 xl:px-96 flex items-center">
-            <ArrowRight
-              className="text-yellow-400 mr-2 flex-shrink-0"
-              size={24}
-            />
-            Inscrivez-vous sur la plateforme afin d&apos;être visible de tous.
-          </p>
-        </div>
-        <div className="mt-8 space-y-4">
-          <ButtonWithIcon
-            handleOnClick={onClickHandler}
-            onClickInput="home"
-            className="bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
-          >
-            <Home className="mr-2" size={24} strokeWidth={2.5} />
-            <span className="text-lg font-semibold">Découvrir l'annuaire</span>
-          </ButtonWithIcon>
+
           <div className="flex justify-center mt-4">
             <a
               href="/infos"
@@ -80,6 +64,15 @@ export default function LandingPage() {
               <span>Pourquoi choisir l'annuaire ?</span>
             </a>
           </div>
+
+          <ButtonWithIcon
+            handleOnClick={handleClick}
+            onClickInput="login"
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <LogIn className="mr-2 h-4 w-4" />
+            Connexion à l'annuaire
+          </ButtonWithIcon>
         </div>
       </div>
     </main>
