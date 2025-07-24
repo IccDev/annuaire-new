@@ -28,6 +28,18 @@ model User {
   @@map("user")
 }
 
+model Candidate {
+  id             String    @id @default(uuid())
+  emailCandidate String
+  emailReferent  String
+  codeValidation Boolean @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  endedAt        DateTime 
+
+
+}
+
 model Session {
   id        String   @id @default(uuid())
   expiresAt DateTime
@@ -73,13 +85,13 @@ model Verification {
   @@map("verification")
 }
 
-
-/* model Role {
-  id        String   @id @default(uuid())
-  name      String
-  userId    String
-  user      User[]     @relation("UserRoles")
-
-  @@unique([name])
-  @@map("role")
-} */
+/**
+ * model Role {
+ * id        String   @id @default(uuid())
+ * name      String
+ * userId    String
+ * user      User[]     @relation("UserRoles")
+ * @@unique([name])
+ * @@map("role")
+ * }
+ */
