@@ -14,8 +14,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,7 +31,6 @@ const signupFormSchema = z.object({
 })
 
 
-
 export default function CreateCandidateForm() {
     const form = useForm<z.infer<typeof signupFormSchema>>({
         resolver: zodResolver(signupFormSchema),
@@ -42,9 +39,6 @@ export default function CreateCandidateForm() {
 
         },
     });
-
-    // const router = useRouter();
-    // const user = await getUSer()
 
 
     async function onSubmit(values: z.infer<typeof signupFormSchema>) {
@@ -61,9 +55,6 @@ export default function CreateCandidateForm() {
                     <CardTitle className="text-2xl font-bold text-center text-primary">
                         Parrainer un candidat
                     </CardTitle>
-                    {/* <CardDescription className="text-center text-muted-foreground">
-                        Créez votre compte pour rejoindre la communauté
-                    </CardDescription> */}
                 </CardHeader>
 
                 <Form {...form}>

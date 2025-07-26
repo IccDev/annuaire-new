@@ -5,6 +5,8 @@ import React from "react";
 
 const AuthPage = async () => {
     const user = await getUSer();
+    console.log("user in auth page: ", user);
+    
 
     if (!user) {
         return unauthorized();

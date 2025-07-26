@@ -184,7 +184,7 @@ export default function HomePage() {
                         {"Recherche Intelligente"}
                     </Link>
                 </div> */}
-                <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                {/* <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <Link
                         href={`/scanner`}
                         className="w-full sm:w-auto cursor-pointer rounded-full bg-slate-700 px-4 py-2 text-lg text-white hover:bg-slate-500 text-center order-1 sm:order-none"
@@ -197,7 +197,7 @@ export default function HomePage() {
                     >
                         {"Mettre à jour mes données"}
                     </Link>
-                </div>
+                </div> */}
             </div>
             <div className="mt-8 rounded-lg bg-white p-6 shadow-md">
                 <h2 className="text-2xl mb-6 text-center font-bold text-slate-600">
