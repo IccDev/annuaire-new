@@ -68,7 +68,7 @@ export default function LandingPage() {
           <ButtonWithIcon
             handleOnClick={handleClick}
             onClickInput="login"
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 hover:bg-blue-700 max-w-md mx-auto w-full md:w-auto"
           >
             <LogIn className="mr-2 h-4 w-4" />
             Connexion à l'annuaire

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, User } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -151,6 +151,12 @@ export default function HomePage() {
 
     return (
         <div className="h-lvh bg-slate-200 bg-gradient-to-tr p-2 sm:p-4">
+            <div className="w-full flex justify-end p-2">
+                <Link href="/user" className="flex flex-col items-center text-slate-600 hover:text-slate-800 transition-colors">
+                    <User className="h-8 w-8" />
+                    <span className="text-xs font-semibold">Mon profil</span>
+                </Link>
+            </div>
             <div className="h-1/4 w-full rounded-lg bg-white p-1">
                 <div className="relative h-full w-full overflow-hidden rounded-lg bg-neutral-200">
                     <Image
