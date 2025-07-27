@@ -62,22 +62,30 @@ export type Education = {
   domaine?: string;
   titre?: string;
   specialite?: string;
+  periodeDebut?: string;
+  periodeFin?: string;
 };
 
 export type Profession = {
   domaine?: string;
   titre?: string;
+  periodeDebut?: string;
+  periodeFin?: string;
 };
 
 export type ZodEducation = {
   domaine?: Maybe<string>;
   titre?: Maybe<string>;
   specialite?: Maybe<string>;
+  periodeDebut?: Maybe<string>;
+  periodeFin?: Maybe<string>;
 };
 
 export type ZodProfession = {
   domaine?: Maybe<string>;
   titre?: Maybe<string>;
+  periodeDebut?: Maybe<string>;
+  periodeFin?: Maybe<string>;
 };
 
 export type ZodProfessionnelData = {
@@ -196,6 +204,8 @@ export const get_professionnel = (
           domaine: d?.domaine || "",
           titre: d?.titre || "",
           specialite: d?.specialite || "",
+          periodeDebut: d?.periodeDebut || "",
+          periodeFin: d?.periodeFin || "",
         })) || [],
     professions:
       pro.professions
@@ -203,6 +213,8 @@ export const get_professionnel = (
         .map((d) => ({
           domaine: d?.domaine || "",
           titre: d?.titre || "",
+          periodeDebut: d?.periodeDebut || "",
+          periodeFin: d?.periodeFin || "",
         })) || [],
     diplomes:
       pro.diplomes

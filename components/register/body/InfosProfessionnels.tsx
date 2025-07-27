@@ -15,11 +15,15 @@ const educationSchema = z.object({
     titre: z.string().optional(),
     domaine: z.string().optional(),
     specialite: z.string().optional(),
+    periodeDebut: z.string().optional(),
+    periodeFin: z.string().optional(),
 });
 
 const professionSchema = z.object({
     titre: z.string().optional(),
-    domaine: z.string().optional()
+    domaine: z.string().optional(),
+    periodeDebut: z.string().optional(),
+    periodeFin: z.string().optional(),
 });
 
 const diplomeSchema = z.object({
@@ -133,6 +137,20 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 <Trash2 className="h-4 w-4 text-red-700" />
                             </Button>
                         </div>
+                        <div className="space-y-2">
+                            <Label>Période</Label>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    {...register(`professions.${index}.periodeDebut`)}
+                                    placeholder="mm/yyyy"
+                                />
+                                <span>à</span>
+                                <Input
+                                    {...register(`professions.${index}.periodeFin`)}
+                                    placeholder="mm/yyyy"
+                                />
+                            </div>
+                        </div>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div className="space-y-2">
                                 <Label>Fonction</Label>
@@ -224,6 +242,20 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                             >
                                 <Trash2 className="h-4 w-4 text-red-700" />
                             </Button>
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Période</Label>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    {...register(`educations.${index}.periodeDebut`)}
+                                    placeholder="mm/yyyy"
+                                />
+                                <span>à</span>
+                                <Input
+                                    {...register(`educations.${index}.periodeFin`)}
+                                    placeholder="mm/yyyy"
+                                />
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div className="space-y-2">
