@@ -24,7 +24,6 @@ import { updateCandidate } from "@/actions/candidate";
 
 
 
-
 const signupFormSchema = z.object({
   name: z.string().min(2, {
     message: "Le prénom doit contenir au moins 2 caractères."
@@ -88,14 +87,12 @@ export default function SignupForm({ token, emailCandidate }: Props) {
         },
       }
     );
-
-
   }
-
 
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+    
       <Card className="w-full max-w-md shadow-lg animate-fadeIn">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold text-center text-primary">
