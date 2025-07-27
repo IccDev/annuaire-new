@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +35,7 @@ const signupFormSchema = z.object({
 
 
 export default function CreateCandidateForm() {
+    const router = useRouter();
     const form = useForm<z.infer<typeof signupFormSchema>>({
         resolver: zodResolver(signupFormSchema),
         defaultValues: {
@@ -42,9 +45,21 @@ export default function CreateCandidateForm() {
     });
 
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     async function onSubmit(values: z.infer<typeof signupFormSchema>) {
-        console.log(values);
-        await createCandidate(values.email);
+        setIsSubmitting(true);
+        try {
+            await createCandidate(values.email);
+            toast.success("Parrainage réussi !");
+            setTimeout(() => {
+                router.push("/user");
+                router.refresh();
+            }, 2000);
+        } catch (error) {
+            toast.error("Une erreur est survenue");
+            setIsSubmitting(false);
+        }
     }
 
 
@@ -98,9 +113,19 @@ export default function CreateCandidateForm() {
                         <CardFooter className="flex flex-col space-y-4 pt-8">
                             <Button
                                 type="submit"
-                                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 relative"
+                                disabled={isSubmitting}
                             >
-                                Parrainer
+                                {isSubmitting ? (
+                                    <>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div>
+                                        </div>
+                                        <span className="opacity-0">Parrainer</span>
+                                    </>
+                                ) : (
+                                    "Parrainer"
+                                )}
                             </Button>
                         </CardFooter>
                     </form>

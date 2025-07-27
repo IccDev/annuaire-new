@@ -13,6 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum RoleType {
+  ADMIN
+  USER
+  CANDIDATE
+  REFERENT
+}
+
 model User {
   id            String    @id @default(uuid())
   name          String
@@ -29,15 +36,13 @@ model User {
 }
 
 model Candidate {
-  id             String    @id @default(uuid())
+  id             String   @id @default(uuid())
   emailCandidate String
   emailReferent  String
-  codeValidation Boolean @default(true)
+  codeValidation Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  endedAt        DateTime 
-
-
+  endedAt        DateTime
 }
 
 model Session {

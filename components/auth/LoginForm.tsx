@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -43,26 +44,38 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function onSubmit(values: z.infer<typeof signinFormSchema>) {
-    await signIn.email({
-      email: values.email,
-      password: values.password,
-    },
-      {
-        onSuccess: () => {
-          router.push("/home");
-          router.refresh();
-        },
-        onError: (error) => {
-          toast.error(error?.error?.message);
-        },
-      }
-    )
+    setIsSubmitting(true);
+    try {
+      await signIn.email({
+        email: values.email,
+        password: values.password,
+      },
+        {
+          onSuccess: () => {
+            toast.success("Connexion réussie !");
+            setTimeout(() => {
+              router.push("/home");
+              router.refresh();
+            }, 1000);
+          },
+          onError: (error) => {
+            toast.error(error?.error?.message || "Erreur lors de la connexion");
+            setIsSubmitting(false);
+          },
+        }
+      );
+    } catch (error) {
+      toast.error("Une erreur est survenue");
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -128,7 +141,22 @@ export default function LoginForm() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">Se connecter</Button>
+              <Button 
+                type="submit" 
+                className="w-full bg-primary hover:bg-primary/90 relative" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div>
+                    </div>
+                    <span className="opacity-0">Se connecter</span>
+                  </>
+                ) : (
+                  "Se connecter"
+                )}
+              </Button>
             </CardFooter>
           </form>
         </Form>

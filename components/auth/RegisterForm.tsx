@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -65,28 +66,36 @@ export default function SignupForm({ token, emailCandidate }: Props) {
 
 
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
-    console.log(values);
-
-
-    await signUp.email(
-      {
-        email: emailCandidate,
-        password: values.password,
-        name: values.name,
-      },
-      {
-        onSuccess: async () => {
-          await updateCandidate(token)
-          router.push("/auth/login");
-          router.refresh();
+    setIsSubmitting(true);
+    try {
+      await signUp.email(
+        {
+          email: emailCandidate,
+          password: values.password,
+          name: values.name,
         },
-        onError: (error) => {
-          console.log(error?.error?.message);
-          toast.error(error?.error?.message);
-        },
-      }
-    );
+        {
+          onSuccess: async () => {
+            toast.success("Inscription réussie !");
+            await updateCandidate(token);
+            setTimeout(() => {
+              router.push("/auth/login");
+              router.refresh();
+            }, 2000);
+          },
+          onError: (error) => {
+            toast.error(error?.error?.message || "Erreur lors de l'inscription");
+            setIsSubmitting(false);
+          },
+        }
+      );
+    } catch (error) {
+      toast.error("Une erreur est survenue");
+      setIsSubmitting(false);
+    }
   }
 
 
@@ -177,11 +186,21 @@ export default function SignupForm({ token, emailCandidate }: Props) {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4 pt-6">
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90"
+              <Button 
+                type="submit" 
+                className="w-full bg-primary hover:bg-primary/90 relative" 
+                disabled={isSubmitting}
               >
-                S'inscrire
+                {isSubmitting ? (
+                  <>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div>
+                    </div>
+                    <span className="opacity-0">S'inscrire</span>
+                  </>
+                ) : (
+                  "S'inscrire"
+                )}
               </Button>
             </CardFooter>
           </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession, signOut } from '@/lib/auth-client';
+import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +21,14 @@ const UserProfilePage = () => {
     const { data, isPending, error } = useSession();
     const user = data?.user as User | null;
     const loading = isPending;
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        setTimeout(async () => {
+            await signOut({ query: { callbackUrl: '/' } });
+        }, 2000);
+    };
 
     if (loading) {
         return (
@@ -81,7 +90,23 @@ const UserProfilePage = () => {
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                    <Button variant="destructive" onClick={() => signOut({ query: { callbackUrl: '/' } })}>Se déconnecter</Button>
+                    <Button 
+                        variant="destructive" 
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        className="relative"
+                    >
+                        {isLoggingOut ? (
+                            <>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div>
+                                </div>
+                                <span className="opacity-0">Se déconnecter</span>
+                            </>
+                        ) : (
+                            "Se déconnecter"
+                        )}
+                    </Button>
                 </CardFooter>
             </Card>
         </div>
