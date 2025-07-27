@@ -18,7 +18,7 @@ import InformatiqueImg from "@/public/images/informaticien.jpeg";
 
 const Spinner = () => (
     <div className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
-        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Chargement...</span>
     </div>
 );
 
@@ -181,15 +181,15 @@ export default function HomePage() {
                 </p>
                 <Search />
                 {isSearching && <div className="ml-4">Recherche en cours...</div>}
-                {/* <div className="mt-4 w-full flex justify-center">
+                <div className="mt-4 w-full flex justify-center">
                     <Link
                         href={`/recherche-intelligente`}
-                        className="w-full sm:w-auto cursor-pointer rounded-full bg-gradient-to-r from-sky-500 to-indigo-600 px-6 py-3 text-lg font-semibold text-white hover:from-sky-600 hover:to-indigo-700 text-center flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300"
+                        className="w-full sm:w-auto cursor-pointer rounded-full bg-slate-600 px-6 py-3 text-lg font-semibold text-white hover:from-sky-600 hover:to-indigo-700 text-center flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300"
                     >
                         <Image src="/images/ai.png" alt="Recherche Intelligente" width={24} height={24} />
                         {"Recherche Intelligente"}
                     </Link>
-                </div> */}
+                </div>
                 {/* <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <Link
                         href={`/scanner`}

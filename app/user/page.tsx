@@ -71,9 +71,12 @@ const UserProfilePage = () => {
                             <Link href="/register" passHref>
                                 <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Créer ma fiche Pro</Button>
                             </Link>
-                            <Link href={`/update-user/${user.id}`} passHref>
+                            <Link href={`/update`} passHref>
                                 <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Modifier ma fiche Pro</Button>
                             </Link>
+                            {/* <Link href={`/update-user/${user.id}`} passHref>
+                                <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Modifier ma fiche Pro</Button>
+                            </Link> */}
                             <Link href="/auth/parrainer" passHref>
                                 <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Parrainer</Button>
                             </Link>
