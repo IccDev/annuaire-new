@@ -40,7 +40,6 @@ export default function CreateCandidateForm() {
         resolver: zodResolver(signupFormSchema),
         defaultValues: {
             email: "",
-
         },
     });
 
