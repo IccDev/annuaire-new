@@ -1,116 +1,72 @@
-"use client";
-
-import { useSession, signOut } from '@/lib/auth-client';
-import { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { getSession } from "@/lib/auth-server";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import UserProfileClient from "./UserProfileClient";
 
 interface User {
-    id: string;
-    name: string | null;
-    email: string | null;
-    image?: string | null;
-    emailVerified: boolean | null;
-    createdAt: Date;
+  id: string;
+  name: string | null;
+  email: string | null;
+  image: string | null;
+  emailVerified: boolean | null;
+  createdAt: Date;
 }
 
-const UserProfilePage = () => {
-    const { data, isPending, error } = useSession();
-    const user = data?.user as User | null;
-    const loading = isPending;
-    const [isLoggingOut, setIsLoggingOut] = useState(false);
+export default async function UserProfilePage() {
+  const session = await getSession();
+  const user = session?.user;
 
-    const handleLogout = async () => {
-        setIsLoggingOut(true);
-        setTimeout(async () => {
-            await signOut({ query: { callbackUrl: '/' } });
-        }, 2000);
-    };
+  if (!user) {
+    redirect("/auth/login");
+  }
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen bg-gray-100">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-            </div>
-        );
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+  });
+
+  if (!dbUser) {
+    redirect("/auth/login");
+  }
+
+  const fullUser: User = {
+    id: dbUser.id,
+    name: dbUser.name,
+    email: dbUser.email,
+    image: user.image || null,
+    emailVerified: dbUser.emailVerified,
+    createdAt: dbUser.createdAt
+  };
+
+  // Nous utilisons l'email comme identifiant pour vérifier l'existence du profil
+  const res = await fetch(
+    `http://84.234.16.224:4042/annuaire/query/get_user_email/${fullUser.email}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
     }
+  );
 
-    if (!user) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-                <p className="text-2xl mb-4">Vous n'êtes pas connecté.</p>
-                <Link href="/auth/login">
-                    <Button>Se connecter</Button>
-                </Link>
-            </div>
-        );
-    }
+  const hasProfile = res.ok;
 
-    return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <Card className="w-full max-w-md shadow-lg">
-                <CardHeader className="text-center">
-                    <Avatar className="w-24 h-24 mx-auto mb-4">
-                        <AvatarImage src={user.image || '/images/avatar.png'} alt={user.name || 'User'} />
-                        <AvatarFallback>{user.name ? user.name.charAt(0).toUpperCase() : 'U'}</AvatarFallback>
-                    </Avatar>
-                    <CardTitle className="text-2xl">{user.name}</CardTitle>
-                    <CardDescription>{user.email}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Membre depuis le:</span>
-                        <span className="font-semibold">{new Date(user.createdAt).toLocaleDateString('fr-FR')}</span>
-                    </div>
-                    {/* <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Email vérifié:</span>
-                        <span className={`font-semibold ${user.emailVerified ? 'text-green-500' : 'text-red-500'}`}>
-                            {user.emailVerified ? 'Oui' : 'Non'}
-                        </span>
-                    </div> */}
-                    <div className="flex flex-col gap-8 pt-8">
-                        <Link href="/home" className="flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200">
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Retour à l'accueil
-                        </Link>
-                        <div className="flex flex-col gap-6">
-                            <Link href="/register" passHref>
-                                <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Créer ma fiche professionel</Button>
-                            </Link>
-                            <Link href={`/update`} passHref>
-                                <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Modifier ma fiche professionnel</Button>
-                            </Link>
-                            <Link href="/auth/parrainer" passHref>
-                                <Button className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">Parrainer</Button>
-                            </Link>
-                        </div>
-                    </div>
-                </CardContent>
-                <CardFooter className="flex justify-center">
-                    <Button 
-                        variant="destructive" 
-                        onClick={handleLogout}
-                        disabled={isLoggingOut}
-                        className="relative"
-                    >
-                        {isLoggingOut ? (
-                            <>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin"></div>
-                                </div>
-                                <span className="opacity-0">Se déconnecter</span>
-                            </>
-                        ) : (
-                            "Se déconnecter"
-                        )}
-                    </Button>
-                </CardFooter>
-            </Card>
-        </div>
-    );
-};
+  let isReferent = null;
+  if (fullUser.email) {
+    isReferent = await prisma.candidate.findFirst({
+      where: {
+        emailReferent: fullUser.email,
+      },
+    });
+  }
 
-export default UserProfilePage;
+  return (
+    <UserProfileClient
+      user={fullUser}
+      hasProfile={hasProfile}
+      isReferent={!!isReferent}
+    />
+  );
+}
+
+

@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
+import { checkProfessionalProfile } from "@/actions/user";
 import { toast } from "sonner";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
@@ -59,8 +60,9 @@ export default function LoginForm() {
         password: values.password,
       },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             toast.success("Connexion réussie !");
+            await checkProfessionalProfile(values.email);
             setTimeout(() => {
               router.push("/home");
               router.refresh();

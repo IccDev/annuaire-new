@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
+import { checkProfessionalProfile } from "@/actions/user";
 import { useParams, useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
@@ -80,6 +81,7 @@ export default function SignupForm({ token, emailCandidate }: Props) {
         {
           onSuccess: async () => {
             toast.success("Inscription réussie !");
+            await checkProfessionalProfile(emailCandidate);
             await updateCandidate(token);
             setTimeout(() => {
               router.push("/auth/login");
