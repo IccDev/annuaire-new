@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { get_user_to_contact } from "@/app/api/annuaire-api";
 import emailjs from "@emailjs/browser";
+import { ArrowLeft, Home } from 'lucide-react';
 
 const Navigate = ({ goBack, goHome }: { goBack: () => void, goHome: () => void }) => {
     return (
@@ -151,9 +152,24 @@ export default function ContactPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
-            <header className="sticky top-0 z-10 bg-white/80 p-4 backdrop-blur-sm">
+            {/* <header className="sticky top-0 z-10 bg-white/80 p-4 backdrop-blur-sm">
                 <div className="mx-auto flex max-w-7xl justify-end">
                     <Navigate goBack={goBack} goHome={goHome} />
+                </div>
+            </header> */}
+            <header className="bg-white shadow-sm sticky top-0 z-10">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center py-4">
+                        <button onClick={() => router.back()} className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                            <ArrowLeft className="w-5 h-5 mr-2" />
+                            Retour
+                        </button>
+
+                        <button onClick={() => router.push('/home')} className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                            <Home className="w-5 h-5 mr-2" />
+                            Accueil
+                        </button>
+                    </div>
                 </div>
             </header>
             <main className="mx-auto max-w-7xl px-4 pb-8">

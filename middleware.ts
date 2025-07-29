@@ -1,14 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 
+const protectedRoutes = [
+  "/home",
+  "/register",
+  "/parrainer",
+  "/user",
+  "/update",
+  "/recherche-intelligente",
+  "/update-user/:path*",
+  "/auth/parrainer",
+  "/scanner",
+  "/admin",
+  "/referent/dashboard",
+];
+const publicRoutes = ["/", "/auth/login", "/auth/register"];
+
 export async function middleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
+  const path = request.nextUrl.pathname;
 
-  // THIS IS NOT SECURE!
-  // This is the recommended approach to optimistically redirect users
-  // We recommend handling auth checks in each page/route
-  if (!sessionCookie) {
-    return NextResponse.redirect(new URL("/", request.url));
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    path.startsWith(route.replace(":path*", ""))
+  );
+  const isPublicRoute = publicRoutes.includes(path);
+
+  if (sessionCookie && isPublicRoute) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
+  if (!sessionCookie && isProtectedRoute) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
   return NextResponse.next();
@@ -16,16 +38,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/home",
-    "/register",
-    "/parrainer",
-    "/auth/register",
-    "/user",
-    "/update",
-    "/recherche-intelligente",
-    "/update-user/:path*",
-    "/auth/parrainer",
-    "/scanner",
-    "/admin",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

@@ -1,27 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Candidate } from '@/app/generated/prisma/client';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Home } from 'lucide-react';
 
-const Navigate = ({ goBack, goHome }: { goBack: () => void, goHome: () => void }) => {
-  return (
-    <div className="flex justify-between">
-      <button onClick={goBack} className="flex items-center text-gray-600 hover:text-gray-900">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L4.414 9H17a1 1 0 110 2H4.414l5.293 5.293a1 1 0 010 1.414z" clipRule="evenodd" />
-        </svg>
-        Retour
-      </button>
-      <button onClick={goHome} className="flex items-center text-gray-600 hover:text-gray-900">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-        </svg>
-        Accueil
-      </button>
-    </div>
-  )
-}
+
+
 
 interface ReferentDashboardClientProps {
   candidates: Candidate[];
@@ -30,41 +15,45 @@ interface ReferentDashboardClientProps {
 const ReferentDashboardClient = ({ candidates }: ReferentDashboardClientProps) => {
   const router = useRouter();
 
-  const goHome = () => {
-    router.push("/home");
-  }
-
-  const goBack = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push(`/home/`);
-    }
-  }
-
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <header className="sticky top-0 z-10 bg-white/80 p-4 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl justify-end">
-          <Navigate goBack={goBack} goHome={goHome} />
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <button onClick={() => router.back()} className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Retour
+            </button>
+
+            <button onClick={() => router.push('/home')} className="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              <Home className="w-5 h-5 mr-2" />
+              Accueil
+            </button>
+          </div>
         </div>
       </header>
 
-      <h1 className="text-3xl font-bold mb-8">Tableau de bord référent</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {candidates.map((candidate) => (
-          <Card key={candidate.id}>
-            <CardHeader>
-              <CardTitle>Candidat</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p><strong>Email du candidat:</strong> {candidate.emailCandidate}</p>
-              <p><strong>Code validé:</strong> {candidate.codeValidation ? 'Oui' : 'Non'}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+        <h1 className="text-xl font-semibold text-gray-800">Tableau de Bord Référent</h1>
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email du Candidat</TableHead>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code Validé</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="bg-white divide-y divide-gray-200">
+              {candidates.map((candidate) => (
+                <TableRow key={candidate.id} className="hover:bg-gray-50">
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{candidate.emailCandidate}</TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{candidate.codeValidation ? 'Oui' : 'Non'}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </main>
     </div>
   );
 };

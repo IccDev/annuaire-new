@@ -35,12 +35,6 @@ export interface Profession {
   fonction?: string;
 }
 
-// import {
-//   PersonnelData as FormPersonnelData,
-//   EgliseData as FormEgliseData,
-//   Education as FormEducation,
-// } from "./annuaire-register";
-
 export interface UserPersonnelData {
   nom: string;
   prenom: string;

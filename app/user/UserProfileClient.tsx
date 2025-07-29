@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+
 interface User {
     id: string;
     name: string | null;
@@ -27,21 +29,9 @@ const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientPr
 
     const handleLogout = async () => {
         setIsLoggingOut(true);
-        setTimeout(async () => {
-            await signOut({ query: { callbackUrl: '/' } });
-        }, 2000);
+        await signOut({ query: { callbackUrl: '/' } });
     };
 
-    if (!user) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-                <p className="text-2xl mb-4">Utilisateur non trouvé.</p>
-                <Link href="/auth/login">
-                    <Button>Se connecter</Button>
-                </Link>
-            </div>
-        );
-    }
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -80,13 +70,13 @@ const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientPr
                             )}
                             {isReferent && (
                                 <Link href="/referent/dashboard" passHref>
-                                    <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <button className="w-full border border-slate-700 text-slate-700 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                                         Accéder au tableau de bord référent
-                                    </Button>
+                                    </button>
                                 </Link>
                             )}
                             <Link href="/auth/parrainer" passHref>
-                                <button className="w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-xl hover:bg-blue-50 transition-all duration-200">
+                                <button className="w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                                     parrainer
                                 </button>
                             </Link>
