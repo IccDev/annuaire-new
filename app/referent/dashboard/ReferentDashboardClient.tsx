@@ -37,7 +37,7 @@ const ReferentDashboardClient = ({ candidates }: ReferentDashboardClientProps) =
             <TableHeader className="bg-gray-50">
               <TableRow>
                 <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email du Candidat</TableHead>
-                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code Validé</TableHead>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">LIEN VALIDE</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="bg-white divide-y divide-gray-200">
