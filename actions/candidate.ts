@@ -20,7 +20,7 @@ export async function createCandidate(emailCandidate: string) {
   });
 
   revalidatePath(`/auth/register/${result.id}`);
-  redirect(`/auth/register/${result.id}`);
+  return result;
 }
 
 export async function getCandidateByToken(token: string) {

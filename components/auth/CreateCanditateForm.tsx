@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { createCandidate } from "@/actions/candidate";
 import Link from "next/link";
 import { ArrowLeft, Home } from 'lucide-react';
+import emailjs from "@emailjs/browser";
 
 
 
@@ -49,14 +50,30 @@ export default function CreateCandidateForm() {
     async function onSubmit(values: z.infer<typeof signupFormSchema>) {
         setIsSubmitting(true);
         try {
-            await createCandidate(values.email);
-            toast.success("Parrainage réussi !");
+            const candidate = await createCandidate(values.email);
+            const registrationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/register/${candidate.id}`;
+
+            await emailjs.send(
+                `${process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID}`,
+                `${process.env.NEXT_PUBLIC_EMAIL_INVITATION_TEMPLATE_ID}`,
+                {
+                    to_email: values.email,
+                    url_formulaire: registrationLink,
+                    object: "Invitation à vous inscrire",
+                },
+                {
+                    publicKey: process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID,
+                }
+            );
+
+            toast.success("L'email de parrainage a été envoyé avec succès !");
             setTimeout(() => {
                 router.push("/user");
                 router.refresh();
             }, 2000);
         } catch (error) {
-            toast.error("Une erreur est survenue");
+            console.error('EMAILJS ERROR:', error);
+            toast.error("Une erreur est survenue lors de l'envoi de l'invitation.");
             setIsSubmitting(false);
         }
     }
