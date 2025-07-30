@@ -28,8 +28,14 @@ const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientPr
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const handleLogout = async () => {
-        setIsLoggingOut(true);
-        await signOut({ query: { callbackUrl: '/' } });
+        try {
+            setIsLoggingOut(true);
+            await signOut();
+            window.location.href = '/auth/login';
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion:', error);
+            setIsLoggingOut(false);
+        }
     };
 
 
@@ -62,7 +68,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientPr
                                     </Button>
                                 </Link>
                             ) : (
-                                <Link href="/register" passHref>
+                                <Link href={user.email ? `/register?email=${encodeURIComponent(user.email)}` : "/register"} passHref>
                                     <Button className="w-full bg-slate-700 hover:bg-slate-500 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                                         Créer ma fiche professionnelle
                                     </Button>

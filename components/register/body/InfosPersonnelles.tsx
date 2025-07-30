@@ -47,9 +47,11 @@ type PersonnelFormValues = z.infer<typeof personnelSchema>;
 interface InfosPersonnellesProps {
     data: PersonnelData;
     onSubmit: (data: PersonnelData) => void;
+    userEmail?: string;
 }
 
-export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesProps) {
+export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPersonnellesProps) {
+    console.log("userEmail in InfosPersonnelles:", userEmail);
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [countries, setCountries] = useState<Array<{ name: string }>>([]);
     const [cities, setCities] = useState<string[]>([]);
@@ -72,7 +74,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
             genre: data.genre || "",
             nom: data.nom || "",
             prenom: data.prenom || "",
-            email: data.email || "",
+            email: userEmail || data.email || "",
             consentement_email: data.consentement_email || false,
             gsm: data.gsm || "",
             consentement_gsm: data.consentement_gsm || false,
@@ -254,7 +256,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                     <Label htmlFor="email">Email<span className="text-red-500">*</span></Label>
-                    <Input id="email" type="email" {...register("email")} placeholder="Votre adresse email" />
+                    <Input id="email" type="email" {...register("email")} placeholder="Votre adresse email" readOnly={!!userEmail} disabled />
                     {errors.email && (
                         <p className="text-sm text-red-500">{errors.email.message}</p>
                     )}

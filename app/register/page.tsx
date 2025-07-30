@@ -1,8 +1,6 @@
-"use client";
-
-import RegisterForm from "@/components/register/RegisterForm";
 import Header from "@/components/register/header/Header";
-import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
+import RegisterPageClient from "@/components/register/RegisterPageClient";
+import { Suspense } from 'react';
 
 export default function RegisterPage() {
     return (
@@ -10,7 +8,9 @@ export default function RegisterPage() {
             <Header />
             <main className="container mx-auto px-4 py-12">
                 <div className="max-w-4xl mx-auto">
-                    <RegisterForm defaultRegisterFormData={defaultRegisterFormData} action="create" />
+                    <Suspense fallback={<div>Chargement...</div>}>
+                        <RegisterPageClient />
+                    </Suspense>
                 </div>
             </main>
         </div>

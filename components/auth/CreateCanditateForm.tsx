@@ -18,14 +18,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { createCandidate } from "@/actions/candidate";
 import Link from "next/link";
 import { ArrowLeft, Home } from 'lucide-react';
 import emailjs from "@emailjs/browser";
-
-
-
 
 const signupFormSchema = z.object({
     email: z.string().email({
@@ -33,7 +29,6 @@ const signupFormSchema = z.object({
     }),
 
 })
-
 
 export default function CreateCandidateForm() {
     const router = useRouter();
