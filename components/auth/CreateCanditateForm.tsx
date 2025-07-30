@@ -21,7 +21,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { createCandidate } from "@/actions/candidate";
 import Link from "next/link";
 import { ArrowLeft, Home } from 'lucide-react';
-import emailjs from "@emailjs/browser";
+
 
 const signupFormSchema = z.object({
     email: z.string().email({
@@ -48,18 +48,22 @@ export default function CreateCandidateForm() {
             const candidate = await createCandidate(values.email);
             const registrationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/register/${candidate.id}`;
 
-            await emailjs.send(
-                `${process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID}`,
-                `${process.env.NEXT_PUBLIC_EMAIL_INVITATION_TEMPLATE_ID}`,
-                {
+            const response = await fetch('/api/send-invitation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     to_email: values.email,
                     url_formulaire: registrationLink,
                     object: "Invitation à vous inscrire",
-                },
-                {
-                    publicKey: process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID,
-                }
-            );
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to send email');
+            }
 
             toast.success("L'email de parrainage a été envoyé avec succès !");
             setTimeout(() => {
@@ -67,7 +71,7 @@ export default function CreateCandidateForm() {
                 router.refresh();
             }, 2000);
         } catch (error) {
-            console.error('EMAILJS ERROR:', error);
+            console.error('SENDING EMAIL ERROR:', error);
             toast.error("Une erreur est survenue lors de l'envoi de l'invitation.");
             setIsSubmitting(false);
         }

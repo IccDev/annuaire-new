@@ -1,7 +1,6 @@
 import { getSession } from '@/lib/auth-server';
 import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
-// import ReferentDashboardClient from './ReferentDashboardClient';
 import ReferentDashboardClient from './ReferentDashboardClient';
 
 export default async function ReferentDashboardPage() {

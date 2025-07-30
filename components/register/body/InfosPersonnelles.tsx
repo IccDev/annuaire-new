@@ -51,7 +51,6 @@ interface InfosPersonnellesProps {
 }
 
 export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPersonnellesProps) {
-    console.log("userEmail in InfosPersonnelles:", userEmail);
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [countries, setCountries] = useState<Array<{ name: string }>>([]);
     const [cities, setCities] = useState<string[]>([]);

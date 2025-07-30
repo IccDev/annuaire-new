@@ -5,9 +5,6 @@ import { Candidate } from '@/app/generated/prisma/client';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Home } from 'lucide-react';
 
-
-
-
 interface ReferentDashboardClientProps {
   candidates: Candidate[];
 }
@@ -34,7 +31,7 @@ const ReferentDashboardClient = ({ candidates }: ReferentDashboardClientProps) =
       </header>
 
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
-        <h1 className="text-xl font-semibold text-gray-800">Tableau de Bord Référent</h1>
+        <h1 className="text-xl font-semibold text-gray-800">Tableau de bord référent</h1>
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <Table>
             <TableHeader className="bg-gray-50">

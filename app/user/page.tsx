@@ -37,7 +37,6 @@ export default async function UserProfilePage() {
     createdAt: dbUser.createdAt
   };
 
-  // Nous utilisons l'email comme identifiant pour vérifier l'existence du profil
   const res = await fetch(
     `http://84.234.16.224:4042/annuaire/query/get_user_email/${fullUser.email}`,
     {

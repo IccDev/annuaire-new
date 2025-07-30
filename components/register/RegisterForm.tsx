@@ -11,7 +11,6 @@ import type { PersonnelData, EgliseData, ProfessionnelData } from "@/types/inter
 type Step = "personnel" | "eglise" | "professionnel" | "end";
 
 export default function RegisterForm(props: {defaultRegisterFormData: RegisterFormData, action: "update" | "create", userEmail?: string}) {
-    console.log("userEmail in RegisterForm:", props.userEmail);
     const [currentStep, setCurrentStep] = useState<Step>("personnel");
     const [formData, setFormData] = useState(props.defaultRegisterFormData);
     const [isAnimating, setIsAnimating] = useState(false);
