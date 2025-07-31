@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -9,7 +9,10 @@ export async function POST(req: Request) {
     const { to_email, url_formulaire, object } = body;
 
     if (!to_email || !url_formulaire || !object) {
-        return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const { data, error } = await resend.emails.send({
@@ -22,7 +25,7 @@ export async function POST(req: Request) {
           <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Invitation à l'Annuaire ICC</title>
+            <title>Invitation sur l'Annuaire des professions</title>
             <style>
               body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
               .container { background-color: #f9fafb; border-radius: 8px; padding: 24px; }
@@ -32,9 +35,9 @@ export async function POST(req: Request) {
           </head>
           <body>
             <div class="container">
-              <h2>Bienvenue à l'Annuaire des Professions de l'Eglise</h2>
+              <h2>Bienvenue sur l'Annuaire des Professions de l'Église.</h2>
               <p>Bonjour,</p>
-              <p>Vous avez été invité(e) à rejoindre l'annuaire des professions de l'église. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
+              <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux professions de l'Église. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
               <a href="${url_formulaire}" class="button">Créer mon profil</a>
               <div class="footer">
                 <p>Cordialement,<br>L'équipe ICC DSI</p>
@@ -42,7 +45,7 @@ export async function POST(req: Request) {
             </div>
           </body>
         </html>
-      `
+      `,
     });
 
     if (error) {
@@ -52,8 +55,11 @@ export async function POST(req: Request) {
     return NextResponse.json(data);
   } catch (error) {
     if (error instanceof Error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { error: "An unknown error occurred" },
+      { status: 500 }
+    );
   }
 }
