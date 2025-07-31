@@ -69,7 +69,8 @@ export default function LoginForm() {
             }, 1000);
           },
           onError: (error) => {
-            toast.error(error?.error?.message || "Erreur lors de la connexion");
+            toast.error("Email ou mot de passe incorrect");
+            console.log(error?.error?.message)
             setIsSubmitting(false);
           },
         }

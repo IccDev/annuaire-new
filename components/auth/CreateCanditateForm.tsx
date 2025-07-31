@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { createCandidate } from "@/actions/candidate";
 import Link from "next/link";
-import { ArrowLeft, Home } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 
 const signupFormSchema = z.object({
