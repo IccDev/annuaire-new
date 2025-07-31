@@ -81,10 +81,14 @@ interface LocalRegisterFormDataResult {
         educations: Array<{
             domaine: string | undefined;
             titre: string | undefined;
+            periodeDebut: string | undefined;
+            periodeFin: string | undefined;
         }>;
         professions: Array<{
             domaine: string | undefined;
             titre: string | undefined;
+            periodeDebut: string | undefined;
+            periodeFin: string | undefined;
         }>;
         diplomes: Array<{
             nom: string;
@@ -158,10 +162,14 @@ const fetchUserData = async (id: string): Promise<LocalRegisterFormDataResult | 
                     educations: apiData.professionnel.educations.map(edu => ({
                         domaine: edu.domaine || "",
                         titre: edu.titre || "",
+                        periodeDebut: edu.periodeDebut || "",
+                        periodeFin: edu.periodeFin || ""
                     })),
                     professions: apiData.professionnel.professions.map(prof => ({
                         domaine: prof.domaine || "",
                         titre: prof.titre || "",
+                        periodeDebut: prof.periodeDebut || "",
+                        periodeFin: prof.periodeFin || ""
                     })),
                     diplomes: apiData.professionnel.diplomes.map(dip => ({
                         nom: dip.nom || "",
@@ -333,7 +341,12 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                 items={[
                                     {
                                         text: userData.professionnel.educations
-                                            .map((education) => `• ${education.domaine} (${education.titre})`)
+                                            .map((education) => {
+                                                const periode = education.periodeDebut || education.periodeFin
+                                                    ? `(${education.periodeDebut || ''} à ${education.periodeFin || ''})`
+                                                    : '';
+                                                return `• ${education.domaine} (${education.titre}) ${periode}`;
+                                            })
                                             .join("\n") || "Non spécifié",
                                     },
                                 ]}
@@ -343,7 +356,12 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                 items={[
                                     {
                                         text: userData.professionnel.professions
-                                            .map((profession) => `• ${profession.titre} (${profession.domaine}) `)
+                                            .map((profession) => {
+                                                const periode = profession.periodeDebut || profession.periodeFin
+                                                    ? `(${profession.periodeDebut || ''} à ${profession.periodeFin || ''})`
+                                                    : '';
+                                                return `• ${profession.titre} (${profession.domaine}) ${periode}`;
+                                            })
                                             .join("\n") || "Non spécifié",
                                     },
                                 ]}

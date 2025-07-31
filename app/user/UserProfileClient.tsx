@@ -80,11 +80,13 @@ const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientPr
                                     </button>
                                 </Link>
                             )}
-                            <Link href="/auth/parrainer" passHref>
-                                <button className="w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                                    parrainer
-                                </button>
-                            </Link>
+                            {isReferent && (
+                                <Link href="/auth/parrainer" passHref>
+                                    <button className="w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                        parrainer
+                                    </button>
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </CardContent>
