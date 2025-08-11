@@ -86,6 +86,7 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
     });
 
     const selectedCountry = watch("residence.pays");
+    const selectedLangues = watch("langues") || [];
 
     useEffect(() => {
         const fetchCountries = async () => {
@@ -262,7 +263,7 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
                     <div className="flex items-center space-x-2">
                         <Checkbox
                             id="consentement_email"
-                            checked={watch("consentement_email")}
+                            checked={watch("consentement_email") || false}
                             onCheckedChange={(checked) => setValue("consentement_email", checked === true)}
                         />
                         <Label htmlFor="consentement_email">Autoriser l'affichage de mon email</Label>
@@ -277,7 +278,7 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
                     <div className="flex items-center space-x-2">
                         <Checkbox
                             id="consentement_gsm"
-                            checked={watch("consentement_gsm")}
+                            checked={watch("consentement_gsm") || false}
                             onCheckedChange={(checked) => setValue("consentement_gsm", checked === true)}
                         />
                         <Label htmlFor="consentement_gsm">Autoriser l'affichage de mon numéro</Label>
@@ -402,8 +403,8 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
                                 className="w-full justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 flex items-center"
                             >
                                 <span>
-                                    {watch("langues").length > 0
-                                        ? `${watch("langues").length} langue(s) sélectionnée(s)`
+                                    {selectedLangues.length > 0
+                                        ? `${selectedLangues.length} langue(s) sélectionnée(s)`
                                         : "Sélectionnez vos langues"}
                                 </span>
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -433,7 +434,7 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
                                             <Check
                                                 className={cn(
                                                     "mr-2 h-4 w-4",
-                                                    watch("langues").includes(langue)
+                                                    selectedLangues.includes(langue)
                                                         ? "opacity-100"
                                                         : "opacity-0"
                                                 )}
@@ -446,7 +447,7 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
                         </PopoverContent>
                     </Popover>
                     <div className="mt-2 flex flex-wrap gap-2">
-                        {watch("langues").map((langue) => (
+                        {selectedLangues.map((langue) => (
                             <div
                                 key={langue}
                                 className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-900"
@@ -457,7 +458,7 @@ export default function InfosPersonnelles({ data, onSubmit, userEmail }: InfosPe
                                     onClick={() => {
                                         setValue(
                                             "langues",
-                                            watch("langues").filter((l) => l !== langue)
+                                            selectedLangues.filter((l) => l !== langue)
                                         );
                                     }}
                                     className="ml-1 rounded-full hover:text-red-500"
