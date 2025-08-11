@@ -38,17 +38,19 @@ export default async function UserProfilePage() {
   };
 
   const res = await fetch(
-    `http://84.234.16.224:4042/annuaire/query/get_user_email/${fullUser.email}`,
+    `http://84.234.16.224:4042/annuaire/query/user_by_email`,
     {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      body: JSON.stringify({ email: fullUser.email })
     }
   );
 
-  const hasProfile = res.ok;
+  const data = await res.json();
+  const hasProfile = data.data.length > 0;
 
   let isReferent = null;
   if (fullUser.email) {

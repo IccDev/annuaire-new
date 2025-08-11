@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
     if (!to_email || !url_formulaire || !object) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Champs obligatoires manquants." },
         { status: 400 }
       );
     }
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: "An unknown error occurred" },
+      { error: "Une erreur improbable est arrivée." },
       { status: 500 }
     );
   }
