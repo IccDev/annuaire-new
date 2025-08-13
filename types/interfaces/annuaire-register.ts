@@ -130,12 +130,16 @@ export const defaultProfessionnelData: ProfessionnelData = {
       domaine: "",
       titre: "",
       specialite: "",
+      periodeDebut: "",
+      periodeFin: "",
     },
   ],
   professions: [
     {
       domaine: "",
       titre: "",
+      periodeDebut: "",
+      periodeFin: "",
     },
   ],
   diplomes: [

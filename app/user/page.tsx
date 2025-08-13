@@ -52,20 +52,13 @@ export default async function UserProfilePage() {
   const data = await res.json();
   const hasProfile = data.data.length > 0;
 
-  let isReferent = null;
-  if (fullUser.email) {
-    isReferent = await prisma.candidate.findFirst({
-      where: {
-        emailReferent: fullUser.email,
-      },
-    });
-  }
+  const isReferent = dbUser.role === 'REFERENT';
 
   return (
     <UserProfileClient
       user={fullUser}
       hasProfile={hasProfile}
-      isReferent={!!isReferent}
+      isReferent={isReferent}
     />
   );
 }
