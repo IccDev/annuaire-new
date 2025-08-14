@@ -53,12 +53,14 @@ export default async function UserProfilePage() {
   const hasProfile = data.data.length > 0;
 
   const isReferent = dbUser.role === 'REFERENT';
+  const isAdmin = dbUser.role === 'ADMIN';
 
   return (
     <UserProfileClient
       user={fullUser}
       hasProfile={hasProfile}
       isReferent={isReferent}
+      isAdmin={isAdmin}
     />
   );
 }

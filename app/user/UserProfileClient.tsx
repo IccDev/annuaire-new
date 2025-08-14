@@ -22,9 +22,10 @@ interface UserProfileClientProps {
     user: User;
     hasProfile: boolean;
     isReferent: boolean;
+    isAdmin: boolean;
 }
 
-const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientProps) => {
+const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfileClientProps) => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const handleLogout = async () => {
@@ -73,14 +74,21 @@ const UserProfileClient = ({ user, hasProfile, isReferent }: UserProfileClientPr
                                     </Button>
                                 </Link>
                             )}
-                            {isReferent && (
+                            {(isReferent || isAdmin) && (
                                 <Link href="/referent/dashboard" passHref>
                                     <button className="w-full border border-slate-700 text-slate-700 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                                         Accéder au tableau de bord référent
                                     </button>
                                 </Link>
                             )}
-                            {isReferent && (
+                            {isAdmin && (
+                                <Link href="/admin" passHref>
+                                    <button className="w-full bg-gradient-to-r from-slate-600 to-slate-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                                        🛠️ Administration
+                                    </button>
+                                </Link>
+                            )}
+                            {(isReferent || isAdmin) && (
                                 <Link href="/auth/parrainer" passHref>
                                     <button className="w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
                                         parrainer
