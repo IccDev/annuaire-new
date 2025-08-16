@@ -34,3 +34,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+docker tag 997b3e997ae9 iccbrx/annuaire_ui:dev
+
+docker push iccbrx/annuaire_ui:dev
+
+scp -i private.key C:/Users/Admin local/Desktop/devops/devops/dev/.env debian@84.234.16.224:/home/debian/devops/dev

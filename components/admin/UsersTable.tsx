@@ -106,116 +106,207 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
       <Card className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm">
         <CardContent className="p-0">
         
-          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-100/50 text-sm font-semibold text-slate-600">
+          {/* Header Desktop */}
+          <div className="hidden md:grid grid-cols-10 gap-4 px-6 py-4 border-b border-slate-100/50 text-sm font-semibold text-slate-600">
             <div className="col-span-4">Utilisateur</div>
             <div className="col-span-2">Rôle</div>
-            <div className="col-span-2">Statut</div>
-            <div className="col-span-2">Date</div>
-            <div className="col-span-2 text-center">Actions</div>
-          </div>
-          
-          <div className="md:hidden grid grid-cols-12 gap-4 px-6 py-4 border-b border-slate-100/50 text-sm font-semibold text-slate-600">
-            <div className="col-span-4">Utilisateur</div>
-            <div className="col-span-2">Rôle</div>
-            <div className="col-span-2">Statut</div>
             <div className="col-span-2">Date</div>
             <div className="col-span-2 text-center">Actions</div>
           </div>
 
           <div className="divide-y divide-slate-100/50">
             {users.map((user: User) => (
-              <div 
-                key={user.id} 
-                className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-gradient-to-r hover:from-slate-50/30 hover:to-slate-100/20 transition-all duration-300 group"
-              >
-
-                <div className="col-span-4 flex items-center space-x-3">
-                  <Avatar className="w-10 h-10 ring-2 ring-white shadow-md">
-                    <AvatarImage src="/images/avatar.png" alt={user.name || 'User'} />
-                    <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold">
-                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-slate-800 truncate">{user.name || 'Utilisateur'}</p>
-                    <p className="text-sm text-slate-500 truncate">{user.email}</p>
+              <div key={user.id}>
+                {/* Version Desktop */}
+                <div className="hidden md:grid grid-cols-10 gap-4 px-6 py-4 hover:bg-gradient-to-r hover:from-slate-50/30 hover:to-slate-100/20 transition-all duration-300 group">
+                  <div className="col-span-4 flex items-center space-x-3">
+                    <Avatar className="w-10 h-10 ring-2 ring-white shadow-md">
+                      <AvatarImage src="/images/avatar.png" alt={user.name || 'User'} />
+                      <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold">
+                        {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-slate-800 truncate">{user.name || 'Utilisateur'}</p>
+                      <p className="text-sm text-slate-500 truncate">{user.email}</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-span-2 flex items-center">
-                  {getRoleBadge(user.role)}
-                </div>
-
-                <div className="col-span-2 flex items-center">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full ${user.emailVerified ? 'bg-green-500' : 'bg-amber-500'}`} />
-                    <span className={`text-sm font-medium ${user.emailVerified ? 'text-green-700' : 'text-amber-700'}`}>
-                      {user.emailVerified ? 'Vérifié' : 'En attente'}
-                    </span>
+                  <div className="col-span-2 flex items-center">
+                    {getRoleBadge(user.role)}
                   </div>
-                </div>
 
-                <div className="col-span-2 flex items-center">
-                  <span className="text-sm text-slate-600">{formatDate(new Date(user.createdAt))}</span>
-                </div>
+                  <div className="col-span-2 flex items-center">
+                    <span className="text-sm text-slate-600">{formatDate(new Date(user.createdAt))}</span>
+                  </div>
 
-                <div className="col-span-2 flex items-center justify-center">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        className="h-8 w-8 p-0 hover:bg-slate-100 transition-all duration-200"
-                        disabled={updatingUser === user.id}
-                      >
-                        <MoreHorizontal className="h-4 w-4 text-slate-600" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-52">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem 
-                        className="cursor-pointer"
-                        onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        Voir le profil
-                      </DropdownMenuItem>
-                
-                      {user.role !== 'ADMIN' && (
-                        <>
-                          <DropdownMenuSeparator />
+                  <div className="col-span-2 flex items-center justify-center">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="h-8 w-8 p-0 hover:bg-slate-100 transition-all duration-200"
+                          disabled={updatingUser === user.id}
+                        >
+                          <MoreHorizontal className="h-4 w-4 text-slate-600" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-52">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          className="cursor-pointer"
+                          onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          Voir le profil
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        
+                        {user.role === 'ADMIN' ? (
+                          // Actions pour les admins
                           <DropdownMenuItem 
-                            className="cursor-pointer"
+                            className="cursor-pointer text-orange-600 focus:text-orange-600"
                             onClick={() => {
-                              const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
-                              setRoleChangeUser({ user, newRole });
+                              setRoleChangeUser({ user, newRole: 'USER' });
                             }}
                           >
                             <Shield className="mr-2 h-4 w-4" />
-                            {user.role === 'REFERENT' ? 'Retirer référent' : 'Promouvoir référent'}
+                            Retirer droits admin
                           </DropdownMenuItem>
-                          {user.role === 'USER' && (
+                        ) : (
+                          // Actions pour non-admins
+                          <>
                             <DropdownMenuItem 
-                              className="cursor-pointer text-orange-600 focus:text-orange-600"
+                              className="cursor-pointer"
                               onClick={() => {
-                                setRoleChangeUser({ user, newRole: 'ADMIN' });
+                                const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
+                                setRoleChangeUser({ user, newRole });
                               }}
                             >
                               <Shield className="mr-2 h-4 w-4" />
-                              Promouvoir admin
+                              {user.role === 'REFERENT' ? 'Retirer référent' : 'Promouvoir référent'}
                             </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem 
-                            className="cursor-pointer text-red-600 focus:text-red-600"
-                            onClick={() => setDeleteUser(user)}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Supprimer
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                            {user.role === 'USER' && (
+                              <DropdownMenuItem 
+                                className="cursor-pointer text-orange-600 focus:text-orange-600"
+                                onClick={() => {
+                                  setRoleChangeUser({ user, newRole: 'ADMIN' });
+                                }}
+                              >
+                                <Shield className="mr-2 h-4 w-4" />
+                                Promouvoir admin
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem 
+                              className="cursor-pointer text-red-600 focus:text-red-600"
+                              onClick={() => setDeleteUser(user)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Supprimer
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                {/* Version Mobile - Compacte et propre */}
+                <div className="md:hidden p-3 hover:bg-slate-50/50 transition-all duration-300">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="w-10 h-10 ring-2 ring-white shadow-md flex-shrink-0">
+                      <AvatarImage src="/images/avatar.png" alt={user.name || 'User'} />
+                      <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold text-sm">
+                        {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-slate-800 truncate text-sm">{user.name || 'Utilisateur'}</p>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <div className="scale-75 origin-left">
+                              {getRoleBadge(user.role)}
+                            </div>
+                            <span className="text-xs text-slate-500">
+                              {formatDate(new Date(user.createdAt))}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              className="h-8 w-8 p-0 hover:bg-slate-100 transition-all duration-200 flex-shrink-0"
+                              disabled={updatingUser === user.id}
+                            >
+                              <MoreHorizontal className="h-4 w-4 text-slate-600" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-52">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                              className="cursor-pointer"
+                              onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              Voir le profil
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            
+                            {user.role === 'ADMIN' ? (
+                              // Actions pour les admins
+                              <DropdownMenuItem 
+                                className="cursor-pointer text-orange-600 focus:text-orange-600"
+                                onClick={() => {
+                                  setRoleChangeUser({ user, newRole: 'USER' });
+                                }}
+                              >
+                                <Shield className="mr-2 h-4 w-4" />
+                                Retirer droits admin
+                              </DropdownMenuItem>
+                            ) : (
+                              // Actions pour non-admins
+                              <>
+                                <DropdownMenuItem 
+                                  className="cursor-pointer"
+                                  onClick={() => {
+                                    const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
+                                    setRoleChangeUser({ user, newRole });
+                                  }}
+                                >
+                                  <Shield className="mr-2 h-4 w-4" />
+                                  {user.role === 'REFERENT' ? 'Retirer référent' : 'Promouvoir référent'}
+                                </DropdownMenuItem>
+                                {user.role === 'USER' && (
+                                  <DropdownMenuItem 
+                                    className="cursor-pointer text-orange-600 focus:text-orange-600"
+                                    onClick={() => {
+                                      setRoleChangeUser({ user, newRole: 'ADMIN' });
+                                    }}
+                                  >
+                                    <Shield className="mr-2 h-4 w-4" />
+                                    Promouvoir admin
+                                  </DropdownMenuItem>
+                                )}
+                                <DropdownMenuItem 
+                                  className="cursor-pointer text-red-600 focus:text-red-600"
+                                  onClick={() => setDeleteUser(user)}
+                                >
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Supprimer
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

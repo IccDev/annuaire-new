@@ -77,7 +77,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                             {(isReferent || isAdmin) && (
                                 <Link href="/referent/dashboard" passHref>
                                     <button className="w-full border border-slate-700 text-slate-700 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                                        Accéder au tableau de bord référent
+                                        Tableau de bord référent
                                     </button>
                                 </Link>
                             )}

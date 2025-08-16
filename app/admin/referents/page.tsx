@@ -114,26 +114,26 @@ export default function ReferentsPage() {
           </Badge>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {referents.map((referent) => (
             <Card 
               key={referent.id} 
               className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm hover:shadow-2xl hover:shadow-slate-500/10 transition-all duration-300 hover:scale-[1.02] group"
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="w-12 h-12 ring-2 ring-white shadow-md">
+              <CardHeader className="pb-2 md:pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-2 md:space-x-3 flex-1 min-w-0">
+                    <Avatar className="w-8 h-8 md:w-12 md:h-12 ring-2 ring-white shadow-md flex-shrink-0">
                       <AvatarImage src="/images/avatar.png" alt={referent.name || 'User'} />
-                      <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold">
+                      <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold text-xs md:text-sm">
                         {referent.name ? referent.name.charAt(0).toUpperCase() : 'R'}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
-                      <CardTitle className="text-lg font-semibold text-slate-800">
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-sm md:text-lg font-semibold text-slate-800 truncate">
                         {referent.name || 'Référent'}
                       </CardTitle>
-                      <p className="text-sm text-slate-500">{referent.email}</p>
+                      <p className="text-xs md:text-sm text-slate-500 truncate">{referent.email}</p>
                     </div>
                   </div>
                   
@@ -182,25 +182,27 @@ export default function ReferentsPage() {
                 </div>
               </CardHeader>
               
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 md:space-y-4 pt-2 md:pt-4">
                 <div className="flex items-center justify-between">
-                  <Badge className={
-                    referent.role === 'ADMIN' 
-                      ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white border-0' 
-                      : 'bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0'
-                  }>
-                    {referent.role}
-                  </Badge>
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full ${referent.emailVerified ? 'bg-green-500' : 'bg-amber-500'}`} />
-                    <span className={`text-sm ${referent.emailVerified ? 'text-green-700' : 'text-amber-700'}`}>
+                  <div className="scale-75 md:scale-100 origin-left">
+                    <Badge className={
+                      referent.role === 'ADMIN' 
+                        ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white border-0 text-xs' 
+                        : 'bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 text-xs'
+                    }>
+                      {referent.role}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center space-x-1 md:space-x-2">
+                    <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${referent.emailVerified ? 'bg-green-500' : 'bg-amber-500'}`} />
+                    <span className={`text-xs md:text-sm ${referent.emailVerified ? 'text-green-700' : 'text-amber-700'}`}>
                       {referent.emailVerified ? 'Vérifié' : 'En attente'}
                     </span>
                   </div>
                 </div>
                 
-                <div className="text-center p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100/50">
-                  <div className="text-lg font-semibold text-slate-700">
+                <div className="text-center p-2 md:p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100/50">
+                  <div className="text-sm md:text-lg font-semibold text-slate-700">
                     Depuis le {new Intl.DateTimeFormat('fr-FR', {
                       day: '2-digit',
                       month: '2-digit', 
