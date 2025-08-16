@@ -53,7 +53,7 @@ function getRoleBadge(role: string) {
 function formatDate(date: Date) {
   return new Intl.DateTimeFormat('fr-FR', {
     day: '2-digit',
-    month: '2-digit', 
+    month: '2-digit',
     year: 'numeric'
   }).format(date);
 }
@@ -71,7 +71,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role: newRole })
       });
-      
+
       if (response.ok) {
         onUserUpdate();
       }
@@ -85,12 +85,12 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
 
   const handleDeleteUser = async () => {
     if (!deleteUser) return;
-    
+
     try {
       const response = await fetch(`/api/admin/users/${deleteUser.id}`, {
         method: 'DELETE'
       });
-      
+
       if (response.ok) {
         onUserUpdate();
       }
@@ -105,8 +105,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
     <>
       <Card className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm">
         <CardContent className="p-0">
-        
-          {/* Header Desktop */}
+
           <div className="hidden md:grid grid-cols-10 gap-4 px-6 py-4 border-b border-slate-100/50 text-sm font-semibold text-slate-600">
             <div className="col-span-4">Utilisateur</div>
             <div className="col-span-2">Rôle</div>
@@ -117,7 +116,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
           <div className="divide-y divide-slate-100/50">
             {users.map((user: User) => (
               <div key={user.id}>
-                {/* Version Desktop */}
+
                 <div className="hidden md:grid grid-cols-10 gap-4 px-6 py-4 hover:bg-gradient-to-r hover:from-slate-50/30 hover:to-slate-100/20 transition-all duration-300 group">
                   <div className="col-span-4 flex items-center space-x-3">
                     <Avatar className="w-10 h-10 ring-2 ring-white shadow-md">
@@ -143,8 +142,8 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                   <div className="col-span-2 flex items-center justify-center">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           className="h-8 w-8 p-0 hover:bg-slate-100 transition-all duration-200"
                           disabled={updatingUser === user.id}
                         >
@@ -154,7 +153,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                       <DropdownMenuContent align="end" className="w-52">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="cursor-pointer"
                           onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
                         >
@@ -162,10 +161,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                           Voir le profil
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        
+
                         {user.role === 'ADMIN' ? (
-                          // Actions pour les admins
-                          <DropdownMenuItem 
+
+                          <DropdownMenuItem
                             className="cursor-pointer text-orange-600 focus:text-orange-600"
                             onClick={() => {
                               setRoleChangeUser({ user, newRole: 'USER' });
@@ -175,9 +174,9 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                             Retirer droits admin
                           </DropdownMenuItem>
                         ) : (
-                          // Actions pour non-admins
+
                           <>
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               className="cursor-pointer"
                               onClick={() => {
                                 const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
@@ -188,7 +187,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                               {user.role === 'REFERENT' ? 'Retirer référent' : 'Promouvoir référent'}
                             </DropdownMenuItem>
                             {user.role === 'USER' && (
-                              <DropdownMenuItem 
+                              <DropdownMenuItem
                                 className="cursor-pointer text-orange-600 focus:text-orange-600"
                                 onClick={() => {
                                   setRoleChangeUser({ user, newRole: 'ADMIN' });
@@ -198,7 +197,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                 Promouvoir admin
                               </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               className="cursor-pointer text-red-600 focus:text-red-600"
                               onClick={() => setDeleteUser(user)}
                             >
@@ -212,7 +211,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                   </div>
                 </div>
 
-                {/* Version Mobile - Compacte et propre */}
+
                 <div className="md:hidden p-3 hover:bg-slate-50/50 transition-all duration-300">
                   <div className="flex items-center space-x-3">
                     <Avatar className="w-10 h-10 ring-2 ring-white shadow-md flex-shrink-0">
@@ -221,7 +220,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                         {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                       </AvatarFallback>
                     </Avatar>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
@@ -235,11 +234,11 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                             </span>
                           </div>
                         </div>
-                        
+
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               className="h-8 w-8 p-0 hover:bg-slate-100 transition-all duration-200 flex-shrink-0"
                               disabled={updatingUser === user.id}
                             >
@@ -249,7 +248,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                           <DropdownMenuContent align="end" className="w-52">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               className="cursor-pointer"
                               onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
                             >
@@ -257,10 +256,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                               Voir le profil
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            
+
                             {user.role === 'ADMIN' ? (
-                              // Actions pour les admins
-                              <DropdownMenuItem 
+
+                              <DropdownMenuItem
                                 className="cursor-pointer text-orange-600 focus:text-orange-600"
                                 onClick={() => {
                                   setRoleChangeUser({ user, newRole: 'USER' });
@@ -270,9 +269,9 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                 Retirer droits admin
                               </DropdownMenuItem>
                             ) : (
-                              // Actions pour non-admins
+
                               <>
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   className="cursor-pointer"
                                   onClick={() => {
                                     const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
@@ -283,7 +282,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                   {user.role === 'REFERENT' ? 'Retirer référent' : 'Promouvoir référent'}
                                 </DropdownMenuItem>
                                 {user.role === 'USER' && (
-                                  <DropdownMenuItem 
+                                  <DropdownMenuItem
                                     className="cursor-pointer text-orange-600 focus:text-orange-600"
                                     onClick={() => {
                                       setRoleChangeUser({ user, newRole: 'ADMIN' });
@@ -293,7 +292,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                     Promouvoir admin
                                   </DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   className="cursor-pointer text-red-600 focus:text-red-600"
                                   onClick={() => setDeleteUser(user)}
                                 >
@@ -331,7 +330,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDeleteUser}
               className="bg-red-600 hover:bg-red-700"
             >
@@ -345,28 +344,28 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {roleChangeUser?.newRole === 'ADMIN' ? 'Promouvoir en admin' : 
-               roleChangeUser?.newRole === 'REFERENT' ? 'Promouvoir en référent' : 
-               'Retirer le rôle de référent'}
+              {roleChangeUser?.newRole === 'ADMIN' ? 'Promouvoir en admin' :
+                roleChangeUser?.newRole === 'REFERENT' ? 'Promouvoir en référent' :
+                  'Retirer le rôle de référent'}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {roleChangeUser?.newRole === 'ADMIN' 
+              {roleChangeUser?.newRole === 'ADMIN'
                 ? `Êtes-vous sûr de vouloir donner les droits d'administrateur à ${roleChangeUser?.user.name || roleChangeUser?.user.email} ? Cette action lui donnera accès à toutes les fonctionnalités admin.`
-                : roleChangeUser?.newRole === 'REFERENT' 
-                ? `Êtes-vous sûr de vouloir donner le rôle de référent à ${roleChangeUser?.user.name || roleChangeUser?.user.email} ? Cette personne pourra ensuite être consultée dans la liste des référents.`
-                : `Êtes-vous sûr de vouloir retirer le rôle de référent à ${roleChangeUser?.user.name || roleChangeUser?.user.email} ?`
+                : roleChangeUser?.newRole === 'REFERENT'
+                  ? `Êtes-vous sûr de vouloir donner le rôle de référent à ${roleChangeUser?.user.name || roleChangeUser?.user.email} ? Cette personne pourra ensuite être consultée dans la liste des référents.`
+                  : `Êtes-vous sûr de vouloir retirer le rôle de référent à ${roleChangeUser?.user.name || roleChangeUser?.user.email} ?`
               }
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={() => roleChangeUser && handleRoleChange(roleChangeUser.user.id, roleChangeUser.newRole)}
               className={roleChangeUser?.newRole === 'ADMIN' ? "bg-orange-600 hover:bg-orange-700" : "bg-slate-600 hover:bg-slate-700"}
             >
-              {roleChangeUser?.newRole === 'ADMIN' ? 'Promouvoir admin' : 
-               roleChangeUser?.newRole === 'REFERENT' ? 'Promouvoir référent' : 
-               'Retirer référent'}
+              {roleChangeUser?.newRole === 'ADMIN' ? 'Promouvoir admin' :
+                roleChangeUser?.newRole === 'REFERENT' ? 'Promouvoir référent' :
+                  'Retirer référent'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

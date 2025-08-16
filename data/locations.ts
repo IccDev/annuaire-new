@@ -7,7 +7,7 @@ export const countries = [
 
 export const citiesByCountry: { [key: string]: string[] } = {
   Belgique: [
-    // Région Bruxelles-Capitale
+    
     "Bruxelles",
     "Anderlecht",
     "Auderghem",

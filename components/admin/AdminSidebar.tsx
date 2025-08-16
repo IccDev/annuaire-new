@@ -168,7 +168,7 @@ export default function AdminSidebar({ user }: AdminSidebarProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="fixed top-4 left-4 z-50 lg:hidden bg-white/80 backdrop-blur-sm border border-slate-200 hover:bg-slate-50 shadow-lg"
+            className="fixed top-4 right-4 z-50 lg:hidden bg-white/80 backdrop-blur-sm border border-slate-200 hover:bg-slate-50 shadow-lg"
           >
             <Menu className="h-5 w-5 text-slate-700" />
           </Button>
