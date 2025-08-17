@@ -63,10 +63,16 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                         <div className="flex flex-col gap-6">
                             {hasProfile ? (
                                 <Link href="/update" passHref>
-                                    <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <Button
+                                        className="w-full text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                                        style={{ backgroundColor: "#FF9966" }}
+                                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#FF7F50"}
+                                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#FF9966"}
+                                    >
                                         Mettre à jour ma fiche professionnelle
                                     </Button>
                                 </Link>
+
                             ) : (
                                 <Link href={user.email ? `/register?email=${encodeURIComponent(user.email)}` : "/register"} passHref>
                                     <Button className="w-full bg-slate-700 hover:bg-slate-500 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">

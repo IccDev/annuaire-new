@@ -65,16 +65,16 @@ export default async function StatsCards() {
       iconBg: "bg-slate-600",
       trend: null
     },
-    {
-      title: "Croissance",
-      value: `${stats.growth > 0 ? '+' : ''}${stats.growth}%`,
-      description: "Ce mois",
-      icon: TrendingUp,
-      gradient: stats.growth >= 0 ? "from-slate-600 to-slate-800" : "from-red-500 to-red-600",
-      bgGradient: stats.growth >= 0 ? "from-slate-50 to-slate-100/50" : "from-red-50 to-red-100/50",
-      iconBg: stats.growth >= 0 ? "bg-slate-600" : "bg-red-500",
-      trend: stats.growth >= 0 ? "up" : "down"
-    },
+    // {
+    //   title: "Croissance",
+    //   value: `${stats.growth > 0 ? '+' : ''}${stats.growth}%`,
+    //   description: "Ce mois",
+    //   icon: TrendingUp,
+    //   gradient: stats.growth >= 0 ? "from-slate-600 to-slate-800" : "from-red-500 to-red-600",
+    //   bgGradient: stats.growth >= 0 ? "from-slate-50 to-slate-100/50" : "from-red-50 to-red-100/50",
+    //   iconBg: stats.growth >= 0 ? "bg-slate-600" : "bg-red-500",
+    //   trend: stats.growth >= 0 ? "up" : "down"
+    // },
     {
       title: "Activité",
       value: stats.usersThisMonth.toString(),

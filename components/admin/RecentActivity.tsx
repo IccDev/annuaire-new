@@ -89,9 +89,9 @@ export default async function RecentActivity() {
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-amber-500 flex items-center justify-center">
+          {/* <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-amber-500 flex items-center justify-center">
             <Activity className="w-4 h-4 text-white" />
-          </div>
+          </div> */}
           <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
             Live
           </Badge>
