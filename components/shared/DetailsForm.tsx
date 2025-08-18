@@ -332,14 +332,14 @@ const fetchUserData = async (id: string): Promise<LocalRegisterFormDataResult | 
                     educations: apiData.professionnel.educations.map(edu => ({
                         domaine: edu.domaine || "",
                         titre: edu.titre || "",
-                        periodeDebut: (edu as any).periode_debut || "",
-                        periodeFin: (edu as any).periode_fin || ""
+                        periodeDebut: edu.periodeDebut || "",
+                        periodeFin: edu.periodeFin || ""
                     })),
                     professions: apiData.professionnel.professions.map(prof => ({
                         domaine: prof.domaine || "",
                         titre: prof.titre || "",
-                        periodeDebut: (prof as any).periode_debut || "",
-                        periodeFin: (prof as any).periode_fin || ""
+                        periodeDebut: prof.periodeDebut || "",
+                        periodeFin: prof.periodeFin || ""
                     })),
                     diplomes: apiData.professionnel.diplomes.map(dip => ({
                         nom: dip.nom || "",
