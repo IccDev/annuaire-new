@@ -193,12 +193,12 @@ export default function ReferentsPage() {
                       {referent.role}
                     </Badge>
                   </div>
-                  <div className="flex items-center space-x-1 md:space-x-2">
+                  {/* <div className="flex items-center space-x-1 md:space-x-2">
                     <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${referent.emailVerified ? 'bg-green-500' : 'bg-amber-500'}`} />
                     <span className={`text-xs md:text-sm ${referent.emailVerified ? 'text-green-700' : 'text-amber-700'}`}>
                       {referent.emailVerified ? 'Vérifié' : 'En attente'}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
                 
                 <div className="text-center p-2 md:p-3 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100/50">

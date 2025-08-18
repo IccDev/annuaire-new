@@ -29,7 +29,7 @@ export async function POST(req: Request) {
             <style>
               body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
               .container { background-color: #f9fafb; border-radius: 8px; padding: 24px; }
-              .button { display: inline-block; background-color: #1e293b; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; margin: 16px 0; }
+              .button { display: inline-block; background-color: #3b82f6; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; margin: 16px 0; }
               .footer { margin-top: 24px; font-size: 14px; color: #666; }
             </style>
           </head>
