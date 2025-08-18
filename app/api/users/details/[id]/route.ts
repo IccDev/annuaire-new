@@ -1,5 +1,46 @@
 import { NextResponse } from "next/server";
-// import type { RegisterFormDataResult } from '@/types/interfaces/annuaire';
+
+
+function transformDataFromExternalAPI(data: any): any {
+  if (!data) return data;
+  
+  if (Array.isArray(data)) {
+    return data.map((item: any) => transformDataFromExternalAPI(item));
+  }
+  
+  const transformedData = { ...data };
+  
+  if (transformedData.professionnel) {
+    
+    if (transformedData.professionnel.professions && Array.isArray(transformedData.professionnel.professions)) {
+      transformedData.professionnel.professions = transformedData.professionnel.professions.map((prof: any) => ({
+        ...prof,
+        periodeDebut: prof.periode_debut || "",
+        periodeFin: prof.periode_fin || "",
+      }));
+      
+      transformedData.professionnel.professions.forEach((prof: any) => {
+        delete prof.periode_debut;
+        delete prof.periode_fin;
+      });
+    }
+    
+    if (transformedData.professionnel.educations && Array.isArray(transformedData.professionnel.educations)) {
+      transformedData.professionnel.educations = transformedData.professionnel.educations.map((edu: any) => ({
+        ...edu,
+        periodeDebut: edu.periode_debut || "",
+        periodeFin: edu.periode_fin || "",
+      }));
+      
+      transformedData.professionnel.educations.forEach((edu: any) => {
+        delete edu.periode_debut;
+        delete edu.periode_fin;
+      });
+    }
+  }
+  
+  return transformedData;
+}
 
 export async function GET(
   request: Request,
@@ -20,7 +61,10 @@ export async function GET(
     );
 
     const data = await res.json();
-    return NextResponse.json(data);
+    
+    const transformedData = transformDataFromExternalAPI(data);
+    
+    return NextResponse.json(transformedData);
   } catch (error) {
     console.error("Erreur de recuperation du détail:", error);
     return NextResponse.json(

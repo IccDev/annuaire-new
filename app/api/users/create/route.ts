@@ -1,9 +1,42 @@
 import { NextResponse } from 'next/server';
 
+
+function transformPayloadForExternalAPI(payload: any) {
+  const transformedPayload = { ...payload };
+  
+
+  if (transformedPayload.professionnel?.professions) {
+    transformedPayload.professionnel.professions = transformedPayload.professionnel.professions.map((prof: any) => ({
+      ...prof,
+      periode_debut: prof.periodeDebut,
+      periode_fin: prof.periodeFin,
+    }));
+    
+    transformedPayload.professionnel.professions.forEach((prof: any) => {
+      delete prof.periodeDebut;
+      delete prof.periodeFin;
+    });
+  }
+  
+  if (transformedPayload.professionnel?.educations) {
+    transformedPayload.professionnel.educations = transformedPayload.professionnel.educations.map((edu: any) => ({
+      ...edu,
+      periode_debut: edu.periodeDebut,
+      periode_fin: edu.periodeFin,
+    }));
+    
+    transformedPayload.professionnel.educations.forEach((edu: any) => {
+      delete edu.periodeDebut;
+      delete edu.periodeFin;
+    });
+  }
+  
+  return transformedPayload;
+}
+
 export async function POST(request: Request) {
   try {
     const payload = await request.json();
-    
   
     const checkEmailRes = await fetch(
       `http://84.234.16.224:4042/annuaire/check/email?email=${encodeURIComponent(payload.personnel.email)}`,
@@ -24,6 +57,7 @@ export async function POST(request: Request) {
       );
     }
     
+    const transformedPayload = transformPayloadForExternalAPI(payload);
   
     const res = await fetch(
       "http://84.234.16.224:4042/annuaire/create/user",
@@ -33,7 +67,7 @@ export async function POST(request: Request) {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(transformedPayload),
       }
     );
     
