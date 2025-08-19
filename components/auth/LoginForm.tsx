@@ -13,6 +13,8 @@ import { signIn } from "@/lib/auth-client";
 import { checkProfessionalProfile } from "@/actions/user";
 import { toast } from "sonner";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import IccLogo from "../../public/images/icc.png";
+import Image from "next/image";
 
 const signinFormSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -96,9 +98,12 @@ export default function LoginForm() {
 
       <Card className="w-full max-w-md shadow-lg animate-fadeIn">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-2xl font-bold text-center text-primary">
-            Connexion
-          </CardTitle>
+          <div className="flex flex-col items-center">
+            <Image src={IccLogo} alt="Logo" width={64} height={64} />
+            <CardTitle className="text-2xl font-bold text-center text-primary">
+              Connexion
+            </CardTitle>
+          </div>
           <CardDescription className="text-center text-muted-foreground">
             Connectez-vous à votre compte pour accéder à votre espace
           </CardDescription>
