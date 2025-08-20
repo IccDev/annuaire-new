@@ -148,15 +148,15 @@ export interface Education {
   domaine: string;
   titre: string;
   specialite: string;
-  periodeDebut?: string;
-  periodeFin?: string;
+  periode_debut?: string;
+  periode_fin?: string;
 }
 
 export interface Profession {
   domaine?: string;
   titre?: string;
-  periodeDebut?: string;
-  periodeFin?: string;
+  periode_debut?: string;
+  periode_fin?: string;
 }
 
 export interface Diplome {

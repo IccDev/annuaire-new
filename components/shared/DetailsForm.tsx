@@ -150,9 +150,7 @@ const ProfessionalItem = ({
 
     return (
         <div className="mb-4 last:mb-0 border-l-4 border-slate-400 pl-4 py-3 bg-white rounded-r-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-            {/* Mobile: période au-dessus, Desktop: côte à côte */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                {/* Sur mobile, la période s'affiche en premier */}
                 {periodText && (
                     <div className="order-1 sm:order-2">
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 shadow-sm">
@@ -163,7 +161,7 @@ const ProfessionalItem = ({
                         </span>
                     </div>
                 )}
-                {/* Sur mobile, le titre s'affiche en second */}
+             
                 <div className="order-2 sm:order-1">
                     <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight">{title}</h4>
                 </div>
@@ -251,14 +249,14 @@ interface LocalRegisterFormDataResult {
         educations: Array<{
             domaine: string | undefined;
             titre: string | undefined;
-            periodeDebut: string | undefined;
-            periodeFin: string | undefined;
+            periode_debut: string | undefined;
+            periode_fin: string | undefined;
         }>;
         professions: Array<{
             domaine: string | undefined;
             titre: string | undefined;
-            periodeDebut: string | undefined;
-            periodeFin: string | undefined;
+            periode_debut: string | undefined;
+            periode_fin: string | undefined;
         }>;
         diplomes: Array<{
             nom: string;
@@ -305,8 +303,14 @@ const defaultRegisterFormDataResult: LocalRegisterFormDataResult = {
 const fetchUserData = async (id: string): Promise<LocalRegisterFormDataResult | null> => {
     try {
         const userData = await get_user_by_id(id);
+        console.log("Raw user data from API:", userData);
+
         if (userData && userData.length > 0) {
             const apiData = userData[0] as RegisterFormDataResult;
+            console.log("ApiData professionnel:", apiData.professionnel);
+            console.log("Professions:", apiData.professionnel?.professions);
+            console.log("Educations:", apiData.professionnel?.educations);
+
             const transformedData: LocalRegisterFormDataResult = {
                 personnel: {
                     genre: apiData.personnel.genre || "",
@@ -332,14 +336,14 @@ const fetchUserData = async (id: string): Promise<LocalRegisterFormDataResult | 
                     educations: apiData.professionnel.educations.map(edu => ({
                         domaine: edu.domaine || "",
                         titre: edu.titre || "",
-                        periodeDebut: edu.periodeDebut || "",
-                        periodeFin: edu.periodeFin || ""
+                        periode_debut: edu.periode_debut || "",
+                        periode_fin: edu.periode_fin || ""
                     })),
                     professions: apiData.professionnel.professions.map(prof => ({
                         domaine: prof.domaine || "",
                         titre: prof.titre || "",
-                        periodeDebut: prof.periodeDebut || "",
-                        periodeFin: prof.periodeFin || ""
+                        periode_debut: prof.periode_debut || "",
+                        periode_fin: prof.periode_fin || ""
                     })),
                     diplomes: apiData.professionnel.diplomes.map(dip => ({
                         nom: dip.nom || "",
@@ -380,12 +384,14 @@ export default function UserProfile({ user_id }: UserProfileProps) {
             setIsLoading(true);
 
             try {
-                const storedData = localStorage.getItem("userData");
-                const storedUserId = localStorage.getItem("userId");
+                localStorage.removeItem("userData");
+                localStorage.removeItem("userId");
 
-                if (storedData && storedUserId === user_id) {
-                    const parsedData = JSON.parse(storedData);
-                    setUserData(parsedData);
+                const data = await fetchUserData(user_id);
+                if (data) {
+                    setUserData(data);
+                    localStorage.setItem("userData", JSON.stringify(data));
+                    localStorage.setItem("userId", user_id);
                 } else {
 
                     const data = await fetchUserData(user_id);
@@ -495,8 +501,8 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                 type="education"
                                 items={userData.professionnel.educations.map((education) => ({
                                     period: {
-                                        debut: education.periodeDebut || "",
-                                        fin: education.periodeFin || ""
+                                        debut: education.periode_debut || "",
+                                        fin: education.periode_fin || ""
                                     },
                                     title: education.titre || "Non spécifié",
                                     domain: education.domaine || "Non spécifié"
@@ -510,8 +516,8 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                     title: profession.titre || "Non spécifié",
                                     domain: profession.domaine || "Non spécifié",
                                     period: {
-                                        debut: profession.periodeDebut || "",
-                                        fin: profession.periodeFin || ""
+                                        debut: profession.periode_debut || "",
+                                        fin: profession.periode_fin || ""
                                     }
                                 }))}
                             />

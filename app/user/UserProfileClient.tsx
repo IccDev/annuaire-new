@@ -97,7 +97,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                             {(isReferent || isAdmin) && (
                                 <Link href="/auth/parrainer" passHref>
                                     <button className="w-full border border-blue-500 text-blue-500 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                                        parrainer
+                                        Parrainer
                                     </button>
                                 </Link>
                             )}

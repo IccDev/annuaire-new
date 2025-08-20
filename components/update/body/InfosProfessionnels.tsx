@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,11 +16,27 @@ const educationSchema = z.object({
     titre: z.string().optional(),
     domaine: z.string().optional(),
     specialite: z.string().optional(),
+    periode_debut: z.string().optional().refine((val) => {
+        if (!val || val === "") return true; // Champ optionnel
+        return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
+    }, { message: "Format invalide. Utilisez MM/YYYY (ex: 09/2020)" }),
+    periode_fin: z.string().optional().refine((val) => {
+        if (!val || val === "") return true; // Champ optionnel
+        return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
+    }, { message: "Format invalide. Utilisez MM/YYYY (ex: 12/2023)" }),
 });
 
 const professionSchema = z.object({
     titre: z.string().optional(),
-    statut: z.string().optional()
+    statut: z.string().optional(),
+    periode_debut: z.string().optional().refine((val) => {
+        if (!val || val === "") return true; 
+        return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
+    }, { message: "Format invalide. Utilisez MM/YYYY (ex: 01/2021)" }),
+    periode_fin: z.string().optional().refine((val) => {
+        if (!val || val === "") return true; 
+        return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
+    }, { message: "Format invalide. Utilisez MM/YYYY (ex: 06/2024)" }),
 });
 
 const diplomeSchema = z.object({
@@ -61,14 +78,16 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
     } = useForm<ProfessionnelFormValues>({
         resolver: zodResolver(professionnelSchema),
         defaultValues: {
-            educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "" }],
-            professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", statut: "" }],
+            educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "" }],
+            professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", statut: "", periode_debut: "", periode_fin: "" }],
             diplomes: data.diplomes && data.diplomes.length > 0 ? data.diplomes : [],
             certifications: data.certifications && data.certifications.length > 0 ? data.certifications : [],
             competences: data.competences && data.competences.length > 0 ? data.competences : [{ nom: "" }],
         }
     });
 
+    // Les utilisateurs saisissent eux-mêmes le "/" - validation par Zod
+    
     const {
         fields: educationFields,
         append: appendEducation,
@@ -195,6 +214,32 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                     </p>
                                 )}
                             </div>
+                            <div className="space-y-2">
+                                <Label>Période de début</Label>
+                                <Input
+                                    {...register(`professions.${index}.periode_debut`)}
+                                    placeholder="MM/YYYY"
+                                    maxLength={7}
+                                />
+                                {errors.professions?.[index]?.periode_debut && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.professions[index]?.periode_debut?.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Période de fin</Label>
+                                <Input
+                                    {...register(`professions.${index}.periode_fin`)}
+                                    placeholder="MM/YYYY"
+                                    maxLength={7}
+                                />
+                                {errors.professions?.[index]?.periode_fin && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.professions[index]?.periode_fin?.message}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -202,7 +247,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendProfession({ titre: "", statut: "" })}
+                    onClick={() => appendProfession({ titre: "", statut: "", periode_debut: "", periode_fin: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une profession
@@ -302,6 +347,32 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                     </p>
                                 )}
                             </div>
+                            <div className="space-y-2">
+                                <Label>Période de début</Label>
+                                <Input
+                                    {...register(`educations.${index}.periode_debut`)}
+                                    placeholder="MM/YYYY"
+                                    maxLength={7}
+                                />
+                                {errors.educations?.[index]?.periode_debut && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.educations[index]?.periode_debut?.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Période de fin</Label>
+                                <Input
+                                    {...register(`educations.${index}.periode_fin`)}
+                                    placeholder="MM/YYYY"
+                                    maxLength={7}
+                                />
+                                {errors.educations?.[index]?.periode_fin && (
+                                    <p className="text-sm text-red-500">
+                                        {errors.educations[index]?.periode_fin?.message}
+                                    </p>
+                                )}
+                            </div>
                             {/* <div className="space-y-2">
                                 <Label>Spécialité</Label>
                                 <Input
@@ -321,7 +392,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "" })}
+                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une éducation

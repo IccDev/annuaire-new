@@ -10,32 +10,16 @@ function transformDataFromExternalAPI(data: any): any {
   
   const transformedData = { ...data };
   
+  console.log("Transforming data for professionnel:", transformedData.professionnel);
+  
   if (transformedData.professionnel) {
     
     if (transformedData.professionnel.professions && Array.isArray(transformedData.professionnel.professions)) {
-      transformedData.professionnel.professions = transformedData.professionnel.professions.map((prof: any) => ({
-        ...prof,
-        periodeDebut: prof.periode_debut || "",
-        periodeFin: prof.periode_fin || "",
-      }));
-      
-      transformedData.professionnel.professions.forEach((prof: any) => {
-        delete prof.periode_debut;
-        delete prof.periode_fin;
-      });
+      console.log("Original professions:", transformedData.professionnel.professions);
     }
     
     if (transformedData.professionnel.educations && Array.isArray(transformedData.professionnel.educations)) {
-      transformedData.professionnel.educations = transformedData.professionnel.educations.map((edu: any) => ({
-        ...edu,
-        periodeDebut: edu.periode_debut || "",
-        periodeFin: edu.periode_fin || "",
-      }));
-      
-      transformedData.professionnel.educations.forEach((edu: any) => {
-        delete edu.periode_debut;
-        delete edu.periode_fin;
-      });
+      console.log("Original educations:", transformedData.professionnel.educations);
     }
   }
   
@@ -62,7 +46,11 @@ export async function GET(
 
     const data = await res.json();
     
+    console.log("Raw data from external API:", JSON.stringify(data, null, 2));
+    
     const transformedData = transformDataFromExternalAPI(data);
+    
+    console.log("Transformed data:", JSON.stringify(transformedData, null, 2));
     
     return NextResponse.json(transformedData);
   } catch (error) {

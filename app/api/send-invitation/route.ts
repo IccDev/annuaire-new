@@ -37,10 +37,11 @@ export async function POST(req: Request) {
             <div class="container">
               <h2>Bienvenue sur l'Annuaire des Professions de l'Église.</h2>
               <p>Bonjour,</p>
-              <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux professions de l'Église. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
+              <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux professions de l'Église Impact Centre Chrétien. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
               <a href="${url_formulaire}" class="button">Créer mon profil</a>
               <div class="footer">
                 <p>Cordialement,<br>L'équipe ICC DSI</p>
+                <p>iccdev@impactcentrechretien.eu</p>
               </div>
             </div>
           </body>

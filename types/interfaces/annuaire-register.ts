@@ -62,30 +62,30 @@ export type Education = {
   domaine?: string;
   titre?: string;
   specialite?: string;
-  periodeDebut?: string;
-  periodeFin?: string;
+  periode_debut?: string;
+  periode_fin?: string;
 };
 
 export type Profession = {
   domaine?: string;
   titre?: string;
-  periodeDebut?: string;
-  periodeFin?: string;
+  periode_debut?: string;
+  periode_fin?: string;
 };
 
 export type ZodEducation = {
   domaine?: Maybe<string>;
   titre?: Maybe<string>;
   specialite?: Maybe<string>;
-  periodeDebut?: Maybe<string>;
-  periodeFin?: Maybe<string>;
+  periode_debut?: Maybe<string>;
+  periode_fin?: Maybe<string>;
 };
 
 export type ZodProfession = {
   domaine?: Maybe<string>;
   titre?: Maybe<string>;
-  periodeDebut?: Maybe<string>;
-  periodeFin?: Maybe<string>;
+  periode_debut?: Maybe<string>;
+  periode_fin?: Maybe<string>;
 };
 
 export type ZodProfessionnelData = {
@@ -130,16 +130,16 @@ export const defaultProfessionnelData: ProfessionnelData = {
       domaine: "",
       titre: "",
       specialite: "",
-      periodeDebut: "",
-      periodeFin: "",
+      periode_debut: "",
+      periode_fin: "",
     },
   ],
   professions: [
     {
       domaine: "",
       titre: "",
-      periodeDebut: "",
-      periodeFin: "",
+      periode_debut: "",
+      periode_fin: "",
     },
   ],
   diplomes: [
@@ -208,8 +208,8 @@ export const get_professionnel = (
           domaine: d?.domaine || "",
           titre: d?.titre || "",
           specialite: d?.specialite || "",
-          periodeDebut: d?.periodeDebut || "",
-          periodeFin: d?.periodeFin || "",
+          periode_debut: d?.periode_debut || "",
+          periode_fin: d?.periode_fin || "",
         })) || [],
     professions:
       pro.professions
@@ -217,8 +217,8 @@ export const get_professionnel = (
         .map((d) => ({
           domaine: d?.domaine || "",
           titre: d?.titre || "",
-          periodeDebut: d?.periodeDebut || "",
-          periodeFin: d?.periodeFin || "",
+          periode_debut: d?.periode_debut || "",
+          periode_fin: d?.periode_fin || "",
         })) || [],
     diplomes:
       pro.diplomes

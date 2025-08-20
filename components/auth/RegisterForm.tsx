@@ -95,7 +95,7 @@ export default function SignupForm({ token, emailCandidate }: Props) {
             if (errorMessage.includes("Password should be at least 6 characters")) {
               form.setError("password", {
                 type: "manual",
-                message: "Le mot de passe doit contenir au moins 6 caractères.",
+                message: "Mot de passe trop court.",
               });
             } else {
               toast.error(errorMessage);

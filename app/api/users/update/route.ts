@@ -3,31 +3,7 @@ import { NextResponse } from 'next/server';
 function transformPayloadForExternalAPI(payload: any): any {
   const transformedPayload = { ...payload };
   
-  if (transformedPayload.professionnel?.professions) {
-    transformedPayload.professionnel.professions = transformedPayload.professionnel.professions.map((prof: any) => ({
-      ...prof,
-      periode_debut: prof.periodeDebut,
-      periode_fin: prof.periodeFin,
-    }));
-    
-    transformedPayload.professionnel.professions.forEach((prof: any) => {
-      delete prof.periodeDebut;
-      delete prof.periodeFin;
-    });
-  }
-  
-  if (transformedPayload.professionnel?.educations) {
-    transformedPayload.professionnel.educations = transformedPayload.professionnel.educations.map((edu: any) => ({
-      ...edu,
-      periode_debut: edu.periodeDebut,
-      periode_fin: edu.periodeFin,
-    }));
-    
-    transformedPayload.professionnel.educations.forEach((edu: any) => {
-      delete edu.periodeDebut;
-      delete edu.periodeFin;
-    });
-  }
+  console.log("Payload received for update:", JSON.stringify(transformedPayload, null, 2));
   
   return transformedPayload;
 }

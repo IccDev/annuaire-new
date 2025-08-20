@@ -42,7 +42,7 @@ const defaultAnnuaireUserUpdate: AnnuaireUserUpdate = {
 };
 
 
-export default function UserUpdate() {
+export default function UserUpdate({ email }: { email: string }) {
     const router = useRouter();
     const params = useParams();
     const user_id = params.user_id as string;
@@ -50,40 +50,46 @@ export default function UserUpdate() {
     const [showToast, setShowToast] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { control, handleSubmit, formState: { errors } } = useForm<AnnuaireUserUpdate>({
-        defaultValues: defaultAnnuaireUserUpdate
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm<AnnuaireUserUpdate>({
+        defaultValues: { email: email || "" }
     });
+
+    useEffect(() => {
+        if (email) {
+            setValue('email', email);
+        }
+    }, [email, setValue]);
 
 
     const sendUpdateEmail = async (email_to_update: string, user_id: string) => {
         emailjs
-        .send(
-            `${process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID}`,
-            `${process.env.NEXT_PUBLIC_EMAIL_UPDATE_TEMPLATE_ID}`,
-            {
-            url_formulaire: `${process.env.NEXT_PUBLIC_BASE_URL}/update/${user_id}`,
-            to_email: email_to_update,
-            object:
-                "Annuaire des professions ICC - Modification de vos informations personnelles",
-            },
-            {
-            publicKey: process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID,
-        })
-        .then(
-            () => {
-            setIsLoading(false);
-                setShowToast(true);
-                setTimeout(() => {
-                    setShowToast(false);
-                    goHome();
-                }, 3000);
-            },
-            (error: any) => {
-                console.error("Erreur lors de l'envoi de l'email:", error);
-                setIsLoading(false);
-                alert("Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer.");
-            },
-        );
+            .send(
+                `${process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID}`,
+                `${process.env.NEXT_PUBLIC_EMAIL_UPDATE_TEMPLATE_ID}`,
+                {
+                    url_formulaire: `${process.env.NEXT_PUBLIC_BASE_URL}/update/${user_id}`,
+                    to_email: email_to_update,
+                    object:
+                        "Annuaire des professions ICC - Modification de vos informations personnelles",
+                },
+                {
+                    publicKey: process.env.NEXT_PUBLIC_EMAIL_PUBLIC_ID,
+                })
+            .then(
+                () => {
+                    setIsLoading(false);
+                    setShowToast(true);
+                    setTimeout(() => {
+                        setShowToast(false);
+                        goHome();
+                    }, 3000);
+                },
+                (error: any) => {
+                    console.error("Erreur lors de l'envoi de l'email:", error);
+                    setIsLoading(false);
+                    alert("Une erreur s'est produite lors de l'envoi de l'email. Veuillez réessayer.");
+                },
+            );
     };
 
     useEffect(() => {
@@ -141,8 +147,10 @@ export default function UserUpdate() {
                                             <input
                                                 type="email"
                                                 placeholder="Votre email"
-                                                className="block w-full rounded-md border border-gray-300 py-3 px-4 text-gray-900 shadow-sm focus:border-slate-700 focus:ring-1 focus:ring-slate-700 text-center placeholder:text-gray-500 sm:text-sm"
+                                                className="block w-full rounded-md border border-gray-300 py-3 px-4 text-gray-900 shadow-sm focus:border-slate-700 focus:ring-1 focus:ring-slate-700 text-center placeholder:text-gray-500 sm:text-sm bg-gray-100 cursor-not-allowed"
                                                 {...field}
+                                                value={email || field.value || ""}
+                                                disabled
                                             />
                                         )}
                                     />
