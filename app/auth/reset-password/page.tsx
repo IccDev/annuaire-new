@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,15 @@ const resetPasswordSchema = z.object({
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordPage() {
-    const form = useForm<ResetPasswordFormValues>({
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+}
+
+function ResetPasswordForm() {
+  const form = useForm<ResetPasswordFormValues>({
         resolver: zodResolver(resetPasswordSchema),
         defaultValues: {
             password: "",
