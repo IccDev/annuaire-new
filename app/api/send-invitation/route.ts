@@ -40,7 +40,7 @@ export async function POST(req: Request) {
               <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux professions de l'Église Impact Centre Chrétien. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
               <a href="${url_formulaire}" class="button">Créer mon profil</a>
               <div class="footer">
-                <p>Cordialement,<br>L'équipe ICC DSI</p>
+                <p>Cordialement,<br>L'équipe informatique (DSI)</p>
                 <p>iccdev@impactcentrechretien.eu</p>
               </div>
             </div>

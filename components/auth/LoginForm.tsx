@@ -169,7 +169,7 @@ export default function LoginForm() {
                 />
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex flex-col space-y-4">
               <Button 
                 type="submit" 
                 className="w-full bg-primary hover:bg-primary/90 relative" 
@@ -186,6 +186,17 @@ export default function LoginForm() {
                   "Se connecter"
                 )}
               </Button>
+              
+              <div className="text-center">
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-sm text-muted-foreground hover:text-primary"
+                  onClick={() => router.push("/auth/forgot-password")}
+                >
+                  Mot de passe oublié ?
+                </Button>
+              </div>
             </CardFooter>
           </form>
         </Form>

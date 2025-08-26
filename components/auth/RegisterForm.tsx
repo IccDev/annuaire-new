@@ -50,8 +50,6 @@ type Props = {
 
 
 export default function SignupForm({ token, emailCandidate }: Props) {
-  // console.log("token register form: ", token);
-  // console.log("email register form: ", emailCandidate);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -92,7 +90,7 @@ export default function SignupForm({ token, emailCandidate }: Props) {
           },
           onError: (error) => {
             const errorMessage = error?.error?.message || "Erreur lors de l'inscription";
-            if (errorMessage.includes("Password should be at least 6 characters")) {
+            if (errorMessage.includes("Le mot de passe doit contenir au moins 6 caractères.")) {
               form.setError("password", {
                 type: "manual",
                 message: "Mot de passe trop court.",
@@ -214,6 +212,7 @@ export default function SignupForm({ token, emailCandidate }: Props) {
                             </div>
                           </div>
                         </FormControl>
+                        <p className="text-sm italic text-slate-500"><span className="text-red-500">*</span> au moins 6 caractères</p>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -222,7 +221,7 @@ export default function SignupForm({ token, emailCandidate }: Props) {
               </div>
             </CardContent>
             <div className="w-full flex flex-col gap-4 pt-2">
-              {/* Accordéon RGPD */}
+
               <div className="w-full">
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="rgpd">
