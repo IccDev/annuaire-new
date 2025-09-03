@@ -25,6 +25,7 @@ model User {
   name          String
   email         String
   emailVerified Boolean?
+  imageUrl      String?
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]

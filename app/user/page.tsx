@@ -8,6 +8,7 @@ interface User {
   name: string | null;
   email: string | null;
   image: string | null;
+  imageUrl: string | null;
   emailVerified: boolean | null;
   createdAt: Date;
 }
@@ -33,6 +34,7 @@ export default async function UserProfilePage() {
     name: dbUser.name,
     email: dbUser.email,
     image: user.image || null,
+    imageUrl: dbUser.imageUrl,
     emailVerified: dbUser.emailVerified,
     createdAt: dbUser.createdAt
   };

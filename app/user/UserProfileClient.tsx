@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Edit3 } from 'lucide-react';
 
 
 interface User {
@@ -14,6 +14,7 @@ interface User {
     name: string | null;
     email: string | null;
     image: string | null;
+    imageUrl: string | null;
     emailVerified: boolean | null;
     createdAt: Date;
 }
@@ -43,10 +44,17 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
             <Card className="w-full max-w-md shadow-lg">
                 <CardHeader className="text-center">
-                    <Avatar className="w-24 h-24 mx-auto mb-4">
-                        <AvatarImage src={user.image || '/images/avatar.png'} alt={user.name || 'User'} />
-                        <AvatarFallback>{user.name ? user.name.charAt(0).toUpperCase() : 'U'}</AvatarFallback>
-                    </Avatar>
+                    <div className="relative inline-block mb-4">
+                        <Link href="/profile" className="group cursor-pointer">
+                            <Avatar className="w-24 h-24 mx-auto transition-transform duration-200 group-hover:scale-105">
+                                <AvatarImage src={user.imageUrl || user.image || undefined} alt={user.name || 'User'} />
+                                <AvatarFallback className="bg-gray-200">{user.name ? user.name.charAt(0).toUpperCase() : 'U'}</AvatarFallback>
+                            </Avatar>
+                            <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1.5 shadow-lg group-hover:bg-blue-600 transition-colors duration-200">
+                                <Edit3 className="w-3 h-3 text-white" />
+                            </div>
+                        </Link>
+                    </div>
                     <CardTitle className="text-2xl">{user.name}</CardTitle>
                     <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
@@ -80,6 +88,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                     </Button>
                                 </Link>
                             )}
+
                             {(isReferent || isAdmin) && (
                                 <Link href="/referent/dashboard" passHref>
                                     <button className="w-full border border-slate-700 text-slate-700 font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
