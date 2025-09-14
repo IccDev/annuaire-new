@@ -79,7 +79,7 @@ function SidebarContent({ user }: { user: User }) {
         {/* User Profile */}
         <div className="flex items-center space-x-3 p-3 rounded-xl bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200/50">
           <Avatar className="w-10 h-10 ring-2 ring-slate-200">
-            <AvatarImage src="/images/avatar.png" alt={user.name} />
+            <AvatarImage src={(user as any).imageUrl || (user as any).image || undefined} alt={user.name} />
             <AvatarFallback className="bg-gradient-to-br from-slate-500 to-slate-700 text-white font-semibold">
               {user.name.charAt(0).toUpperCase()}
             </AvatarFallback>

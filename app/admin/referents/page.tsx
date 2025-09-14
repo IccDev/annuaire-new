@@ -124,7 +124,7 @@ export default function ReferentsPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-2 md:space-x-3 flex-1 min-w-0">
                     <Avatar className="w-8 h-8 md:w-12 md:h-12 ring-2 ring-white shadow-md flex-shrink-0">
-                      <AvatarImage src="/images/avatar.png" alt={referent.name || 'User'} />
+                      <AvatarImage src={(referent as any).imageUrl || (referent as any).image || undefined} alt={referent.name || 'User'} />
                       <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold text-xs md:text-sm">
                         {referent.name ? referent.name.charAt(0).toUpperCase() : 'R'}
                       </AvatarFallback>

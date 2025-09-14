@@ -141,10 +141,10 @@ export default function LoginForm() {
                       <FormLabel>Mot de passe</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input 
-                            type={showPassword ? "text" : "password"} 
-                            placeholder="*********" 
-                            {...field} 
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="*********"
+                            {...field}
                             className="pr-10"
                           />
                           <Button
@@ -170,9 +170,9 @@ export default function LoginForm() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
-              <Button 
-                type="submit" 
-                className="w-full bg-primary hover:bg-primary/90 relative" 
+              <Button
+                type="submit"
+                className="w-full bg-slate-900 hover:bg-slate-600 text-white relative"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -186,7 +186,7 @@ export default function LoginForm() {
                   "Se connecter"
                 )}
               </Button>
-              
+
               <div className="text-center">
                 <Button
                   type="button"

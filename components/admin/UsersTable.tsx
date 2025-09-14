@@ -120,7 +120,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                 <div className="hidden md:grid grid-cols-10 gap-4 px-6 py-4 hover:bg-gradient-to-r hover:from-slate-50/30 hover:to-slate-100/20 transition-all duration-300 group">
                   <div className="col-span-4 flex items-center space-x-3">
                     <Avatar className="w-10 h-10 ring-2 ring-white shadow-md">
-                      <AvatarImage src="/images/avatar.png" alt={user.name || 'User'} />
+                      <AvatarImage src={(user as any).imageUrl || (user as any).image || undefined} alt={user.name || 'User'} />
                       <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold">
                         {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                       </AvatarFallback>
@@ -215,7 +215,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                 <div className="md:hidden p-3 hover:bg-slate-50/50 transition-all duration-300">
                   <div className="flex items-center space-x-3">
                     <Avatar className="w-10 h-10 ring-2 ring-white shadow-md flex-shrink-0">
-                      <AvatarImage src="/images/avatar.png" alt={user.name || 'User'} />
+                      <AvatarImage src={(user as any).imageUrl || (user as any).image || undefined} alt={user.name || 'User'} />
                       <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white font-semibold text-sm">
                         {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                       </AvatarFallback>

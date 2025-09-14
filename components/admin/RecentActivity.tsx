@@ -12,6 +12,7 @@ async function getRecentActivity() {
     select: {
       id: true,
       name: true,
+  imageUrl: true,
       email: true,
       role: true,
       createdAt: true,
@@ -119,7 +120,7 @@ export default async function RecentActivity() {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3">
                       <Avatar className="w-8 h-8 ring-2 ring-white shadow-md">
-                        <AvatarImage src="/images/avatar.png" alt={activity.user} />
+                        <AvatarImage src={(activity as any).imageUrl || undefined} alt={activity.user} />
                         <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white text-sm">
                           {activity.user.charAt(0).toUpperCase()}
                         </AvatarFallback>

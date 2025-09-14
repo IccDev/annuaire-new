@@ -117,7 +117,7 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-gray-100 py-8 px-4">
             <div className="max-w-2xl mx-auto">
-                {/* En-tête avec navigation */}
+
                 <div className="mb-6">
                     <Link href="/user" className="flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors duration-200 mb-4">
                         <ArrowLeft className="w-4 h-4 mr-2" />
@@ -127,7 +127,7 @@ export default function ProfilePage() {
                     <p className="text-gray-600 mt-2">Personnalisez votre profil et vos informations</p>
                 </div>
 
-                {/* Section Photo de Profil */}
+
                 <Card className="mb-6">
                     <CardHeader>
                         <CardTitle className="flex items-center">
@@ -147,7 +147,6 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                {/* Section Informations Personnelles */}
                 <Card className="mb-6">
                     <CardHeader>
                         <CardTitle className="flex items-center">
@@ -205,7 +204,7 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                {/* Actions */}
+
                 <div className="flex flex-col sm:flex-row gap-4">
                     <Link href="/user" className="flex-1">
                         <Button variant="outline" className="w-full">
@@ -213,7 +212,7 @@ export default function ProfilePage() {
                         </Button>
                     </Link>
                     <Link href="/update" className="flex-1">
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        <Button className="w-full bg-slate-900 hover:bg-slate-500">
                             Modifier ma fiche professionnelle
                         </Button>
                     </Link>
