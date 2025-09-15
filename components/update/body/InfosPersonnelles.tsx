@@ -179,6 +179,7 @@ export default function InfosPersonnelles({ data, onSubmit }: InfosPersonnellesP
                                 alt="Photo de profil"
                                 layout="fill"
                                 objectFit="cover"
+                                sizes="128px"
                                 className="transition-transform duration-300 group-hover:scale-110"
                             />
                         </div>

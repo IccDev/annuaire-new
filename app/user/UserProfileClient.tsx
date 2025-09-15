@@ -115,10 +115,10 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                         Gestion du profil
                                     </h3>
                                     {hasProfile ? (
-                                        <Link href="/update" className="block">
+                                        <Link href="/update-direct" className="block">
                                             <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                                                 <Edit3 className="w-5 h-5 mr-2" />
-                                                Mettre à jour ma fiche professionnelle
+                                                Ouvrir ma fiche professionnelle
                                             </Button>
                                         </Link>
                                     ) : (
@@ -133,32 +133,28 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
 
                                 {(isReferent || isAdmin) && (
                                     <div className="rounded-xl p-6">
-                                        {/* <h3 className="font-semibold text-slate-800 mb-4 flex items-center">
-                                            <Shield className="w-5 h-5 mr-2 text-slate-600" />
-                                            Outils d'administration
-                                        </h3> */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div className="flex flex-col gap-3">
                                             {(isReferent || isAdmin) && (
                                                 <Link href="/referent/dashboard" className="block">
-                                                    <Button variant="outline" className="w-full h-auto py-3 px-4 border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-all duration-200 rounded-lg">
+                                                    <Button variant="outline" className="w-full font-semibold py-4 px-6 border-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:border-slate-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                                                         <Shield className="w-5 h-5 mr-2" />
-                                                        <span className="text-sm font-medium">Dashboard Référent</span>
+                                                        Dashboard référent
                                                     </Button>
                                                 </Link>
                                             )}
 
                                             {isAdmin && (
                                                 <Link href="/admin" className="block">
-                                                    <Button className="w-full h-auto py-3 px-4 bg-slate-700 hover:bg-slate-800 text-white transition-all duration-200 rounded-lg">
+                                                    <Button className="w-full font-semibold py-4 px-6 bg-slate-700 hover:bg-slate-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                                                         <Settings className="w-5 h-5 mr-2" />
-                                                        <span className="text-sm font-medium">Administration</span>
+                                                        Administration
                                                     </Button>
                                                 </Link>
                                             )}
 
                                             {(isReferent || isAdmin) && (
-                                                <Link href="/auth/parrainer" className="block sm:col-span-2">
-                                                    <Button variant="outline" className="w-full py-3 px-4 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 rounded-lg">
+                                                <Link href="/auth/parrainer" className="block">
+                                                    <Button variant="outline" className="w-full font-semibold py-4 px-6 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                                                         <UserPlus className="w-5 h-5 mr-2" />
                                                         Parrainer un nouveau membre
                                                     </Button>
