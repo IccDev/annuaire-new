@@ -6,6 +6,7 @@ import Image from "next/image";
 import AvatarImg from "@/public/images/avatar.png";
 import { get_user_by_id } from "@/app/api/annuaire-api";
 import { RegisterFormDataResult } from '@/types/interfaces/annuaire';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 
 const Navigate = ({ goBack, goHome }: { goBack: () => void, goHome: () => void }) => {
@@ -124,11 +125,13 @@ const ProfessionalItem = ({
     title,
     domain,
     period,
+    additionalInfo,
     type = "profession"
 }: {
     title: string;
     domain: string;
     period: { debut?: string; fin?: string };
+    additionalInfo?: string;
     type?: "profession" | "education";
 }) => {
     const formatPeriod = () => {
@@ -161,12 +164,24 @@ const ProfessionalItem = ({
                         </span>
                     </div>
                 )}
-             
+
                 <div className="order-2 sm:order-1">
-                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight">{title}</h4>
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight">
+                        {type === "education" ? domain : title}
+                    </h4>
                 </div>
             </div>
-            <p className="text-gray-600 text-sm leading-relaxed mt-2">{domain}</p>
+            <p className="text-gray-600 text-sm leading-relaxed mt-2">
+                {type === "education" ? title : domain}
+            </p>
+            {additionalInfo && (
+                <div className="mt-3 p-3 bg-sky-50 rounded-md border border-sky-100">
+                    <h5 className="text-xs font-medium text-sky-800 mb-1">
+                        {type === "profession" ? "Tâches effectuées" : "Compétences acquises"}
+                    </h5>
+                    <p className="text-xs text-sky-700 leading-relaxed whitespace-pre-wrap">{additionalInfo}</p>
+                </div>
+            )}
         </div>
     );
 };
@@ -177,7 +192,7 @@ const ProfessionalSection = ({
     type = "profession"
 }: {
     title: string;
-    items: Array<{ title: string; domain: string; period: { debut?: string; fin?: string } }>;
+    items: Array<{ title: string; domain: string; period: { debut?: string; fin?: string }; additionalInfo?: string }>;
     type?: "profession" | "education";
 }) => {
     const getIcon = () => {
@@ -203,17 +218,79 @@ const ProfessionalSection = ({
                 <span>{title}</span>
             </h3>
             {items.length > 0 ? (
-                <div className="space-y-3">
-                    {items.map((item, index) => (
+                items.length === 1 ? (
+                    <div className="space-y-3">
                         <ProfessionalItem
-                            key={index}
-                            title={item.title}
-                            domain={item.domain}
-                            period={item.period}
+                            key={0}
+                            title={items[0].title}
+                            domain={items[0].domain}
+                            period={items[0].period}
+                            additionalInfo={items[0].additionalInfo}
                             type={type}
                         />
-                    ))}
-                </div>
+                    </div>
+                ) : (
+
+                    <Accordion type="multiple" className="w-full">
+                        {items.map((item, index) => (
+                            <AccordionItem key={index} value={`item-${index}`} className="border-slate-200 rounded-lg mb-2 border overflow-hidden">
+                                <AccordionTrigger className="hover:bg-slate-50 px-4 py-3 transition-all duration-200 hover:shadow-sm [&[data-state=open]]:bg-slate-50">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full pr-2">
+                                        <div className="flex flex-col flex-1 min-w-0 text-left">
+                                            <span className="font-semibold text-gray-900">
+                                                {type === "education" ? item.domain : item.title}
+                                            </span>
+                                            <span className="text-sm text-gray-600">
+                                                {type === "education" ? item.title : item.domain}
+                                            </span>
+                                        </div>
+                                        {(item.period.debut || item.period.fin) && (
+                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
+                                                <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                                                </svg>
+                                                {item.period.debut && item.period.fin
+                                                    ? `${item.period.debut} - ${item.period.fin}`
+                                                    : item.period.debut
+                                                        ? `Depuis ${item.period.debut}`
+                                                        : `Jusqu'à ${item.period.fin}`
+                                                }
+                                            </span>
+                                        )}
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="px-4 pb-4">
+                                    <div className="space-y-3 pt-2">
+                                        <div className="text-sm text-gray-700">
+                                            <strong>{type === "profession" ? "Statut" : "Domaine"} :</strong> {item.domain}
+                                        </div>
+                                        {(item.period.debut || item.period.fin) && (
+                                            <div className="text-sm text-gray-700">
+                                                <strong>Période :</strong>{" "}
+                                                {item.period.debut && item.period.fin
+                                                    ? `${item.period.debut} - ${item.period.fin}`
+                                                    : item.period.debut
+                                                        ? `Depuis ${item.period.debut}`
+                                                        : `Jusqu'à ${item.period.fin}`
+                                                }
+                                            </div>
+                                        )}
+                                        {item.additionalInfo && (
+                                            <div className="mt-4 p-4 bg-sky-50 rounded-lg border border-sky-100">
+                                                <h5 className="text-sm font-semibold text-sky-900 mb-2">
+                                                    {type === "profession" ? "Tâches effectuées" : "Compétences acquises"}
+                                                </h5>
+                                                <div className="text-sm text-sky-800 leading-relaxed whitespace-pre-wrap">
+                                                    {item.additionalInfo}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                )
             ) : (
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
                     <p className="text-gray-500 text-sm text-center">Non spécifié</p>
@@ -251,12 +328,14 @@ interface LocalRegisterFormDataResult {
             titre: string | undefined;
             periode_debut: string | undefined;
             periode_fin: string | undefined;
+            competences_acquises: string | undefined;
         }>;
         professions: Array<{
             domaine: string | undefined;
             titre: string | undefined;
             periode_debut: string | undefined;
             periode_fin: string | undefined;
+            task: string | undefined;
         }>;
         diplomes: Array<{
             nom: string;
@@ -337,13 +416,15 @@ const fetchUserData = async (id: string): Promise<LocalRegisterFormDataResult | 
                         domaine: edu.domaine || "",
                         titre: edu.titre || "",
                         periode_debut: edu.periode_debut || "",
-                        periode_fin: edu.periode_fin || ""
+                        periode_fin: edu.periode_fin || "",
+                        competences_acquises: edu.competences_acquises || ""
                     })),
                     professions: apiData.professionnel.professions.map(prof => ({
                         domaine: prof.domaine || "",
                         titre: prof.titre || "",
                         periode_debut: prof.periode_debut || "",
-                        periode_fin: prof.periode_fin || ""
+                        periode_fin: prof.periode_fin || "",
+                        task: prof.task || ""
                     })),
                     diplomes: apiData.professionnel.diplomes.map(dip => ({
                         nom: dip.nom || "",
@@ -505,8 +586,8 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                         fin: education.periode_fin || ""
                                     },
                                     title: education.titre || "Non spécifié",
-                                    domain: education.domaine || "Non spécifié"
-
+                                    domain: education.domaine || "Non spécifié",
+                                    additionalInfo: education.competences_acquises || undefined
                                 }))}
                             />
                             <ProfessionalSection
@@ -518,7 +599,8 @@ export default function UserProfile({ user_id }: UserProfileProps) {
                                     period: {
                                         debut: profession.periode_debut || "",
                                         fin: profession.periode_fin || ""
-                                    }
+                                    },
+                                    additionalInfo: profession.task || undefined
                                 }))}
                             />
                             <InfoSection

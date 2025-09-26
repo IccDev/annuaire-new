@@ -5,6 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Trash2, Check, ChevronsUpDown } from "lucide-react";
 import { ProfessionnelData, domaines, user_status } from "@/types/interfaces/annuaire-register";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
@@ -24,6 +25,7 @@ const educationSchema = z.object({
         if (!val || val === "") return true;
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 12/2023)" }),
+    competences_acquises: z.string().optional(),
 });
 
 const professionSchema = z.object({
@@ -37,6 +39,7 @@ const professionSchema = z.object({
         if (!val || val === "") return true;
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 06/2024)" }),
+    task: z.string().optional(),
 });
 
 const diplomeSchema = z.object({
@@ -57,6 +60,23 @@ const professionnelSchema = z.object({
     diplomes: z.array(diplomeSchema).optional(),
     certifications: z.array(certificationSchema).optional(),
     competences: z.array(competenceSchema).optional(),
+}).refine((data) => {
+    // Si aucune profession et aucune éducation, alors au moins une compétence est requise
+    const hasNoEducation = !data.educations || data.educations.length === 0 ||
+        data.educations.every(edu => !edu.titre && !edu.domaine && !edu.specialite && !edu.periode_debut && !edu.periode_fin && !edu.competences_acquises);
+
+    const hasNoProfession = !data.professions || data.professions.length === 0 ||
+        data.professions.every(prof => !prof.titre && !prof.domaine && !prof.periode_debut && !prof.periode_fin && !prof.task);
+
+    if (hasNoEducation && hasNoProfession) {
+        const hasCompetence = data.competences && data.competences.length > 0 &&
+            data.competences.some(comp => comp.nom && comp.nom.trim() !== "");
+        return hasCompetence;
+    }
+    return true;
+}, {
+    message: "Au moins une compétence est requise si aucune profession ou éducation n'est renseignée",
+    path: ["competences"]
 });
 
 type ProfessionnelFormValues = z.infer<typeof professionnelSchema>;
@@ -77,14 +97,14 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
     } = useForm<ProfessionnelFormValues>({
         resolver: zodResolver(professionnelSchema),
         defaultValues: {
-            educations: data.educations || [{ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "" }],
-            professions: data.professions || [{ titre: "", domaine: "", periode_debut: "", periode_fin: "" }],
+            educations: [],
+            professions: [],
             diplomes: data.diplomes || [],
             certifications: data.certifications || [],
-            competences: data.competences || [{ nom: "" }],
+            competences: [],
         },
     });
-    
+
     const {
         fields: educationFields,
         append: appendEducation,
@@ -130,12 +150,23 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
         name: "competences",
     });
 
+    const watchedEducations = watch("educations");
+    const watchedProfessions = watch("professions");
+
+    const hasNoEducation = !watchedEducations || watchedEducations.length === 0 ||
+        watchedEducations.every(edu => !edu.titre && !edu.domaine && !edu.specialite && !edu.periode_debut && !edu.periode_fin && !edu.competences_acquises);
+
+    const hasNoProfession = !watchedProfessions || watchedProfessions.length === 0 ||
+        watchedProfessions.every(prof => !prof.titre && !prof.domaine && !prof.periode_debut && !prof.periode_fin && !prof.task);
+
+    const isCompetenceRequired = hasNoEducation && hasNoProfession;
+
     return (
         <form id="professionnel-form" onSubmit={handleSubmit((data) => onSubmit(data))} className="space-y-8">
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Activités professionnelles</Label>
+                    <Label className="text-lg font-medium">Parcours professionnel</Label>
                 </div>
                 {professionFields.map((field, index) => (
                     <div key={field.id} className="space-y-4">
@@ -234,13 +265,26 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 )}
                             </div>
                         </div>
+                        <div className="space-y-2">
+                            <Label>Tâches effectuées</Label>
+                            <Textarea
+                                {...register(`professions.${index}.task`)}
+                                placeholder="Décrivez les principales tâches et responsabilités de cette profession..."
+                                className="min-h-[100px]"
+                            />
+                            {errors.professions?.[index]?.task && (
+                                <p className="text-sm text-red-500">
+                                    {errors.professions[index]?.task?.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 ))}
                 <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendProfession({ titre: "", domaine: "", periode_debut: "", periode_fin: "" })}
+                    onClick={() => appendProfession({ titre: "", domaine: "", periode_debut: "", periode_fin: "", task: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une profession
@@ -249,12 +293,12 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Éducation</Label>
+                    <Label className="text-lg font-medium">Parcours académique</Label>
                 </div>
                 {educationFields.map((field, index) => (
                     <div key={field.id} className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h4>Éducation {index + 1}</h4>
+                            <h4>École {index + 1}</h4>
                             <Button
                                 type="button"
                                 variant="ghost"
@@ -362,18 +406,19 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                     </p>
                                 )}
                             </div>
-                            {/* <div className="space-y-2">
-                                <Label>Spécialité</Label>
-                                <Input
-                                    {...register(`educations.${index}.specialite`)}
-                                    placeholder="Ex: Développement web, Finance..."
-                                />
-                                {errors.educations?.[index]?.specialite && (
-                                    <p className="text-sm text-red-500">
-                                        {errors.educations[index]?.specialite?.message}
-                                    </p>
-                                )}
-                            </div> */}
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Compétences acquises</Label>
+                            <Textarea
+                                {...register(`educations.${index}.competences_acquises`)}
+                                placeholder="Décrivez les compétences et connaissances acquises lors de cette formation..."
+                                className="min-h-[100px]"
+                            />
+                            {errors.educations?.[index]?.competences_acquises && (
+                                <p className="text-sm text-red-500">
+                                    {errors.educations[index]?.competences_acquises?.message}
+                                </p>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -381,10 +426,10 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "" })}
+                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "", competences_acquises: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
-                    Ajouter une éducation
+                    Ajouter une école
                 </Button>
             </div>
 
@@ -432,8 +477,16 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Compétences</Label>
+                    <Label className="text-lg font-medium">
+                        Compétences diverses
+                        {isCompetenceRequired && <span className="text-red-500 ml-1">*</span>}
+                    </Label>
                 </div>
+                {isCompetenceRequired && errors.competences && (
+                    <p className="text-sm text-red-500">
+                        Au moins une compétence est requise si aucune profession ou éducation n'est renseignée
+                    </p>
+                )}
                 {competenceFields.map((field, index) => (
                     <div key={field.id} className="flex items-center space-x-4">
                         <div className="flex-grow space-y-2">
@@ -470,7 +523,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Plus d’informations</Label>
+                    <Label className="text-lg font-medium">Commentaires additionnels</Label>
                 </div>
                 {certificationFields.map((field, index) => (
                     <div key={field.id} className="flex items-center space-x-4">
@@ -495,15 +548,6 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                         </Button>
                     </div>
                 ))}
-                {/* <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => appendCertification({ nom: "" })}
-                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
-                >
-                    Ajouter une information
-                </Button> */}
             </div>
         </form>
     );

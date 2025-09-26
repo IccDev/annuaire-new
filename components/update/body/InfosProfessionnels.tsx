@@ -5,6 +5,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Trash2, Check, ChevronsUpDown } from "lucide-react";
 import { ProfessionnelData, domaines, user_status } from "@/types/interfaces/annuaire-register";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
@@ -24,19 +25,21 @@ const educationSchema = z.object({
         if (!val || val === "") return true; // Champ optionnel
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 12/2023)" }),
+    competences_acquises: z.string().optional(),
 });
 
 const professionSchema = z.object({
     titre: z.string().optional(),
-    statut: z.string().optional(),
+    domaine: z.string().optional(),
     periode_debut: z.string().optional().refine((val) => {
-        if (!val || val === "") return true; 
+        if (!val || val === "") return true;
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 01/2021)" }),
     periode_fin: z.string().optional().refine((val) => {
-        if (!val || val === "") return true; 
+        if (!val || val === "") return true;
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 06/2024)" }),
+    task: z.string().optional(),
 });
 
 const diplomeSchema = z.object({
@@ -78,16 +81,15 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
     } = useForm<ProfessionnelFormValues>({
         resolver: zodResolver(professionnelSchema),
         defaultValues: {
-            educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "" }],
-            professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", statut: "", periode_debut: "", periode_fin: "" }],
+            educations: data.educations && data.educations.length > 0 ? data.educations : [{ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "", competences_acquises: "" }],
+            professions: data.professions && data.professions.length > 0 ? data.professions : [{ titre: "", domaine: "", periode_debut: "", periode_fin: "", task: "" }],
             diplomes: data.diplomes && data.diplomes.length > 0 ? data.diplomes : [],
             certifications: data.certifications && data.certifications.length > 0 ? data.certifications : [],
             competences: data.competences && data.competences.length > 0 ? data.competences : [{ nom: "" }],
         }
     });
 
-    // Les utilisateurs saisissent eux-mêmes le "/" - validation par Zod
-    
+
     const {
         fields: educationFields,
         append: appendEducation,
@@ -168,7 +170,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 )}
                             </div>
                             <div className="space-y-2">
-                                <Label>Statut</Label>
+                                <Label>Statut professionnel</Label>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <Button
@@ -176,7 +178,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                             role="combobox"
                                             className="w-full justify-between"
                                         >
-                                            {watch(`professions.${index}.statut`) || "Sélectionner un statut"}
+                                            {watch(`professions.${index}.domaine`) || "Sélectionner un statut"}
                                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                     </PopoverTrigger>
@@ -185,32 +187,32 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                             <CommandInput placeholder="Rechercher un statut..." />
                                             <CommandEmpty>Aucun statut trouvé.</CommandEmpty>
                                             <CommandGroup>
-                                                {user_status.map((statutItem) => (
+                                                {user_status.map((statusItem) => (
                                                     <CommandItem
-                                                        key={statutItem}
-                                                        value={statutItem}
+                                                        key={statusItem}
+                                                        value={statusItem}
                                                         onSelect={() => {
-                                                            setValue(`professions.${index}.statut`, statutItem);
+                                                            setValue(`professions.${index}.domaine`, statusItem);
                                                         }}
                                                     >
                                                         <Check
                                                             className={cn(
                                                                 "mr-2 h-4 w-4",
-                                                                watch(`professions.${index}.statut`) === statutItem
+                                                                watch(`professions.${index}.domaine`) === statusItem
                                                                     ? "opacity-100"
                                                                     : "opacity-0"
                                                             )}
                                                         />
-                                                        {statutItem}
+                                                        {statusItem}
                                                     </CommandItem>
                                                 ))}
                                             </CommandGroup>
                                         </Command>
                                     </PopoverContent>
                                 </Popover>
-                                {errors.professions?.[index]?.statut && (
+                                {errors.professions?.[index]?.domaine && (
                                     <p className="text-sm text-red-500">
-                                        {errors.professions[index]?.statut?.message}
+                                        {errors.professions[index]?.domaine?.message}
                                     </p>
                                 )}
                             </div>
@@ -241,13 +243,26 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                 )}
                             </div>
                         </div>
+                        <div className="space-y-2">
+                            <Label>Tâches effectuées</Label>
+                            <Textarea
+                                {...register(`professions.${index}.task`)}
+                                placeholder="Décrivez les principales tâches et responsabilités de cette profession..."
+                                className="min-h-[100px]"
+                            />
+                            {errors.professions?.[index]?.task && (
+                                <p className="text-sm text-red-500">
+                                    {errors.professions[index]?.task?.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 ))}
                 <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendProfession({ titre: "", statut: "", periode_debut: "", periode_fin: "" })}
+                    onClick={() => appendProfession({ titre: "", domaine: "", periode_debut: "", periode_fin: "", task: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une profession
@@ -373,18 +388,19 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                                     </p>
                                 )}
                             </div>
-                            {/* <div className="space-y-2">
-                                <Label>Spécialité</Label>
-                                <Input
-                                    {...register(`educations.${index}.specialite`)}
-                                    placeholder="Ex: Développement web, Finance..."
-                                />
-                                {errors.educations?.[index]?.specialite && (
-                                    <p className="text-sm text-red-500">
-                                        {errors.educations[index]?.specialite?.message}
-                                    </p>
-                                )}
-                            </div> */}
+                        </div>
+                        <div className="space-y-2">
+                            <Label>Compétences acquises</Label>
+                            <Textarea
+                                {...register(`educations.${index}.competences_acquises`)}
+                                placeholder="Décrivez les compétences et connaissances acquises lors de cette formation..."
+                                className="min-h-[100px]"
+                            />
+                            {errors.educations?.[index]?.competences_acquises && (
+                                <p className="text-sm text-red-500">
+                                    {errors.educations[index]?.competences_acquises?.message}
+                                </p>
+                            )}
                         </div>
                     </div>
                 ))}
@@ -392,7 +408,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "" })}
+                    onClick={() => appendEducation({ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "", competences_acquises: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
                     Ajouter une éducation
@@ -506,15 +522,6 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                         </Button>
                     </div>
                 ))}
-                {/* <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => appendCertification({ nom: "" })}
-                    className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
-                >
-                    Ajouter une information
-                </Button> */}
             </div>
         </form>
     );

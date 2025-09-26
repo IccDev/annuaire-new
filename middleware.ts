@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path);
 
   if (sessionCookie && isPublicRoute) {
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(new URL("/user", request.url));
   }
 
   if (!sessionCookie && isProtectedRoute) {

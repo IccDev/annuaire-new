@@ -102,7 +102,6 @@ export default function UpdateDirectPage() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
             <main className="container mx-auto px-4 py-12">
                 <div className="max-w-4xl mx-auto">
-                    {/* Bouton de retour */}
                     <div className="mb-6">
                         <button
                             onClick={() => router.push('/user')}

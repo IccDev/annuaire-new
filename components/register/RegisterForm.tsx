@@ -84,13 +84,15 @@ export default function RegisterForm(props: {defaultRegisterFormData: RegisterFo
                 titre: edu.titre || "",
                 specialite: edu.specialite || "",
                 periode_debut: edu.periode_debut || "",
-                periode_fin: edu.periode_fin || ""
+                periode_fin: edu.periode_fin || "",
+                competences_acquises: edu.competences_acquises || ""
             })),
             professions: (data.professions || []).filter(prof => prof.domaine || prof.titre).map(prof => ({
                 domaine: prof.domaine || "",
                 titre: prof.titre || "",
                 periode_debut: prof.periode_debut || "",
-                periode_fin: prof.periode_fin || ""
+                periode_fin: prof.periode_fin || "",
+                task: prof.task || ""
             })),
             diplomes: (data.diplomes || []).filter(dip => dip.nom).map(dip => ({
                 nom: dip.nom

@@ -150,6 +150,7 @@ export interface Education {
   specialite: string;
   periode_debut?: string;
   periode_fin?: string;
+  competences_acquises?: string;
 }
 
 export interface Profession {
@@ -157,6 +158,7 @@ export interface Profession {
   titre?: string;
   periode_debut?: string;
   periode_fin?: string;
+  task?: string;
 }
 
 export interface Diplome {
@@ -193,16 +195,18 @@ export const defaultProfessionnelData = {
       domaine: "",
       titre: "",
       specialite: "",
-      periodeDebut: "",
-      periodeFin: ""
+      periode_debut: "",
+      periode_fin: "",
+      competences_acquises: "",
     },
   ],
   professions: [
     {
       domaine: "",
       titre: "",
-      periodeDebut: "",
-      periodeFin: ""
+      periode_debut: "",
+      periode_fin: "",
+      task: "",
     },
   ],
   diplomes: [

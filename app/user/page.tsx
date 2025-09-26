@@ -13,7 +13,11 @@ interface User {
   createdAt: Date;
 }
 
-export default async function UserProfilePage() {
+interface PageProps {
+  searchParams: { from?: string };
+}
+
+export default async function UserProfilePage({ searchParams }: PageProps) {
   const session = await getSession();
   const user = session?.user;
 
@@ -53,6 +57,10 @@ export default async function UserProfilePage() {
 
   const data = await res.json();
   const hasProfile = data.data.length > 0;
+
+  if (hasProfile && searchParams.from === 'login') {
+    redirect("/home");
+  }
 
   const isReferent = dbUser.role === 'REFERENT';
   const isAdmin = dbUser.role === 'ADMIN';

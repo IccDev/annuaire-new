@@ -1,18 +1,49 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { nextCookies } from "better-auth/next-js";
 import prisma from "./prisma";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: "postgresql", 
+    provider: "postgresql",
   }),
+  plugins: [nextCookies()],
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,
+    },
+  },
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+    },
+  },
+
+  trustedOrigins:
+    process.env.NODE_ENV === "production"
+      ? ["https://annuaire.impactcentrechretien.eu"]
+      : undefined,
   emailAndPassword: {
     enabled: true,
-    sendResetPassword: async ({ user, token, url }: { user: any; token: string; url: string }) => {
-      console.log("sendResetPassword appelé pour:", user.email, "token:", token.substring(0, 10) + "...");
+    sendResetPassword: async ({
+      user,
+      token,
+      url,
+    }: {
+      user: any;
+      token: string;
+      url: string;
+    }) => {
+      console.log(
+        "sendResetPassword appelé pour:",
+        user.email,
+        "token:",
+        token.substring(0, 10) + "..."
+      );
       const { Resend } = await import("resend");
       const resend = new Resend(process.env.RESEND_API_KEY);
-      
+
       try {
         await resend.emails.send({
           from: "ICC Annuaire <no-reply@impactcentrechretien.eu>",
@@ -41,7 +72,7 @@ export const auth = betterAuth({
                   <p>Pour créer un nouveau mot de passe, veuillez cliquer sur le bouton ci-dessous :</p>
                   <a href="${url}" class="button">Réinitialiser mon mot de passe</a>
                   <div class="warning">
-                    <strong>⚠️ Important :</strong> Ce lien est valide pendant 1 heure seulement. Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.
+                    <strong> Important :</strong> Ce lien est valide pendant 1 heure seulement. Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.
                   </div>
                   <div class="footer">
                     <p>Cordialement,<br>L'équipe informatique (DSI)</p>
@@ -53,7 +84,10 @@ export const auth = betterAuth({
           `,
         });
       } catch (error) {
-        console.error("Erreur lors de l'envoi de l'email de réinitialisation:", error);
+        console.error(
+          "Erreur lors de l'envoi de l'email de réinitialisation:",
+          error
+        );
         throw error;
       }
     },

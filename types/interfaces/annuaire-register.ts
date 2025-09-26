@@ -64,6 +64,7 @@ export type Education = {
   specialite?: string;
   periode_debut?: string;
   periode_fin?: string;
+  competences_acquises?: string;
 };
 
 export type Profession = {
@@ -71,6 +72,7 @@ export type Profession = {
   titre?: string;
   periode_debut?: string;
   periode_fin?: string;
+  task?: string;
 };
 
 export type ZodEducation = {
@@ -79,6 +81,7 @@ export type ZodEducation = {
   specialite?: Maybe<string>;
   periode_debut?: Maybe<string>;
   periode_fin?: Maybe<string>;
+  competences_acquises?: Maybe<string>;
 };
 
 export type ZodProfession = {
@@ -86,6 +89,7 @@ export type ZodProfession = {
   titre?: Maybe<string>;
   periode_debut?: Maybe<string>;
   periode_fin?: Maybe<string>;
+  task?: Maybe<string>;
 };
 
 export type ZodProfessionnelData = {
@@ -132,6 +136,7 @@ export const defaultProfessionnelData: ProfessionnelData = {
       specialite: "",
       periode_debut: "",
       periode_fin: "",
+      competences_acquises: "",
     },
   ],
   professions: [
@@ -140,6 +145,7 @@ export const defaultProfessionnelData: ProfessionnelData = {
       titre: "",
       periode_debut: "",
       periode_fin: "",
+      task: "",
     },
   ],
   diplomes: [
@@ -210,6 +216,7 @@ export const get_professionnel = (
           specialite: d?.specialite || "",
           periode_debut: d?.periode_debut || "",
           periode_fin: d?.periode_fin || "",
+          competences_acquises: d?.competences_acquises || "",
         })) || [],
     professions:
       pro.professions
@@ -219,6 +226,7 @@ export const get_professionnel = (
           titre: d?.titre || "",
           periode_debut: d?.periode_debut || "",
           periode_fin: d?.periode_fin || "",
+          task: d?.task || "",
         })) || [],
     diplomes:
       pro.diplomes
@@ -246,6 +254,7 @@ export const user_status = [
   "Employé",
   "Etudiant ",
   "A la recherche",
+  "Retraité",
 ];
 
 export const domaines = [

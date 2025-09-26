@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
-import { checkProfessionalProfile } from "@/actions/user";
+
 import { toast } from "sonner";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import IccLogo from "../../public/images/icc.png";
@@ -65,9 +65,8 @@ export default function LoginForm() {
         {
           onSuccess: async () => {
             toast.success("Connexion réussie !");
-            await checkProfessionalProfile(values.email);
             setTimeout(() => {
-              router.push("/home");
+              router.push("/user?from=login");
               router.refresh();
             }, 1000);
           },

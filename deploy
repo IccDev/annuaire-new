@@ -1,5 +1,6 @@
-5.docker push iccbrx/annuaire_ui:dev
-4.docker tag 62262c585d6c iccbrx/annuaire_ui:dev
-3.docker image ls
-2.docker login -u iccbrx -p IccDev@2023 docker.io
+
 1.docker compose build annuaire_ui  
+2.docker login -u iccbrx -p IccDev@2023 docker.io
+3.docker image ls
+4.docker tag 62262c585d6c iccbrx/annuaire_ui:dev
+5.docker push iccbrx/annuaire_ui:dev

@@ -5,7 +5,7 @@ import InfosPersonnelles from "./body/InfosPersonnelles";
 import InfosEglise from "./body/InfosEglise";
 import InfosProfessionnels from "./body/InfosProfessionnels";
 import Footer from "./body/Footer";
-// import { defaultRegisterFormData } from "@/types/interfaces/annuaire-register";
+
 import type { PersonnelData, EgliseData, ProfessionnelData, RegisterFormData } from "@/types/interfaces/annuaire-register";
 
 type Step = "personnel" | "eglise" | "professionnel" | "end";
@@ -94,13 +94,15 @@ export default function RegisterForm(props: RegisterFormProps) {
                 titre: edu.titre || "",
                 specialite: edu.specialite || "",
                 periode_debut: edu.periode_debut || "",
-                periode_fin: edu.periode_fin || ""
+                periode_fin: edu.periode_fin || "",
+                competences_acquises: edu.competences_acquises || ""
             })),
             professions: (data.professions || props.defaultRegisterFormData.professionnel.professions || []).filter(prof => prof.domaine || prof.titre).map(prof => ({
                 domaine: prof.domaine || "",
                 titre: prof.titre || "",
                 periode_debut: prof.periode_debut || "",
-                periode_fin: prof.periode_fin || ""
+                periode_fin: prof.periode_fin || "",
+                task: prof.task || ""
             })),
             diplomes: (data.diplomes || props.defaultRegisterFormData.professionnel.diplomes || []).filter(dip => dip.nom).map(dip => ({
                 nom: dip.nom

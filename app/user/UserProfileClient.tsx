@@ -32,20 +32,20 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
-            const result = await signOut();
-            console.log('Déconnexion réussie:', result);
-            localStorage.clear();
-            sessionStorage.clear();
-
-            window.location.replace('/auth/login');
-
+            await signOut({
+                fetchOptions: {
+                    onSuccess: () => {
+                        window.location.replace('/auth/login');
+                    },
+                    onError: (err) => {
+                        console.error('Erreur lors de la déconnexion:', err.error);
+                        window.location.replace('/auth/login');
+                    }
+                }
+            });
         } catch (error) {
-            console.error('Erreur détaillée lors de la déconnexion:', error);
+            console.error('Erreur de déconnexion:', error);
             setIsLoggingOut(false);
-
-            localStorage.clear();
-            sessionStorage.clear();
-
             setTimeout(() => {
                 window.location.replace('/auth/login');
             }, 1000);
@@ -55,10 +55,17 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 md:p-8">
             <div className="max-w-4xl mx-auto mb-6">
-                <Link href="/home" className="inline-flex items-center text-slate-600 hover:text-slate-800 transition-colors duration-200">
-                    <ArrowLeft className="w-5 h-5 mr-2" />
-                    <span className="font-medium">Retour à l'accueil</span>
-                </Link>
+                {hasProfile ? (
+                    <Link href="/home" className="inline-flex items-center text-slate-600 hover:text-slate-800 transition-colors duration-200">
+                        <ArrowLeft className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Aller vers l'accueil</span>
+                    </Link>
+                ) : (
+                    <div className="inline-flex items-center text-slate-400 cursor-not-allowed">
+                        <ArrowLeft className="w-5 h-5 mr-2" />
+                        <span className="font-medium">Accueil (disponible après création du profil)</span>
+                    </div>
+                )}
             </div>
 
             <div className="max-w-4xl mx-auto">
@@ -130,6 +137,33 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                         </Link>
                                     )}
                                 </div>
+
+                                {!hasProfile && (
+                                    <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
+                                        <div className="flex items-start space-x-3">
+                                            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full flex items-center justify-center">
+                                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-bold text-blue-700 text-sm uppercase tracking-wide mb-2">
+                                                    Information importante
+                                                </h4>
+                                                <p className="text-slate-700 italic leading-relaxed text-sm">
+                                                    Pour accéder à l'annuaire des professions et découvrir les profils des autres membres de l'église,
+                                                    vous devez d'abord <span className="font-semibold text-blue-600">créer votre propre fiche professionnelle</span>.
+                                                </p>
+                                                <div className="mt-3 flex items-center space-x-2">
+                                                    {/* <div className="w-2 h-2 bg-sky-400 rounded-full animate-pulse"></div> */}
+                                                    <p className="text-xs text-blue-500 font-medium">
+                                                        Créez votre fiche dès maintenant pour rejoindre la communauté !
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {(isReferent || isAdmin) && (
                                     <div className="rounded-xl p-6">
