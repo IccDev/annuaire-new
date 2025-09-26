@@ -10,13 +10,12 @@ export const auth = betterAuth({
   plugins: [nextCookies()],
   session: {
     cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
+      enabled: false,
     },
   },
   advanced: {
     crossSubDomainCookies: {
-      enabled: true,
+      enabled: false,
     },
   },
 

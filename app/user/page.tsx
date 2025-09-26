@@ -14,7 +14,7 @@ interface User {
 }
 
 interface PageProps {
-  searchParams: { from?: string };
+  searchParams: Promise<{ from?: string }>;
 }
 
 export default async function UserProfilePage({ searchParams }: PageProps) {
@@ -24,6 +24,8 @@ export default async function UserProfilePage({ searchParams }: PageProps) {
   if (!user) {
     redirect("/auth/login");
   }
+
+  const params = await searchParams;
 
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
@@ -58,7 +60,7 @@ export default async function UserProfilePage({ searchParams }: PageProps) {
   const data = await res.json();
   const hasProfile = data.data.length > 0;
 
-  if (hasProfile && searchParams.from === 'login') {
+  if (hasProfile && params.from === 'login') {
     redirect("/home");
   }
 

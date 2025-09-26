@@ -46,11 +46,11 @@ export async function GET(
 
     const data = await res.json();
     
-    console.log("Raw data from external API:", JSON.stringify(data, null, 2));
+    // console.log("Raw data from external API:", JSON.stringify(data, null, 2));
     
     const transformedData = transformDataFromExternalAPI(data);
     
-    console.log("Transformed data:", JSON.stringify(transformedData, null, 2));
+    // console.log("Transformed data:", JSON.stringify(transformedData, null, 2));
     
     return NextResponse.json(transformedData);
   } catch (error) {
