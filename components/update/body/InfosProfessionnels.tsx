@@ -18,11 +18,11 @@ const educationSchema = z.object({
     domaine: z.string().optional(),
     specialite: z.string().optional(),
     periode_debut: z.string().optional().refine((val) => {
-        if (!val || val === "") return true; // Champ optionnel
+        if (!val || val === "") return true;
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 09/2020)" }),
     periode_fin: z.string().optional().refine((val) => {
-        if (!val || val === "") return true; // Champ optionnel
+        if (!val || val === "") return true;
         return /^(0[1-9]|1[0-2])\/\d{4}$/.test(val);
     }, { message: "Format invalide. Utilisez MM/YYYY (ex: 12/2023)" }),
     competences_acquises: z.string().optional(),
@@ -140,7 +140,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Activités professionnelles</Label>
+                    <Label className="text-lg font-medium">Parcours professionnel</Label>
                 </div>
                 {professionFields.map((field, index) => (
                     <div key={field.id} className="space-y-4">
@@ -247,7 +247,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                             <Label>Tâches effectuées</Label>
                             <Textarea
                                 {...register(`professions.${index}.task`)}
-                                placeholder="Décrivez les principales tâches et responsabilités de cette profession..."
+                                placeholder="Décrivez les principales tâches et responsabilités… "
                                 className="min-h-[100px]"
                             />
                             {errors.professions?.[index]?.task && (
@@ -271,12 +271,13 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Éducation</Label>
+                    <Label className="text-lg font-medium">Parcours académique
+                    </Label>
                 </div>
                 {educationFields.map((field, index) => (
                     <div key={field.id} className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h4>Éducation {index + 1}</h4>
+                            <h4>École {index + 1}</h4>
                             <Button
                                 type="button"
                                 variant="ghost"
@@ -393,7 +394,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                             <Label>Compétences acquises</Label>
                             <Textarea
                                 {...register(`educations.${index}.competences_acquises`)}
-                                placeholder="Décrivez les compétences et connaissances acquises lors de cette formation..."
+                                placeholder="Décrivez les compétences et connaissances acquises…"
                                 className="min-h-[100px]"
                             />
                             {errors.educations?.[index]?.competences_acquises && (
@@ -411,7 +412,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
                     onClick={() => appendEducation({ titre: "", domaine: "", specialite: "", periode_debut: "", periode_fin: "", competences_acquises: "" })}
                     className="w-full bg-slate-600 hover:bg-slate-400 text-white mt-4"
                 >
-                    Ajouter une éducation
+                    Ajouter une école
                 </Button>
             </div>
 
@@ -459,7 +460,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Compétences</Label>
+                    <Label className="text-lg font-medium">Compétences diverses</Label>
                 </div>
                 {competenceFields.map((field, index) => (
                     <div key={field.id} className="flex items-center space-x-4">
@@ -497,7 +498,7 @@ export default function InfosProfessionnels({ data, onSubmit }: InfosProfessionn
 
             <div className="space-y-4 pb-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                    <Label className="text-lg font-medium">Plus d’informations</Label>
+                    <Label className="text-lg font-medium">Commentaires additionnels</Label>
                 </div>
                 {certificationFields.map((field, index) => (
                     <div key={field.id} className="flex items-center space-x-4">

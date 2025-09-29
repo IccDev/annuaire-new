@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-// import { redirect } from "next/navigation";
 import { getUSer } from "@/lib/auth-server";
 
 export async function createCandidate(emailCandidate: string) {

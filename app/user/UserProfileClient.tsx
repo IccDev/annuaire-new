@@ -63,7 +63,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                 ) : (
                     <div className="inline-flex items-center text-slate-400 cursor-not-allowed">
                         <ArrowLeft className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Accueil (disponible après création du profil)</span>
+                        <span className="font-medium">Disponible après la création de votre fiche professionnelle</span>
                     </div>
                 )}
             </div>
@@ -141,13 +141,13 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                 {!hasProfile && (
                                     <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
                                         <div className="flex items-start space-x-3">
-                                            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-sky-400 to-blue-500 rounded-full flex items-center justify-center">
+                                            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-amber-400 to-red-500 rounded-full flex items-center justify-center">
                                                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                                 </svg>
                                             </div>
                                             <div className="flex-1">
-                                                <h4 className="font-bold text-blue-700 text-sm uppercase tracking-wide mb-2">
+                                                <h4 className="font-bold text-red-600 text-sm uppercase tracking-wide mb-2">
                                                     Information importante
                                                 </h4>
                                                 <p className="text-slate-700 italic leading-relaxed text-sm">
@@ -156,8 +156,8 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                                 </p>
                                                 <div className="mt-3 flex items-center space-x-2">
                                                     {/* <div className="w-2 h-2 bg-sky-400 rounded-full animate-pulse"></div> */}
-                                                    <p className="text-xs text-blue-500 font-medium">
-                                                        Créez votre fiche dès maintenant pour rejoindre la communauté !
+                                                    <p className="text-xs text-red-500 font-medium">
+                                                        Créer votre fiche dès maintenant en cliquant sur le bouton au dessus !
                                                     </p>
                                                 </div>
                                             </div>

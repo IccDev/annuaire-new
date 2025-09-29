@@ -9,17 +9,15 @@ import {
 export const uploadImage = async (file: File): Promise<string> => {
   try {
     const imageRef = ref(storage, `profile-photos/${Date.now()}-${file.name}`);
-
     const snapshot = await uploadBytes(imageRef, file);
-
     const downloadURL = await getDownloadURL(snapshot.ref);
-
     return downloadURL;
   } catch (error) {
     console.error("Erreur lors du téléchargement de l'image:", error);
     throw new Error("Échec du téléchargement de l'image");
   }
 };
+
 
 export const uploadProfileImage = async (
   file: File,
@@ -41,6 +39,8 @@ export const uploadProfileImage = async (
     throw new Error("Échec du téléchargement de la photo de profil");
   }
 };
+
+
 
 export const deleteProfileImage = async (imageUrl: string): Promise<void> => {
   try {

@@ -79,7 +79,7 @@ const Search = () => {
         console.log("Recherche effectuée avec les données :", data);
     };
 
- 
+
 
     return (
         <>
@@ -164,23 +164,22 @@ export default function HomePage() {
                     <span className="text-xs font-semibold">Mon profil</span>
                 </Link>
             </div>
-            <div className="h-1/4 w-full rounded-lg bg-white p-1">
-                <div className="relative h-full w-full overflow-hidden rounded-lg bg-neutral-200">
+            <div className="w-full rounded-lg bg-white p-1">
+                <div className="relative w-full h-56 sm:h-64 md:h-80 lg:h-96 xl:h-[26rem] 2xl:h-[28rem] overflow-hidden rounded-lg bg-neutral-200">
                     <Image
                         src={AnnuaireImg}
                         alt="Annuaire"
-                        className="w-full"
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
                     />
                 </div>
             </div>
             <p className="mt-4 text-center text-2xl sm:text-4xl font-bold text-slate-600">
-                {"Retrouvez les différents corps de métier dans la famille ICC"}
+                {"Retrouvez les différents corps de métiers dans la famille ICC"}
             </p>
             <p className="p-4 text-center text-sm sm:text-base">
-                Annuaire des églises ICC visant à faciliter l'accès aux différents
-                professionnels au sein de l'église.{" "}
+                Annuaire des églises ICC visant à faciliter l'accès aux différentes compétences au sein de l'église.{" "}
             </p>
             <div className="w-full rounded-lg bg-white p-4 sm:p-6">
                 <p className="mb-4 text-lg font-semibold">
