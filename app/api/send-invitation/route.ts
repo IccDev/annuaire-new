@@ -35,12 +35,13 @@ export async function POST(req: Request) {
           </head>
           <body>
             <div class="container">
-              <h2>Bienvenue sur l'Annuaire des Professions de l'Église.</h2>
+              <h2>Bienvenue sur l'Annuaire des Professions des compétences d'ICC Belgique.</h2>
               <p>Bonjour,</p>
-              <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux professions de l'Église Impact Centre Chrétien. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
+              <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux corps des métiers et compétences d'ICC Belgique. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
               <a href="${url_formulaire}" class="button">Créer mon profil</a>
               <div class="footer">
                 <p>Cordialement,<br>L'équipe informatique (DSI)</p>
+                <p><i> Ce lien expirera dans 5 jours</i></p>
                 <p>iccdev@impactcentrechretien.eu</p>
               </div>
             </div>

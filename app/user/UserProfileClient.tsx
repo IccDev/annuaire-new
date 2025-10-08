@@ -63,7 +63,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                 ) : (
                     <div className="inline-flex items-center text-slate-400 cursor-not-allowed">
                         <ArrowLeft className="w-5 h-5 mr-2" />
-                        <span className="font-medium">Disponible après la création de votre fiche professionnelle</span>
+                        <span className="font-medium">Accueil(Disponible après la création de votre fiche professionnelle)</span>
                     </div>
                 )}
             </div>
@@ -157,7 +157,7 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                                 <div className="mt-3 flex items-center space-x-2">
                                                     {/* <div className="w-2 h-2 bg-sky-400 rounded-full animate-pulse"></div> */}
                                                     <p className="text-xs text-red-500 font-medium">
-                                                        Créer votre fiche dès maintenant en cliquant sur le bouton au dessus !
+                                                        Créez votre fiche dès maintenant en cliquant sur le bouton au dessus !
                                                     </p>
                                                 </div>
                                             </div>
