@@ -11,7 +11,7 @@ export default function AdminDashboard() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-700 via-slate-600 to-slate-800 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-slate-900 bg-clip-text text-transparent">
             Tableau de bord
           </h1>
           <p className="text-slate-600 mt-1 flex items-center space-x-2">

@@ -50,9 +50,9 @@ export default async function StatsCards() {
       value: stats.totalUsers.toString(),
       description: "Membres inscrits",
       icon: Users,
-      gradient: "from-slate-500 to-slate-600",
-      bgGradient: "from-slate-50 to-slate-100/50",
-      iconBg: "bg-slate-500",
+      gradient: "bg-slate-900",
+      bgGradient: "from-blue-50 to-blue-100/50",
+      iconBg: "bg-blue-500",
       trend: null
     },
     {
@@ -60,9 +60,9 @@ export default async function StatsCards() {
       value: stats.totalReferents.toString(),
       description: "Référents et admins",
       icon: UserCheck,
-      gradient: "from-slate-600 to-slate-700",
-      bgGradient: "from-slate-50 to-slate-100/50", 
-      iconBg: "bg-slate-600",
+      gradient: "bg-slate-900",
+      bgGradient: "from-emerald-50 to-emerald-100/50", 
+      iconBg: "bg-emerald-600",
       trend: null
     },
     // {
@@ -80,9 +80,9 @@ export default async function StatsCards() {
       value: stats.usersThisMonth.toString(),
       description: "Nouveaux ce mois",
       icon: Activity,
-      gradient: "from-slate-700 to-slate-900",
-      bgGradient: "from-slate-50 to-slate-100/50",
-      iconBg: "bg-slate-700",
+      gradient: "bg-slate-900",
+      bgGradient: "from-violet-50 to-purple-100/50",
+      iconBg: "bg-violet-700",
       trend: null
     }
   ];
@@ -102,9 +102,9 @@ export default async function StatsCards() {
               <CardTitle className="text-sm font-semibold text-slate-600">
                 {card.title}
               </CardTitle>
-              <div className={`w-10 h-10 rounded-xl ${card.iconBg} flex items-center justify-center shadow-lg`}>
+              {/* <div className={`w-10 h-10 rounded-xl ${card.iconBg} flex items-center justify-center shadow-lg`}>
                 <Icon className="w-5 h-5 text-white" />
-              </div>
+              </div> */}
             </CardHeader>
             
             <CardContent className="space-y-3">

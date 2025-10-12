@@ -19,15 +19,15 @@ const chartConfig = {
   },
   Utilisateurs: {
     label: "Utilisateurs",
-    color: "#475569",
+    color: "#3b82f6",
   },
   Référents: {
     label: "Référents", 
-    color: "#64748b",
+    color: "#10b981",
   },
   Admins: {
     label: "Admins",
-    color: "#374151",
+    color: "#f59e0b",
   },
 } satisfies ChartConfig;
 
@@ -45,9 +45,9 @@ export default function RoleDistribution() {
       if (response.ok) {
         const data = await response.json();
         const formattedData = [
-          { name: "Utilisateurs", value: data.users, color: "#475569", icon: Users },
-          { name: "Référents", value: data.referents, color: "#64748b", icon: UserCheck },
-          { name: "Admins", value: data.admins, color: "#374151", icon: Crown },
+          { name: "Utilisateurs", value: data.users, color: "#3b82f6", icon: Users },
+          { name: "Référents", value: data.referents, color: "#10b981", icon: UserCheck },
+          { name: "Admins", value: data.admins, color: "#f59e0b", icon: Crown },
         ].filter(item => item.value > 0);
         setRoleData(formattedData);
       }
@@ -55,7 +55,7 @@ export default function RoleDistribution() {
       console.error('Erreur lors du chargement de la répartition des rôles:', error);
 
       setRoleData([
-        { name: "Utilisateurs", value: 1, color: "#475569", icon: Users }
+        { name: "Utilisateurs", value: 1, color: "#3b82f6", icon: Users }
       ]);
     } finally {
       setLoading(false);
@@ -75,14 +75,14 @@ export default function RoleDistribution() {
     <Card className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div>
-          <CardTitle className="text-base font-semibold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+          <CardTitle className="text-base font-semibold bg-gradient-to-r from-emerald-700 to-teal-900 bg-clip-text text-transparent">
             Répartition des rôles
           </CardTitle>
           <CardDescription className="text-slate-500 mt-1">
             Distribution des utilisateurs par rôle
           </CardDescription>
         </div>
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-800 flex items-center justify-center">
           <Users className="w-4 h-4 text-white" />
         </div>
       </CardHeader>
@@ -124,10 +124,10 @@ export default function RoleDistribution() {
             {roleData.map((role, index) => {
               const Icon = role.icon;
               return (
-                <div key={index} className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-slate-50/50 to-emerald-50/30 border border-emerald-100/50">
+                <div key={index} className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-white/80 to-slate-50/50 border border-slate-100/50 hover:shadow-md transition-all">
                   <div className="flex items-center space-x-3">
                     <div 
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-semibold"
+                      className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-semibold shadow-lg"
                       style={{ backgroundColor: role.color }}
                     >
                       <Icon className="w-4 h-4" />

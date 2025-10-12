@@ -48,13 +48,13 @@ function getActivityIcon(type: string) {
 function getActivityColor(type: string) {
   switch (type) {
     case 'user_registered':
-      return 'from-slate-500 to-slate-600';
+      return 'from-blue-500 to-blue-600';
     case 'role_changed':
-      return 'from-slate-600 to-slate-700';
+      return 'from-emerald-600 to-emerald-700';
     case 'invitation_sent':
-      return 'from-slate-400 to-slate-500';
+      return 'from-purple-400 to-purple-500';
     default:
-      return 'from-slate-500 to-slate-600';
+      return 'from-blue-500 to-blue-600';
   }
 }
 
@@ -82,7 +82,7 @@ export default async function RecentActivity() {
     <Card className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
         <div>
-          <CardTitle className="text-base font-semibold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+          <CardTitle className="text-base font-semibold bg-gradient-to-r from-orange-700 to-amber-900 bg-clip-text text-transparent">
             Activité récente
           </CardTitle>
           <CardDescription className="text-slate-500 mt-1">
@@ -93,7 +93,7 @@ export default async function RecentActivity() {
           {/* <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-amber-500 flex items-center justify-center">
             <Activity className="w-4 h-4 text-white" />
           </div> */}
-          <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
+          <Badge className="bg-green-100 text-green-700 border-green-200">
             Live
           </Badge>
         </div>
@@ -106,9 +106,9 @@ export default async function RecentActivity() {
             const colorClass = getActivityColor(activity.type);
 
             return (
-              <div key={activity.id} className="group flex items-start space-x-4 p-4 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-amber-50/30 transition-all duration-300 hover:scale-[1.01]">
+              <div key={activity.id} className="group flex items-start space-x-4 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/30 transition-all duration-300 hover:scale-[1.01]">
                 {index < activities.length - 1 && (
-                  <div className="absolute left-[52px] mt-12 w-0.5 h-8 bg-gradient-to-b from-emerald-200 to-transparent" />
+                  <div className="absolute left-[52px] mt-12 w-0.5 h-8 bg-gradient-to-b from-blue-200 to-transparent" />
                 )}
 
 
@@ -121,7 +121,7 @@ export default async function RecentActivity() {
                     <div className="flex items-center space-x-3">
                       <Avatar className="w-8 h-8 ring-2 ring-white shadow-md">
                         <AvatarImage src={(activity as any).imageUrl || undefined} alt={activity.user} />
-                        <AvatarFallback className="bg-gradient-to-br from-slate-400 to-slate-500 text-white text-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-indigo-400 to-blue-500 text-white text-sm">
                           {activity.user.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>

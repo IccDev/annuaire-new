@@ -54,7 +54,7 @@ export default function UserGrowthChart() {
     <Card className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div>
-          <CardTitle className="text-base font-semibold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent">
+          <CardTitle className="text-base font-semibold bg-gradient-to-r from-indigo-700 to-blue-900 bg-clip-text text-transparent">
             Croissance des utilisateurs
           </CardTitle>
           <CardDescription className="text-slate-500 mt-1">
@@ -62,7 +62,7 @@ export default function UserGrowthChart() {
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-blue-800 flex items-center justify-center">
             <TrendingUp className="w-4 h-4 text-white" />
           </div>
         </div>
@@ -74,8 +74,8 @@ export default function UserGrowthChart() {
             <AreaChart data={chartData}>
               <defs>
                 <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#475569" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#475569" stopOpacity={0.1} />
+                  <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
               <XAxis
@@ -90,17 +90,17 @@ export default function UserGrowthChart() {
                 tick={{ fontSize: 12, fill: '#64748b' }}
               />
               <ChartTooltip
-                cursor={{ stroke: '#475569', strokeWidth: 2, strokeDasharray: '5 5' }}
+                cursor={{ stroke: '#4f46e5', strokeWidth: 2, strokeDasharray: '5 5' }}
                 content={<ChartTooltipContent />}
               />
               <Area
                 type="monotone"
                 dataKey="users"
-                stroke="#475569"
+                stroke="#4f46e5"
                 strokeWidth={3}
                 fill="url(#colorUsers)"
-                dot={{ fill: '#475569', strokeWidth: 2, stroke: '#ffffff', r: 4 }}
-                activeDot={{ r: 6, stroke: '#475569', strokeWidth: 2, fill: '#ffffff' }}
+                dot={{ fill: '#4f46e5', strokeWidth: 2, stroke: '#ffffff', r: 4 }}
+                activeDot={{ r: 6, stroke: '#4f46e5', strokeWidth: 2, fill: '#ffffff' }}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -112,8 +112,8 @@ export default function UserGrowthChart() {
             <span>Derniers 8 mois</span>
           </div> */}
           {/* <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-slate-600 rounded-full"></div>
-            <span className="text-sm text-slate-600">+28% ce mois</span>
+            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+            <span className="text-sm text-indigo-600">+28% ce mois</span>
           </div> */}
         </div>
       </CardContent>
