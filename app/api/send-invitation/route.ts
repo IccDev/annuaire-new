@@ -35,7 +35,7 @@ export async function POST(req: Request) {
           </head>
           <body>
             <div class="container">
-              <h2>Bienvenue sur l'Annuaire des Professions des compétences d'ICC Belgique.</h2>
+              <h2>Bienvenue sur l'Annuaire des compétences d'ICC Belgique.</h2>
               <p>Bonjour,</p>
               <p>Vous êtes invité(e) à rejoindre notre annuaire dédié aux corps des métiers et compétences d'ICC Belgique. Pour créer votre profil, veuillez cliquer sur le bouton ci-dessous :</p>
               <a href="${url_formulaire}" class="button">Créer mon profil</a>

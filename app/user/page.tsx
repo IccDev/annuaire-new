@@ -35,6 +35,11 @@ export default async function UserProfilePage({ searchParams }: PageProps) {
     redirect("/auth/login");
   }
 
+  // Récupérer le nombre d'annonces de l'utilisateur
+  const userPostsCount = await prisma.post.count({
+    where: { authorId: dbUser.id },
+  });
+
   const fullUser: User = {
     id: dbUser.id,
     name: dbUser.name,
@@ -73,6 +78,7 @@ export default async function UserProfilePage({ searchParams }: PageProps) {
       hasProfile={hasProfile}
       isReferent={isReferent}
       isAdmin={isAdmin}
+      userPostsCount={userPostsCount}
     />
   );
 }

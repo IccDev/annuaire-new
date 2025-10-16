@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { ArrowLeft, Edit3, User, Settings, Shield, UserPlus, LogOut, Calendar } from 'lucide-react';
+import { ArrowLeft, Edit3, User, Settings, Shield, UserPlus, LogOut, Calendar, FileText, Briefcase, PlusCircle } from 'lucide-react';
 
 
 interface User {
@@ -24,9 +25,10 @@ interface UserProfileClientProps {
     hasProfile: boolean;
     isReferent: boolean;
     isAdmin: boolean;
+    userPostsCount: number;
 }
 
-const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfileClientProps) => {
+const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin, userPostsCount }: UserProfileClientProps) => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const handleLogout = async () => {
@@ -164,6 +166,53 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin }: UserProfil
                                         </div>
                                     </div>
                                 )}
+
+                                {/* <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-6 border border-emerald-200">
+                                    <h3 className="font-semibold text-slate-800 mb-4 flex items-center">
+                                        <FileText className="w-5 h-5 mr-2 text-emerald-600" />
+                                        Annonces
+                                    </h3>
+                                    
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <Link href="/posts" className="block">
+                                            <Button 
+                                                variant="outline" 
+                                                className="w-full justify-start font-semibold py-4 px-6 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                                            >
+                                                <FileText className="w-5 h-5 mr-3" />
+                                                <span className="flex-1 text-left">Voir toutes les annonces</span>
+                                            </Button>
+                                        </Link>
+
+                                        <Link href="/posts/my-posts" className="block">
+                                            <Button 
+                                                variant="outline" 
+                                                className="w-full justify-start font-semibold py-4 px-6 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                                            >
+                                                <Briefcase className="w-5 h-5 mr-3" />
+                                                <span className="flex-1 text-left">Mes annonces</span>
+                                                {userPostsCount > 0 && (
+                                                    <Badge className="bg-emerald-500 text-white">
+                                                        {userPostsCount}
+                                                    </Badge>
+                                                )}
+                                            </Button>
+                                        </Link>
+
+                                        <Link href="/posts/create" className="block">
+                                            <Button 
+                                                className="w-full justify-start font-semibold py-4 px-6 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                                            >
+                                                <PlusCircle className="w-5 h-5 mr-3" />
+                                                <span className="flex-1 text-left">Créer une annonce</span>
+                                            </Button>
+                                        </Link>
+                                    </div>
+
+                                    <p className="text-xs text-slate-600 mt-4 italic">
+                                        Publiez vos offres d'emploi, recherches de profils ou annonces diverses
+                                    </p>
+                                </div> */}
 
                                 {(isReferent || isAdmin) && (
                                     <div className="rounded-xl p-6">

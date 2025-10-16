@@ -342,7 +342,7 @@ export const departements = [
   "MOS",
   "MRH",
   "Ministère de la Famille",
-  "Ministère de Louange et Adoration",
+  "Ministère de la Louange et Adoration",
   "Ministère des Célibataires",
   "On est Ensemble",
   "PCC",

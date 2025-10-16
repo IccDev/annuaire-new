@@ -14,8 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/lib/auth-client";
-import { checkProfessionalProfile } from "@/actions/user";
+import { signUp, signIn } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -80,13 +79,46 @@ export default function SignupForm({ token, emailCandidate }: Props) {
         },
         {
           onSuccess: async () => {
-            toast.success("Inscription réussie !");
-            await checkProfessionalProfile(emailCandidate);
-            await updateCandidate(token);
-            setTimeout(() => {
+            toast.success("Inscription réussie ! Connexion en cours...");
+            
+            try {
+              await updateCandidate(token);
+            } catch (error) {
+              console.error("Erreur updateCandidate:", error);
+            }
+
+            fetch("/api/send-welcome-email", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                to_email: emailCandidate,
+                user_name: values.name,
+              }),
+            }).catch((error) => {
+              console.error("Erreur envoi email de bienvenue:", error);
+            });
+            
+            try {
+              await signIn.email({
+                email: emailCandidate,
+                password: values.password,
+              }, {
+                onSuccess: () => {
+                  toast.success("Connexion réussie ! Redirection...");
+                  setTimeout(() => {
+                    router.push("/user");
+                  }, 500);
+                },
+                onError: (error) => {
+                  console.error("Erreur connexion auto:", error);
+                  toast.info("Veuillez vous connecter manuellement.");
+                  router.push("/auth/login");
+                }
+              });
+            } catch (error) {
+              console.error("Erreur connexion auto:", error);
               router.push("/auth/login");
-              router.refresh();
-            }, 2000);
+            }
           },
           onError: (error) => {
             const errorMessage = error?.error?.message || "Erreur lors de l'inscription";

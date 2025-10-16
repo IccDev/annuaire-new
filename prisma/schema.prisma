@@ -13,7 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum Role {
   USER
   ADMIN
@@ -31,6 +30,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   role          Role      @default(USER)
+  posts         Post[]
 
   @@unique([email])
   @@map("user")
@@ -89,4 +89,41 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+enum PostType {
+  JOB_OFFER
+  JOB_REQUEST
+  SERVICE_OFFER
+  SERVICE_REQUEST
+  ANNOUNCEMENT
+}
+
+model Post {
+  id           String   @id @default(uuid())
+  title        String
+  description  String   @db.Text
+  type         PostType
+  category     String
+  location     String?
+  requirements String?  @db.Text
+  contactEmail String?
+  contactPhone String?
+  isActive     Boolean  @default(true)
+  views        Int      @default(0)
+
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+
+  @@index([authorId])
+  @@index([type])
+  @@index([category])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("post")
 }
