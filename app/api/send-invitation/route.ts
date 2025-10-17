@@ -25,7 +25,7 @@ export async function POST(req: Request) {
           <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Invitation sur l'Annuaire des professions</title>
+            <title>Invitation sur l'Annuaire des compétences</title>
             <style>
               body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
               .container { background-color: #f9fafb; border-radius: 8px; padding: 24px; }

@@ -19,10 +19,11 @@ export const auth = betterAuth({
     },
   },
 
-  trustedOrigins:
-    process.env.NODE_ENV === "production"
-      ? ["https://annuaire.impactcentrechretien.eu"]
-      : undefined,
+  trustedOrigins: [
+    "https://annuaire.impactcentrechretien.eu",
+    "http://localhost:3000",
+    "http://localhost:3032"
+  ],
   emailAndPassword: {
     enabled: true,
     sendResetPassword: async ({

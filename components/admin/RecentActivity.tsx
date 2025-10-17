@@ -157,11 +157,12 @@ export default async function RecentActivity() {
           })}
         </div>
 
-        <div className="mt-6 pt-4 border-t border-emerald-100/50 text-center">
+        {/* Bouton masqué - Activité complète non implémentée */}
+        {/* <div className="mt-6 pt-4 border-t border-emerald-100/50 text-center">
           <button className="text-sm text-emerald-600 hover:text-emerald-700 font-medium hover:underline transition-colors duration-200">
             Voir toute l'activité
           </button>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
