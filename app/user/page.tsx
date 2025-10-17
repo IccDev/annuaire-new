@@ -50,20 +50,28 @@ export default async function UserProfilePage({ searchParams }: PageProps) {
     createdAt: dbUser.createdAt
   };
 
-  const res = await fetch(
-    `http://84.234.16.224:4042/annuaire/query/user_by_email`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ email: fullUser.email })
-    }
-  );
+  let hasProfile = false;
+  
+  try {
+    const res = await fetch(
+      `http://84.234.16.224:4042/annuaire/query/user_by_email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ email: fullUser.email }),
+        signal: AbortSignal.timeout(3000),
+      }
+    );
 
-  const data = await res.json();
-  const hasProfile = data.data.length > 0;
+    const data = await res.json();
+    hasProfile = data.data.length > 0;
+  } catch (error) {
+    console.error("Erreur vérification profil:", error);
+    hasProfile = false;
+  }
 
   if (hasProfile && params.from === 'login') {
     redirect("/home");

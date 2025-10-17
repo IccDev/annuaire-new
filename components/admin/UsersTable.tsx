@@ -62,9 +62,12 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
   const [updatingUser, setUpdatingUser] = useState<string | null>(null);
   const [roleChangeUser, setRoleChangeUser] = useState<{ user: User; newRole: string } | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     setUpdatingUser(userId);
+    setRoleChangeUser(null);
+    
     try {
       const response = await fetch(`/api/admin/users/${userId}/role`, {
         method: 'PATCH',
@@ -73,13 +76,12 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
       });
 
       if (response.ok) {
-        onUserUpdate();
+        await onUserUpdate();
       }
     } catch (error) {
       console.error('Erreur lors du changement de rôle:', error);
     } finally {
       setUpdatingUser(null);
-      setRoleChangeUser(null);
     }
   };
 
@@ -140,7 +142,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                   </div>
 
                   <div className="col-span-2 flex items-center justify-center">
-                    <DropdownMenu>
+                    <DropdownMenu 
+                      open={openDropdown === user.id} 
+                      onOpenChange={(open) => setOpenDropdown(open ? user.id : null)}
+                    >
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
@@ -155,7 +160,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           className="cursor-pointer"
-                          onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
+                          onClick={() => {
+                            window.open(`/user?id=${user.id}`, '_blank');
+                            setOpenDropdown(null);
+                          }}
                         >
                           <Eye className="mr-2 h-4 w-4" />
                           Voir le profil
@@ -168,6 +176,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                             className="cursor-pointer text-orange-600 focus:text-orange-600"
                             onClick={() => {
                               setRoleChangeUser({ user, newRole: 'USER' });
+                              setOpenDropdown(null);
                             }}
                           >
                             <Shield className="mr-2 h-4 w-4" />
@@ -181,6 +190,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                               onClick={() => {
                                 const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
                                 setRoleChangeUser({ user, newRole });
+                                setOpenDropdown(null);
                               }}
                             >
                               <Shield className="mr-2 h-4 w-4" />
@@ -191,6 +201,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                 className="cursor-pointer text-orange-600 focus:text-orange-600"
                                 onClick={() => {
                                   setRoleChangeUser({ user, newRole: 'ADMIN' });
+                                  setOpenDropdown(null);
                                 }}
                               >
                                 <Shield className="mr-2 h-4 w-4" />
@@ -199,7 +210,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                             )}
                             <DropdownMenuItem
                               className="cursor-pointer text-red-600 focus:text-red-600"
-                              onClick={() => setDeleteUser(user)}
+                              onClick={() => {
+                                setDeleteUser(user);
+                                setOpenDropdown(null);
+                              }}
                             >
                               <Trash2 className="mr-2 h-4 w-4" />
                               Supprimer
@@ -235,7 +249,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                           </div>
                         </div>
 
-                        <DropdownMenu>
+                        <DropdownMenu
+                          open={openDropdown === `mobile-${user.id}`}
+                          onOpenChange={(open) => setOpenDropdown(open ? `mobile-${user.id}` : null)}
+                        >
                           <DropdownMenuTrigger asChild>
                             <Button
                               variant="ghost"
@@ -250,7 +267,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="cursor-pointer"
-                              onClick={() => window.open(`/user?id=${user.id}`, '_blank')}
+                              onClick={() => {
+                                window.open(`/user?id=${user.id}`, '_blank');
+                                setOpenDropdown(null);
+                              }}
                             >
                               <Eye className="mr-2 h-4 w-4" />
                               Voir le profil
@@ -263,6 +283,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                 className="cursor-pointer text-orange-600 focus:text-orange-600"
                                 onClick={() => {
                                   setRoleChangeUser({ user, newRole: 'USER' });
+                                  setOpenDropdown(null);
                                 }}
                               >
                                 <Shield className="mr-2 h-4 w-4" />
@@ -276,6 +297,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                   onClick={() => {
                                     const newRole = user.role === 'REFERENT' ? 'USER' : 'REFERENT';
                                     setRoleChangeUser({ user, newRole });
+                                    setOpenDropdown(null);
                                   }}
                                 >
                                   <Shield className="mr-2 h-4 w-4" />
@@ -286,6 +308,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                     className="cursor-pointer text-orange-600 focus:text-orange-600"
                                     onClick={() => {
                                       setRoleChangeUser({ user, newRole: 'ADMIN' });
+                                      setOpenDropdown(null);
                                     }}
                                   >
                                     <Shield className="mr-2 h-4 w-4" />
@@ -294,7 +317,10 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                                 )}
                                 <DropdownMenuItem
                                   className="cursor-pointer text-red-600 focus:text-red-600"
-                                  onClick={() => setDeleteUser(user)}
+                                  onClick={() => {
+                                    setDeleteUser(user);
+                                    setOpenDropdown(null);
+                                  }}
                                 >
                                   <Trash2 className="mr-2 h-4 w-4" />
                                   Supprimer

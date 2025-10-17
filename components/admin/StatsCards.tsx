@@ -1,14 +1,51 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, UserCheck, TrendingUp, Activity, ArrowUp, ArrowDown } from "lucide-react";
+import { Users, UserCheck, TrendingUp, Activity, ArrowUp, ArrowDown, FileText } from "lucide-react";
 import prisma from "@/lib/prisma";
+
+async function getProfilesStats() {
+  try {
+    const users = await prisma.user.findMany({
+      select: { email: true },
+    });
+
+    const checkProfilePromises = users.map(async (user) => {
+      try {
+        const res = await fetch(
+          `http://84.234.16.224:4042/annuaire/query/user_by_email`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ email: user.email }),
+            signal: AbortSignal.timeout(5000),
+          }
+        );
+
+        const data = await res.json();
+        return data.data.length > 0;
+      } catch (error) {
+        return false;
+      }
+    });
+
+    const results = await Promise.all(checkProfilePromises);
+    return results.filter(Boolean).length;
+  } catch (error) {
+    console.error("Erreur calcul profils:", error);
+    return 0;
+  }
+}
 
 async function getStats() {
   const [
     totalUsers,
     totalReferents,
     usersThisMonth,
-    usersLastMonth
+    usersLastMonth,
+    profilesCompleted
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { role: { in: ['REFERENT', 'ADMIN'] } } }),
@@ -26,7 +63,8 @@ async function getStats() {
           lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
         }
       }
-    })
+    }),
+    getProfilesStats()
   ]);
 
   const growth = usersLastMonth > 0 
@@ -37,7 +75,8 @@ async function getStats() {
     totalUsers,
     totalReferents,
     usersThisMonth,
-    growth: parseFloat(growth)
+    growth: parseFloat(growth),
+    profilesCompleted
   };
 }
 
@@ -56,6 +95,16 @@ export default async function StatsCards() {
       trend: null
     },
     {
+      title: "Fiches professionnelles", 
+      value: stats.profilesCompleted.toString(),
+      description: "Profils complétés",
+      icon: FileText,
+      gradient: "bg-slate-900",
+      bgGradient: "from-orange-50 to-amber-100/50", 
+      iconBg: "bg-orange-600",
+      trend: null
+    },
+    {
       title: "Référents actifs", 
       value: stats.totalReferents.toString(),
       description: "Référents et admins",
@@ -65,16 +114,6 @@ export default async function StatsCards() {
       iconBg: "bg-emerald-600",
       trend: null
     },
-    // {
-    //   title: "Croissance",
-    //   value: `${stats.growth > 0 ? '+' : ''}${stats.growth}%`,
-    //   description: "Ce mois",
-    //   icon: TrendingUp,
-    //   gradient: stats.growth >= 0 ? "from-slate-600 to-slate-800" : "from-red-500 to-red-600",
-    //   bgGradient: stats.growth >= 0 ? "from-slate-50 to-slate-100/50" : "from-red-50 to-red-100/50",
-    //   iconBg: stats.growth >= 0 ? "bg-slate-600" : "bg-red-500",
-    //   trend: stats.growth >= 0 ? "up" : "down"
-    // },
     {
       title: "Activité",
       value: stats.usersThisMonth.toString(),

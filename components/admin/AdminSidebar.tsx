@@ -8,12 +8,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserCheck, 
-  BarChart3, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  UserCheck,
+  BarChart3,
+  Settings,
   Menu,
   Sparkles,
   Crown,
@@ -48,8 +48,14 @@ const navigation = [
   },
   {
     name: "Référents",
-    href: "/admin/referents", 
+    href: "/admin/referents",
     icon: UserCheck,
+    badge: null,
+  },
+  {
+    name: "Fiches professionnelles",
+    href: "/admin/profiles",
+    icon: BarChart3,
     badge: null,
   },
 ];
@@ -76,7 +82,6 @@ function SidebarContent({ user }: { user: User }) {
           </div>
         </div>
 
-        {/* User Profile */}
         <div className="flex items-center space-x-3 p-3 rounded-xl bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200/50">
           <Avatar className="w-10 h-10 ring-2 ring-slate-200">
             <AvatarImage src={(user as any).imageUrl || (user as any).image || undefined} alt={user.name} />
@@ -111,20 +116,20 @@ function SidebarContent({ user }: { user: User }) {
                 )}
               >
                 <div className="flex items-center space-x-3">
-                  <Icon 
+                  <Icon
                     className={cn(
                       "w-5 h-5 transition-transform duration-300",
                       isActive ? "scale-110" : "group-hover:scale-105"
-                    )} 
+                    )}
                   />
                   <span>{item.name}</span>
                 </div>
                 {item.badge && (
-                  <Badge 
+                  <Badge
                     className={cn(
                       "text-xs font-semibold",
-                      isActive 
-                        ? "bg-white/20 text-white border-white/20" 
+                      isActive
+                        ? "bg-white/20 text-white border-white/20"
                         : "bg-slate-100 text-slate-700 border-slate-200"
                     )}
                   >
@@ -139,17 +144,17 @@ function SidebarContent({ user }: { user: User }) {
 
       <div className="p-4 space-y-2 border-t border-slate-100/50">
         <Link href="/user">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="w-full justify-start text-slate-600 hover:text-slate-900 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100"
           >
             <Home className="mr-3 h-4 w-4" />
             Retour au profil
           </Button>
         </Link>
-        <Button 
+        <Button
           onClick={handleLogout}
-          variant="ghost" 
+          variant="ghost"
           className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
         >
           <LogOut className="mr-3 h-4 w-4" />

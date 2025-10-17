@@ -17,8 +17,13 @@ const protectedRoutes = [
 const publicRoutes = ["/", "/auth/login", "/auth/register"];
 
 export async function middleware(request: NextRequest) {
-  const sessionCookie = getSessionCookie(request);
   const path = request.nextUrl.pathname;
+
+  if (path === "/user") {
+    return NextResponse.next();
+  }
+
+  const sessionCookie = getSessionCookie(request);
 
   const isProtectedRoute = protectedRoutes.some((route) =>
     path.startsWith(route.replace(":path*", ""))

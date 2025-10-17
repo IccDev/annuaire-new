@@ -92,7 +92,7 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
                         className="w-full pr-8"
                     />
                     <datalist id="eglises-list">
-                        {ALL_CHURCHES.map((church) => (
+                        {[...ALL_CHURCHES].sort((a, b) => a.localeCompare(b)).map((church) => (
                             <option key={church} value={church} />
                         ))}
                     </datalist>

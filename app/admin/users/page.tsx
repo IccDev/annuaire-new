@@ -57,7 +57,6 @@ export default function UsersPage() {
       filtered = filtered.filter(user => user.role === roleFilter);
     }
 
-    // Trier par ordre alphabétique par nom, puis par email si pas de nom
     filtered = filtered.sort((a, b) => {
       const nameA = a.name || a.email;
       const nameB = b.name || b.email;
