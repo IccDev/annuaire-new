@@ -62,9 +62,9 @@ export default function UserGrowthChart() {
           </CardDescription>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-blue-800 flex items-center justify-center">
+          {/* <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-blue-800 flex items-center justify-center">
             <TrendingUp className="w-4 h-4 text-white" />
-          </div>
+          </div> */}
         </div>
       </CardHeader>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,8 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Eglise } from "@/types/interfaces/annuaire";
-import { get_churches } from "@/app/api/annuaire-api";
+import { ALL_CHURCHES } from "@/lib/constants/churches";
 
 const egliseSchema = z.object({
     eglise: z.string().min(1, "Le nom de l'église est requis"),
@@ -32,7 +31,6 @@ interface InfosEgliseProps {
 export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
     const [departementInput, setDepartementInput] = useState("");
     const [selectedDepartements, setSelectedDepartements] = useState<string[]>(data.departements);
-    const [eglises, setEglises] = useState<Eglise[]>([]);
     const [egliseSearch, setEgliseSearch] = useState(data.eglise || "");
 
     const {
@@ -62,18 +60,6 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
             setEgliseSearch(data.eglise || "");
         }
     }, [data, reset]);
-
-    useEffect(() => {
-        const fetchEglises = async () => {
-            try {
-                const response = await get_churches();
-                setEglises(response);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des eglises:", error);
-            }
-        };
-        fetchEglises();
-    }, []);
 
     const isStarSelected = watch("star");
 
@@ -107,7 +93,7 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
                 <div className="relative w-full">
                     <Input
                         type="text"
-                        placeholder="Nom de votre église ou sélectionnez dans la liste..."
+                        placeholder="Recherchez votre église (ex: ICC Bruxelles)..."
                         list="eglises-list"
                         value={egliseSearch}
                         onChange={e => {
@@ -117,8 +103,8 @@ export default function InfosEglise({ data, onSubmit }: InfosEgliseProps) {
                         className="w-full pr-8"
                     />
                     <datalist id="eglises-list">
-                        {eglises.map((eglise) => (
-                            <option key={eglise.nom} value={eglise.nom} />
+                        {ALL_CHURCHES.map((church) => (
+                            <option key={church} value={church} />
                         ))}
                     </datalist>
                 </div>

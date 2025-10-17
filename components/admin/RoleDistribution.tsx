@@ -135,7 +135,7 @@ export default function RoleDistribution() {
                     <span className="font-medium text-slate-700">{role.name}</span>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-bold text-slate-800">{role.value}%</div>
+                    <div className="text-lg font-bold text-slate-800">{role.value}</div>
                     <div className="text-xs text-slate-500">
                       {role.name === "Utilisateurs" ? "" : 
                        role.name === "Référents" ? "" : ""}
