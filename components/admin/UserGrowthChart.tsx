@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { Calendar, TrendingUp } from "lucide-react";
+// import { Calendar, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ChartData {
@@ -50,6 +50,7 @@ export default function UserGrowthChart() {
       </Card>
     );
   }
+
   return (
     <Card className="border-0 shadow-xl shadow-slate-500/5 bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

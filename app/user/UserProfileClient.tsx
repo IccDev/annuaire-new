@@ -167,52 +167,52 @@ const UserProfileClient = ({ user, hasProfile, isReferent, isAdmin, userPostsCou
                                     </div>
                                 )}
 
-                                {/* <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-6 border border-emerald-200">
+                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
                                     <h3 className="font-semibold text-slate-800 mb-4 flex items-center">
-                                        <FileText className="w-5 h-5 mr-2 text-emerald-600" />
+                                        <FileText className="w-5 h-5 mr-2 text-blue-600" />
                                         Annonces
                                     </h3>
-                                    
-                                    <div className="grid grid-cols-1 gap-3">
-                                        <Link href="/posts" className="block">
-                                            <Button 
-                                                variant="outline" 
-                                                className="w-full justify-start font-semibold py-4 px-6 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-                                            >
-                                                <FileText className="w-5 h-5 mr-3" />
-                                                <span className="flex-1 text-left">Voir toutes les annonces</span>
-                                            </Button>
+
+                                    <div className="flex justify-around gap-4">
+                                        <Link href="/posts" className="flex flex-col items-center group">
+                                            <div className="w-14 h-14 bg-white hover:bg-blue-50 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-blue-200">
+                                                <FileText className="w-6 h-6 text-blue-600 group-hover:text-blue-700" />
+                                            </div>
+                                            <span className="text-xs text-slate-700 font-medium mt-2 text-center">
+                                                Voir les annonces
+                                            </span>
                                         </Link>
 
-                                        <Link href="/posts/my-posts" className="block">
-                                            <Button 
-                                                variant="outline" 
-                                                className="w-full justify-start font-semibold py-4 px-6 border-2 border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
-                                            >
-                                                <Briefcase className="w-5 h-5 mr-3" />
-                                                <span className="flex-1 text-left">Mes annonces</span>
-                                                {userPostsCount > 0 && (
-                                                    <Badge className="bg-emerald-500 text-white">
+                                        <Link href="/posts/create" className="flex flex-col items-center group">
+                                            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                                                <PlusCircle className="w-6 h-6 text-white" />
+                                            </div>
+                                            <span className="text-xs text-slate-700 font-medium mt-2 text-center">
+                                                Créer une annonce
+                                            </span>
+                                        </Link>
+
+                                        <Link href="/posts/my-posts" className="flex flex-col items-center group relative">
+                                            {userPostsCount > 0 && (
+                                                <div className="absolute -top-2 -right-2 z-10">
+                                                    <span className="flex items-center justify-center w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full shadow-lg animate-pulse">
                                                         {userPostsCount}
-                                                    </Badge>
-                                                )}
-                                            </Button>
-                                        </Link>
-
-                                        <Link href="/posts/create" className="block">
-                                            <Button 
-                                                className="w-full justify-start font-semibold py-4 px-6 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                                            >
-                                                <PlusCircle className="w-5 h-5 mr-3" />
-                                                <span className="flex-1 text-left">Créer une annonce</span>
-                                            </Button>
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <div className="w-14 h-14 bg-white hover:bg-blue-50 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-blue-200">
+                                                <Briefcase className="w-6 h-6 text-blue-600 group-hover:text-blue-700" />
+                                            </div>
+                                            <span className="text-xs text-slate-700 font-medium mt-2 text-center">
+                                                Mes annonces
+                                            </span>
                                         </Link>
                                     </div>
 
-                                    <p className="text-xs text-slate-600 mt-4 italic">
+                                    <p className="text-xs text-slate-600 mt-4 italic text-center">
                                         Publiez vos offres d'emploi, recherches de profils ou annonces diverses
                                     </p>
-                                </div> */}
+                                </div>
 
                                 {(isReferent || isAdmin) && (
                                     <div className="rounded-xl p-6">

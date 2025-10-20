@@ -18,14 +18,11 @@ import {
   Phone,
   Edit,
   Trash2,
-  Archive,
-  ArchiveRestore,
-  Share2,
   User,
 } from "lucide-react";
 import { PostWithAuthor } from "@/types/interfaces/post";
 import { getPostTypeInfo, getCategoryInfo } from "@/lib/constants/post-categories";
-import { deletePost, togglePostActive } from "@/actions/post";
+import { deletePost } from "@/actions/post";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -48,7 +45,6 @@ interface PostDetailProps {
 export default function PostDetail({ post, isAuthor = false, isAdmin = false }: PostDetailProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isToggling, setIsToggling] = useState(false);
 
   const typeInfo = getPostTypeInfo(post.type);
   const categoryInfo = getCategoryInfo(post.category);
@@ -65,31 +61,6 @@ export default function PostDetail({ post, isAuthor = false, isAdmin = false }: 
     } else {
       toast.success("Annonce supprimée avec succès");
       router.push("/posts");
-    }
-  };
-
-  const handleToggleActive = async () => {
-    setIsToggling(true);
-    const result = await togglePostActive(post.id);
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success(
-        post.isActive ? "Annonce archivée" : "Annonce réactivée"
-      );
-      router.refresh();
-    }
-    setIsToggling(false);
-  };
-
-  const handleShare = async () => {
-    const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast.success("Lien copié dans le presse-papier");
-    } catch (error) {
-      toast.error("Erreur lors de la copie du lien");
     }
   };
 
@@ -141,36 +112,25 @@ export default function PostDetail({ post, isAuthor = false, isAdmin = false }: 
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  size="icon"
-                  onClick={handleShare}
-                >
-                  <Share2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
+                  className="sm:px-4"
+                  size="sm"
                   asChild
                 >
                   <Link href={`/posts/${post.id}/edit`}>
                     <Edit className="h-4 w-4" />
+                    <span className="hidden sm:inline sm:ml-2">Modifier</span>
                   </Link>
                 </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleToggleActive}
-                  disabled={isToggling}
-                >
-                  {post.isActive ? (
-                    <Archive className="h-4 w-4" />
-                  ) : (
-                    <ArchiveRestore className="h-4 w-4" />
-                  )}
-                </Button>
+
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" size="icon">
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                    <Button 
+                      variant="outline" 
+                      className="text-destructive hover:text-destructive sm:px-4"
+                      size="sm"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span className="hidden sm:inline sm:ml-2">Supprimer</span>
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -231,13 +191,13 @@ export default function PostDetail({ post, isAuthor = false, isAdmin = false }: 
               </Avatar>
               <div>
                 <p className="font-medium">{post.author.name}</p>
-                <Link
+                {/* <Link
                   href={`/user?id=${post.author.id}`}
                   className="text-sm text-primary hover:underline flex items-center gap-1"
                 >
                   <User className="h-3 w-3" />
                   Voir le profil
-                </Link>
+                </Link> */}
               </div>
             </div>
 

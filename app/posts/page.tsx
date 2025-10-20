@@ -3,7 +3,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import PostList from "@/components/posts/PostList";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 import { getSession } from "@/lib/auth-server";
 
 async function getInitialPosts() {
@@ -49,6 +49,15 @@ export default async function PostsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
+        <Button variant="ghost" asChild>
+          <Link href="/user" className="flex items-center">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Retour au profil
+          </Link>
+        </Button>
+      </div>
+
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold">Annonces</h1>
@@ -56,7 +65,7 @@ export default async function PostsPage() {
             Découvrez toutes les annonces de la communauté
           </p>
         </div>
-        
+
         {session && (
           <Button asChild>
             <Link href="/posts/create">

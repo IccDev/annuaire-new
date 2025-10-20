@@ -3,6 +3,7 @@ import StatsCards from "@/components/admin/StatsCards";
 import UserGrowthChart from "@/components/admin/UserGrowthChart";
 import RoleDistribution from "@/components/admin/RoleDistribution";
 import RecentActivity from "@/components/admin/RecentActivity";
+import ExportExcelButton from "@/components/admin/ExportExcelButton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminDashboard() {
@@ -19,6 +20,8 @@ export default function AdminDashboard() {
             <span>Vue d'ensemble de la plateforme</span>
           </p>
         </div>
+        
+        <ExportExcelButton />
       </div>
 
       <Suspense fallback={

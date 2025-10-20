@@ -22,15 +22,48 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { PostType } from "@/app/generated/prisma";
 import { POST_CATEGORIES, POST_TYPES, EXPIRATION_OPTIONS } from "@/lib/constants/post-categories";
 import { createPost, updatePost } from "@/actions/post";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { PostWithAuthor } from "@/types/interfaces/post";
+
+const CITIES = [
+    "Alost",
+    "Anvers",
+    "Berlin",
+    "Bremen",
+    "Bruxelles",
+    "Charleroi",
+    "Hambourg",
+    "La Haye",
+    "La Louvière",
+    "Liège",
+    "Luxembourg",
+    "Mons",
+    "Munich",
+    "Namur",
+    "Nivelles",
+].sort();
 
 const postFormSchema = z.object({
     title: z.string().min(5, "Le titre doit contenir au moins 5 caractères"),
@@ -38,8 +71,8 @@ const postFormSchema = z.object({
     type: z.nativeEnum(PostType, {
         required_error: "Veuillez sélectionner un type d'annonce",
     }),
-    category: z.string().min(1, "Veuillez sélectionner une catégorie"),
-    location: z.string().optional(),
+    category: z.string().min(1, "Veuillez sélectionner ou entrer une catégorie"),
+    locations: z.array(z.string()).min(1, "Veuillez sélectionner au moins une ville"),
     requirements: z.string().optional(),
     contactEmail: z.string().email("Email invalide").optional().or(z.literal("")),
     contactPhone: z.string().optional(),
@@ -64,7 +97,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
             description: post?.description || "",
             type: post?.type || undefined,
             category: post?.category || "",
-            location: post?.location || "",
+            locations: post?.location ? post.location.split(", ") : [],
             requirements: post?.requirements || "",
             contactEmail: post?.contactEmail || "",
             contactPhone: post?.contactPhone || "",
@@ -88,7 +121,7 @@ export default function PostForm({ post, mode }: PostFormProps) {
                 description: values.description,
                 type: values.type,
                 category: values.category,
-                location: values.location || undefined,
+                location: values.locations.join(", "),
                 requirements: values.requirements || undefined,
                 contactEmail: values.contactEmail || undefined,
                 contactPhone: values.contactPhone || undefined,
@@ -181,25 +214,67 @@ export default function PostForm({ post, mode }: PostFormProps) {
                             control={form.control}
                             name="category"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="flex flex-col">
                                     <FormLabel>Catégorie</FormLabel>
-                                    <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Sélectionner une catégorie" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {POST_CATEGORIES.map((category) => (
-                                                <SelectItem key={category.value} value={category.value}>
-                                                    {category.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    className={cn(
+                                                        "justify-between",
+                                                        !field.value && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    {field.value
+                                                        ? POST_CATEGORIES.find(
+                                                            (category) => category.value === field.value
+                                                        )?.label || field.value
+                                                        : "Sélectionner ou écrire une catégorie"}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[400px] p-0">
+                                            <Command>
+                                                <CommandInput
+                                                    placeholder="Rechercher ou écrire une catégorie..."
+                                                    value={field.value}
+                                                    onValueChange={field.onChange}
+                                                />
+                                                <CommandList>
+                                                    <CommandEmpty>
+                                                        Appuyez sur Entrée pour utiliser &quot;{field.value}&quot;
+                                                    </CommandEmpty>
+                                                    <CommandGroup>
+                                                        {POST_CATEGORIES.map((category) => (
+                                                            <CommandItem
+                                                                key={category.value}
+                                                                value={category.value}
+                                                                onSelect={() => {
+                                                                    field.onChange(category.value);
+                                                                }}
+                                                            >
+                                                                <Check
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        category.value === field.value
+                                                                            ? "opacity-100"
+                                                                            : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {category.label}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormDescription>
+                                        Sélectionnez dans la liste ou tapez votre propre catégorie
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -207,15 +282,85 @@ export default function PostForm({ post, mode }: PostFormProps) {
 
                         <FormField
                             control={form.control}
-                            name="location"
+                            name="locations"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Localisation (optionnel)</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Ex: Bruxelles, Belgique" {...field} />
-                                    </FormControl>
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Localisation</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    className={cn(
+                                                        "justify-between",
+                                                        field.value.length === 0 && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    {field.value.length > 0
+                                                        ? `${field.value.length} ville(s) sélectionnée(s)`
+                                                        : "Sélectionner une ou plusieurs villes"}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[400px] p-0">
+                                            <Command>
+                                                <CommandInput placeholder="Rechercher une ville..." />
+                                                <CommandList>
+                                                    <CommandEmpty>Aucune ville trouvée.</CommandEmpty>
+                                                    <CommandGroup>
+                                                        {CITIES.map((city) => (
+                                                            <CommandItem
+                                                                key={city}
+                                                                value={city}
+                                                                onSelect={() => {
+                                                                    const newValue = field.value.includes(city)
+                                                                        ? field.value.filter((v) => v !== city)
+                                                                        : [...field.value, city];
+                                                                    field.onChange(newValue);
+                                                                }}
+                                                            >
+                                                                <Check
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        field.value.includes(city)
+                                                                            ? "opacity-100"
+                                                                            : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {city}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                    {field.value.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {field.value.map((city) => (
+                                                <Badge key={city} variant="secondary" className="gap-1">
+                                                    {city}
+                                                    <button
+                                                        type="button"
+                                                        className="ml-1 hover:bg-muted rounded-sm"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            field.onChange(
+                                                                field.value.filter((v) => v !== city)
+                                                            );
+                                                        }}
+                                                    >
+                                                        <X className="h-3 w-3" />
+                                                    </button>
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    )}
                                     <FormDescription>
-                                        Ville, région ou pays
+                                        Vous pouvez sélectionner plusieurs villes
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>

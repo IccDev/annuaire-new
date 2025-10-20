@@ -149,13 +149,13 @@ export default function ReferentsPage() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem 
+                      {/* <DropdownMenuItem 
                         className="cursor-pointer"
                         onClick={() => window.open(`/user?id=${referent.id}`, '_blank')}
                       >
                         <Eye className="mr-2 h-4 w-4" />
                         Voir le profil
-                      </DropdownMenuItem>
+                      </DropdownMenuItem> */}
                       <DropdownMenuSeparator />
                       <DropdownMenuItem 
                         className="cursor-pointer"

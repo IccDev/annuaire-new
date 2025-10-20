@@ -3,7 +3,6 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth-server";
 import PostCard from "@/components/posts/PostCard";
-import PostStats from "@/components/posts/PostStats";
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowLeft } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -72,15 +71,6 @@ export default async function MyPostsPage() {
             Nouvelle annonce
           </Link>
         </Button>
-      </div>
-
-      <div className="mb-8">
-        <PostStats
-          totalPosts={posts.length}
-          activePosts={activePosts.length}
-          inactivePosts={inactivePosts.length}
-          totalViews={totalViews}
-        />
       </div>
 
       {posts.length === 0 ? (

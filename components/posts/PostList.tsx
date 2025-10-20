@@ -34,9 +34,7 @@ export default function PostList({
       params.set("limit", "12");
 
       if (newFilters.type) params.set("type", newFilters.type);
-      if (newFilters.category) params.set("category", newFilters.category);
       if (newFilters.location) params.set("location", newFilters.location);
-      if (newFilters.search) params.set("search", newFilters.search);
 
       const response = await fetch(`/api/posts?${params.toString()}`);
       const data = await response.json();
@@ -59,9 +57,7 @@ export default function PostList({
       params.set("limit", "12");
 
       if (filters.type) params.set("type", filters.type);
-      if (filters.category) params.set("category", filters.category);
       if (filters.location) params.set("location", filters.location);
-      if (filters.search) params.set("search", filters.search);
 
       const response = await fetch(`/api/posts?${params.toString()}`);
       const data = await response.json();

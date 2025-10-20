@@ -158,7 +158,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                       <DropdownMenuContent align="end" className="w-52">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
+                        {/* <DropdownMenuItem
                           className="cursor-pointer"
                           onClick={() => {
                             window.open(`/user?id=${user.id}`, '_blank');
@@ -167,7 +167,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                         >
                           <Eye className="mr-2 h-4 w-4" />
                           Voir le profil
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuSeparator />
 
                         {user.role === 'ADMIN' ? (
@@ -265,7 +265,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                           <DropdownMenuContent align="end" className="w-52">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem
+                            {/* <DropdownMenuItem
                               className="cursor-pointer"
                               onClick={() => {
                                 window.open(`/user?id=${user.id}`, '_blank');
@@ -274,7 +274,7 @@ export default function UsersTable({ users, onUserUpdate }: UsersTableProps) {
                             >
                               <Eye className="mr-2 h-4 w-4" />
                               Voir le profil
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
                             <DropdownMenuSeparator />
 
                             {user.role === 'ADMIN' ? (
